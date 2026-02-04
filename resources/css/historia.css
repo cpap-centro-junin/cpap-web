@@ -1,0 +1,157 @@
+/* =================================================
+   HISTORIA CPAP – TIMELINE GRANATE CLARO
+   (CSS encapsulado, no afecta navbar)
+   ================================================= */
+
+/* CONTENEDOR PRINCIPAL */
+#timeline {
+    display: flex;
+    background: linear-gradient(
+        135deg,
+        #8c1d2d,
+        #5f0f1b
+    );
+    height: 100vh;
+    min-height: 650px;
+    overflow: hidden;
+    font-family: 'Source Sans Pro', system-ui, sans-serif;
+}
+
+/* ITEM */
+#timeline .tl-item {
+    position: relative;
+    width: 25%;
+    height: 100%;
+    color: #ffffff;
+    overflow: hidden;
+    transition: width 0.6s ease;
+}
+
+#timeline:hover .tl-item {
+    width: 23.333%;
+}
+
+#timeline .tl-item:hover {
+    width: 30% !important;
+}
+
+/* CAPAS OSCURAS */
+#timeline .tl-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(90, 15, 27, 0.65); /* granate claro */
+    transition: opacity 0.6s ease;
+}
+
+#timeline .tl-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.85) 80%
+    );
+    opacity: 0;
+    transform: translateY(40%);
+    transition: all 0.6s ease;
+    z-index: 1;
+}
+
+#timeline .tl-item:hover::after {
+    opacity: 0;
+}
+
+#timeline .tl-item:hover::before {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* IMAGEN DE FONDO */
+#timeline .tl-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(80%);
+    transition: filter 0.6s ease, transform 1s ease;
+}
+
+#timeline .tl-item:hover .tl-bg {
+    filter: grayscale(0);
+    transform: scale(1.04);
+}
+
+/* AÑO */
+#timeline .tl-year {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-top: 1px solid #f1d18a;
+    border-bottom: 1px solid #f1d18a;
+    padding: 14px 32px;
+    z-index: 2;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(2px);
+}
+
+#timeline .tl-year p {
+    font-size: 1.6rem;
+    letter-spacing: 4px;
+    margin: 0;
+    font-weight: 600;
+    color: #f1d18a;
+}
+
+/* CONTENIDO */
+#timeline .tl-content {
+    position: absolute;
+    top: 58%;
+    left: 0;
+    right: 0;
+    padding: 0 40px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.7s ease 0.45s;
+    z-index: 2;
+}
+
+#timeline .tl-item:hover .tl-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#timeline .tl-content h1 {
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #f1d18a;
+    margin-bottom: 12px;
+}
+
+#timeline .tl-content p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #f8f8f8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    #timeline {
+        flex-direction: column;
+        height: auto;
+    }
+
+    #timeline .tl-item,
+    #timeline .tl-item:hover {
+        width: 100% !important;
+        height: 460px;
+    }
+
+    #timeline .tl-year {
+        top: 42%;
+    }
+}

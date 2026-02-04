@@ -36,6 +36,10 @@
     
     <!-- Footer -->
     @include('partials.footer')
+
+    @stack('styles')
+    ...
+    @stack('scripts')
     
     <!-- AOS Animation Script -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

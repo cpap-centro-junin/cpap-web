@@ -27,9 +27,9 @@
                         <i class="fas fa-chevron-down dropdown-icon"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('/#mision') }}">Misión y Visión</a></li>
-                        <li><a href="{{ url('/#historia') }}">Historia</a></li>
-                        <li><a href="{{ url('/#consejo') }}">Consejo Directivo</a></li>
+                        <li>><a href="{{ route('nosotros.mision-vision') }}">Misión y Visión</a></li>
+                        <li><a href="{{ route('nosotros.historia') }}">Historia</a></li>
+                        <li><a href="{{ route('nosotros.consejo-directivo') }}">Consejo Directivo</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
