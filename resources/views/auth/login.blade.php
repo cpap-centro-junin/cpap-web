@@ -42,8 +42,13 @@
 
             <div class="input-group">
                 <label>Contraseña</label>
-                <input type="password" name="password" required>
+
+                <div class="password-wrapper">
+                    <input type="password" name="password" id="password" required>
+                    <span class="toggle-pass" onclick="togglePassword()">👁</span>
+                </div>
             </div>
+
 
             <button class="btn-login" type="submit">Entrar</button>
 
@@ -55,6 +60,18 @@
     </div>
 
 </div>
+<script>
+
+function togglePassword(){
+
+    const pass = document.getElementById('password');
+
+    pass.type = pass.type === "password"
+        ? "text"
+        : "password";
+}
+
+</script>
 
 </body>
 </html>

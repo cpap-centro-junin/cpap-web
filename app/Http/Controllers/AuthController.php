@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            return redirect('/admin/dashboard');
         }
 
         return back()->withErrors([
@@ -31,27 +31,59 @@ class AuthController extends Controller
         ]);
     }
 
-    public function showRegister()
-    {
-        return view('auth.register');
+    public function showRegister(Request $request)
+{
+    $token = $request->token;
+
+    if (!$token) {
+        abort(403, 'No tienes permiso para registrarte.');
     }
+
+    $inv = \App\Models\Invitaciones::where('token', $token)->where('usado', false)->first();
+
+    if (!$inv) {
+        abort(403, 'Token inválido o ya usado.');
+    }
+
+    return view('auth.register', [
+        'token' => $token,
+        'inv' => $inv
+    ]);
+
+}
+
 
     public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
-        ]);
+{
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+        'token' => 'required'
+    ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
+    $inv = \App\Models\Invitaciones::where('token', $request->token)
+        ->where('usado', false)
+        ->first();
 
-        return redirect('/login')->with('success', 'Cuenta creada correctamente');
+    if (!$inv) {
+        return back()->withErrors(['token' => 'Token inválido o ya usado']);
     }
+
+    $user = \App\Models\User::create([
+        'name' => $request->name,
+        'email' => $inv->email,
+        'password' => bcrypt($request->password),
+        'role' => 'directivo'
+    ]);
+
+    $inv->update(['usado' => true]);
+
+    auth()->login($user);
+
+    return redirect('/admin/dashboard');
+}
+
 
     public function logout(Request $request)
     {

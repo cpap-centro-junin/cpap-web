@@ -50,3 +50,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Aquí jalamos las rutas del panel admin
+    Route::prefix('admin')->group(base_path('routes/admin.php'));
+});

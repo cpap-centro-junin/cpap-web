@@ -1,0 +1,274 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    height:100vh;
+}
+
+/* Fondo */
+.background{
+    position:fixed;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+}
+
+.background::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        120deg,
+        rgba(0,0,0,.75),
+        rgba(122,12,12,.65)
+    );
+}
+
+/* CENTRADO REAL */
+.register-wrapper{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+/* CONTENEDOR MEJORADO */
+.register-container{
+
+    width:560px; /* MAS ANCHO */
+    max-height:92vh; /* NUNCA SALE DE PANTALLA */
+
+    overflow-y:auto; /* SCROLL INTERNO SI ES NECESARIO */
+
+    padding:34px;
+
+    border-radius:22px;
+
+    backdrop-filter:blur(18px);
+    background:rgba(255,255,255,.94);
+
+    box-shadow:0 30px 80px rgba(0,0,0,.35);
+
+    animation:fade .7s ease;
+}
+
+/* Scroll bonito */
+.register-container::-webkit-scrollbar{
+    width:6px;
+}
+.register-container::-webkit-scrollbar-thumb{
+    background:#7a0c0c;
+    border-radius:10px;
+}
+
+/* Animación */
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(35px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Logo */
+.logo img{
+    width:85px;
+    display:block;
+    margin:0 auto 10px auto;
+}
+
+/* Título */
+h2{
+    text-align:center;
+    font-size:27px;
+    color:#651010;
+    font-weight:800;
+}
+
+.intro-text{
+    text-align:center;
+    color:#555;
+    margin-bottom:24px;
+}
+
+/* GRID INTELIGENTE */
+.form-row{
+    display:flex;
+    gap:14px;
+}
+
+.form-row .input-group{
+    flex:1;
+}
+
+/* Inputs */
+.input-group{
+    margin-bottom:16px;
+}
+
+.input-group label{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+    display:block;
+}
+
+/* INPUT MODERNO */
+.input-group input{
+    width:100%;
+    padding:12px;
+
+    border-radius:12px;
+    border:1.7px solid #d4d4d4;
+
+    font-size:14px;
+    transition:.25s;
+}
+
+.input-group input:hover{
+    border-color:#aaa;
+}
+
+.input-group input:focus{
+    border-color:#7a0c0c;
+    box-shadow:0 0 0 4px rgba(122,12,12,.15);
+}
+
+input:disabled{
+    background:#f2f2f2;
+}
+
+/* Text helper */
+.input-group small{
+    font-size:11px;
+    color:#777;
+}
+
+/* BOTON */
+.btn-register{
+    width:100%;
+    padding:15px;
+
+    border:none;
+    border-radius:14px;
+
+    background:linear-gradient(135deg,#7a0c0c,#c51d1d);
+
+    color:white;
+    font-size:15px;
+    font-weight:700;
+
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn-register:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px rgba(122,12,12,.4);
+}
+
+/* Error */
+.error-box{
+    background:#fff2f2;
+    border-left:5px solid #b81a1a;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:16px;
+    font-size:13px;
+}
+
+/* Login */
+.login-link{
+    text-align:center;
+    margin-top:18px;
+}
+
+.login-link a{
+    color:#7a0c0c;
+    font-weight:700;
+    text-decoration:none;
+}
+
+.login-link a:hover{
+    text-decoration:underline;
+}
+
+
+/* Password wrapper */
+.password-wrapper{
+    position:relative;
+}
+
+.toggle-pass{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* Barra */
+.strength-bar{
+    width:100%;
+    height:6px;
+    background:#eee;
+    border-radius:10px;
+    margin-top:8px;
+    overflow:hidden;
+}
+
+#strength-fill{
+    height:100%;
+    width:0%;
+    transition:.35s;
+    border-radius:10px;
+}
+
+/* Requisitos */
+.requirements{
+    list-style:none;
+    padding-left:0;
+    margin-top:8px;
+}
+
+.requirements li{
+    font-size:12px;
+    color:#999;
+}
+
+.requirements li.valid{
+    color:green;
+}
+
+/* Botón bloqueado */
+.btn-register:disabled{
+    background:#bbb;
+    cursor:not-allowed;
+    box-shadow:none;
+}
+
+
+/* RESPONSIVE */
+@media(max-width:650px){
+
+    .register-container{
+        width:95%;
+        padding:26px;
+    }
+
+    .form-row{
+        flex-direction:column;
+        gap:0;
+    }
+}
+
+
