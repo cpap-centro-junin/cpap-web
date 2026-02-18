@@ -279,6 +279,252 @@
     font-size: 12px;
 }
 
+/* ============================================================
+   RESUMEN CPAP (dashboard)
+   ============================================================ */
+.cpap-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.cpap-summary-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    border: 1.5px solid var(--border);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cpap-summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+}
+
+.cpap-summary-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.cpap-summary-total .cpap-summary-icon {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.cpap-summary-activos .cpap-summary-icon {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+    color: white;
+}
+
+.cpap-summary-inactivos .cpap-summary-icon {
+    background: linear-gradient(135deg, #9e9e9e 0%, #616161 100%);
+    color: white;
+}
+
+.cpap-summary-hab .cpap-summary-icon {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    color: var(--dark);
+}
+
+.cpap-summary-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cpap-summary-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--medium-gray);
+}
+
+.cpap-summary-num {
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.1;
+}
+
+.cpap-summary-sub {
+    font-size: 12px;
+    color: var(--medium-gray);
+}
+
+/* ============================================================
+   ACTIVIDAD RECIENTE - PANEL GRID
+   ============================================================ */
+.dashboard-activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 22px;
+}
+
+.activity-panel {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    border: 1.5px solid var(--border);
+}
+
+.activity-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(139,21,56,0.04) 0%, rgba(201,169,97,0.04) 100%);
+    border-bottom: 1.5px solid var(--border);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.activity-panel-header i { margin-right: 6px; }
+
+.activity-panel-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--medium-gray);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s;
+}
+
+.activity-panel-link:hover {
+    color: var(--primary);
+}
+
+.activity-panel .activity-cards {
+    padding: 12px 16px;
+    gap: 8px;
+}
+
+/* Avatar en activity card */
+.activity-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.activity-initials {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.activity-panel .activity-icon {
+    background: none;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    padding: 0;
+    font-size: 18px;
+    color: var(--primary);
+}
+
+/* Badges en actividad */
+.activity-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.activity-badge--activo {
+    background: rgba(46,125,50,0.1);
+    color: #2e7d32;
+    border: 1px solid rgba(46,125,50,0.2);
+}
+
+.activity-badge--inactivo {
+    background: rgba(0,0,0,0.06);
+    color: var(--medium-gray);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Empty state en panel de actividad */
+.activity-empty {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--medium-gray);
+}
+
+.activity-empty i {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 10px;
+    opacity: 0.3;
+}
+
+.activity-empty p {
+    font-size: 13px;
+    margin: 0;
+}
+
+/* ============================================================
+   RESPONSIVE DASHBOARD
+   ============================================================ */
+@media (max-width: 768px) {
+    .cpap-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-activity-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions {
+        bottom: 16px;
+        right: 16px;
+        gap: 8px;
+    }
+
+    .action-btn span {
+        display: none;
+    }
+
+    .action-btn {
+        padding: 14px;
+        border-radius: 50%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cpap-summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Quick Actions flotantes */
 .quick-actions {
     position: fixed;

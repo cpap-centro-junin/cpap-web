@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\File;
 class ColegiadoController extends Controller
 {
     /**
-     * Listar todos los colegiados con paginación
+     * Listar todos los colegiados con paginación y ordenamiento
      */
     public function index(Request $request)
     {
@@ -28,9 +28,25 @@ class ColegiadoController extends Controller
             $query->where('estado', $request->estado);
         }
 
-        $colegiados = $query->orderBy('created_at', 'desc')->paginate(15);
+        // Ordenamiento - Solo permitir columnas específicas por seguridad
+        $sortableColumns = ['codigo_cpap', 'dni', 'nombres', 'apellidos', 'especialidad', 'estado', 'fecha_colegiatura', 'created_at'];
+        $sort = $request->get('sort', 'created_at');
+        $order = $request->get('order', 'desc');
 
-        return view('admin.colegiados.index', compact('colegiados'));
+        // Validar que sort sea una columna permitida
+        if (!in_array($sort, $sortableColumns)) {
+            $sort = 'created_at';
+        }
+
+        // Validar dirección (asc o desc)
+        if (!in_array(strtolower($order), ['asc', 'desc'])) {
+            $order = 'desc';
+        }
+
+        $colegiados = $query->orderBy($sort, $order)->paginate(10);
+
+        // Pasar variables de ordenamiento a la vista
+        return view('admin.colegiados.index', compact('colegiados', 'sort', 'order'));
     }
 
     /**
@@ -186,6 +202,23 @@ class ColegiadoController extends Controller
 
         return redirect()->route('admin.colegiados.index')
             ->with('success', 'Colegiado eliminado exitosamente.');
+    }
+
+    /**
+     * Descargar CV del colegiado (inline PDF)
+     */
+    public function descargarCV(Colegiado $colegiado)
+    {
+        if (!$colegiado->cv_path || !Storage::exists($colegiado->cv_path)) {
+            abort(404, 'CV no disponible');
+        }
+
+        $nombre = 'CV_' . $colegiado->codigo_cpap . '.pdf';
+
+        return response()->file(Storage::path($colegiado->cv_path), [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $nombre . '"',
+        ]);
     }
 
     /**

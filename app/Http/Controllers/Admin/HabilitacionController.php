@@ -182,6 +182,36 @@ class HabilitacionController extends Controller
     }
 
     /**
+     * Eliminar permanentemente una habilitación (PDF + QR + BD)
+     *
+     * Si era la única habilitación activa del colegiado,
+     * el colegiado pasa a INACTIVO automáticamente.
+     */
+    public function destroy(Habilitacion $habilitacion)
+    {
+        $colegiado = $habilitacion->colegiado;
+
+        // Eliminar PDF del storage
+        if (Storage::exists($habilitacion->documento_path)) {
+            Storage::delete($habilitacion->documento_path);
+        }
+
+        // Eliminar QR de public
+        $this->qrService->eliminarQR($habilitacion->qr_path);
+
+        // Eliminar registro de BD
+        $habilitacion->delete();
+
+        // Si el colegiado ya no tiene habilitaciones activas → pasa a INACTIVO
+        if ($colegiado->habilitaciones()->where('activo', true)->count() === 0) {
+            $colegiado->update(['estado' => 'inactivo']);
+        }
+
+        return redirect()->route('admin.colegiados.show', $colegiado)
+            ->with('success', 'Documento de habilitación eliminado permanentemente.');
+    }
+
+    /**
      * Eliminar completamente la habilitación anterior de un colegiado (archivos + BD)
      */
     private function eliminarHabilitacionAnterior(Colegiado $colegiado): void

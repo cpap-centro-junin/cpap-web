@@ -13,9 +13,39 @@
             <i class="fas fa-id-card"></i> Colegiados
         </a>
         <span>/</span>
-        <span>{{ $colegiado->codigo_cpap }}</span>
+        <a href="{{ route('admin.colegiados.show', $colegiado) }}">{{ $colegiado->codigo_cpap }}</a>
         <span>/</span>
         <span>Editar</span>
+    </div>
+
+    {{-- Banner contextual del colegiado siendo editado --}}
+    <div class="edit-context-banner">
+        <div class="edit-context-banner__avatar">
+            @if($colegiado->foto)
+                <img src="{{ asset($colegiado->foto) }}" alt="{{ $colegiado->nombre_completo }}">
+            @else
+                <div class="edit-context-banner__initials">
+                    {{ strtoupper(substr($colegiado->nombres, 0, 1) . substr($colegiado->apellidos, 0, 1)) }}
+                </div>
+            @endif
+        </div>
+        <div class="edit-context-banner__info">
+            <div class="edit-context-banner__label">Editando colegiado</div>
+            <h2>{{ $colegiado->nombre_completo }}</h2>
+            <div class="edit-context-banner__meta">
+                <span><i class="fas fa-id-badge"></i> {{ $colegiado->codigo_cpap }}</span>
+                <span><i class="fas fa-id-card"></i> DNI: {{ $colegiado->dni }}</span>
+                @if($colegiado->especialidad)
+                    <span><i class="fas fa-graduation-cap"></i> {{ $colegiado->especialidad }}</span>
+                @endif
+            </div>
+        </div>
+        <div class="edit-context-banner__actions">
+            <a href="{{ route('admin.colegiados.show', $colegiado) }}" class="btn btn-sm btn-outline-light">
+                <i class="fas fa-eye"></i>
+                Ver detalle
+            </a>
+        </div>
     </div>
 
     {{-- Formulario --}}
