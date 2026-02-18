@@ -12,5 +12,8 @@
 @import './base/typography.css';
 @import './base/animations.css';
 
+/* ---- COMPONENTES GLOBALES (compartido con el sitio público) ---- */
+@import './components/buttons.css';
+
 /* ---- MÓDULOS DEL PANEL ADMIN ---- */
 @import './admin/index.css';

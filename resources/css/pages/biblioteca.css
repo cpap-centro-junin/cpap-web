@@ -69,13 +69,13 @@
 }
 
 .search-box:focus-within {
-    border-color: #667eea;
+    border-color: #ffffff;
     box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15);
     transform: translateY(-2px);
 }
 
 .search-box i {
-    color: #667eea;
+    color: #f5f5f5;
     font-size: 1.4rem;
 }
 
@@ -133,7 +133,7 @@
 }
 
 .filter-chip:hover {
-    background: linear-gradient(135deg, #ecec26 0%, #e5ff00 100%);
+    background: linear-gradient(135deg, #f8dea2 0%, #edc954 100%);
     color: white;
     border-color: #667eea;
     transform: translateY(-2px);
@@ -141,7 +141,7 @@
 }
 
 .filter-chip.active {
-    background: linear-gradient(135deg, #ecec26 0%, #dbf016 100%);
+    background: linear-gradient(135deg, #f8dea2 0%, #edc954 100%);
     color: white;
     border-color: #667eea;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);

@@ -15,6 +15,9 @@
 
     @vite(['resources/css/admin.css'])
     @stack('styles')
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body class="admin-layout">
@@ -177,6 +180,38 @@ window.addEventListener('resize', function() {
     if (window.innerWidth > 900) closeMobileSidebar();
 });
 </script>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+@if(session('success'))
+<script>
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'success',
+    title: @json(session('success')),
+    showConfirmButton: false,
+    timer: 4000,
+    timerProgressBar: true,
+    customClass: { popup: 'swal-toast-cpap' }
+});
+</script>
+@endif
+
+@if(session('error'))
+<script>
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'error',
+    title: @json(session('error')),
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+});
+</script>
+@endif
 
 @stack('scripts')
 </body>

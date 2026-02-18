@@ -57,7 +57,7 @@ a {
 }
 
 a:hover {
-    color: var(--primary);
+    color: #cfc235;
 }
 
 /* Listas */
@@ -98,7 +98,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 input[type="number"] {
-    -moz-appearance: textfield;
+    appearance: textfield;        /* estándar */
+    -moz-appearance: textfield;   /* Firefox */
 }
 
 /* Tabla */

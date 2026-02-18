@@ -1,0 +1,126 @@
+/* ============================================================
+   ADMIN - MÓDULO NOTICIAS
+   resources/css/admin/noticias.css
+
+   Estilos específicos para:
+   - admin/noticias/index.blade.php
+   - admin/noticias/create.blade.php
+   - admin/noticias/edit.blade.php
+
+   Nota: Los estilos base (admin-container, page-header,
+   table-card, form-card, breadcrumb, badges, etc.)
+   ya están definidos en colegiados.css y se reutilizan aquí.
+   ============================================================ */
+
+/* ============================================================
+   TABLA - MINIATURAS DE NOTICIAS
+   ============================================================ */
+.noticia-thumb {
+    width: 60px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    display: block;
+}
+
+.noticia-thumb-placeholder {
+    width: 60px;
+    height: 42px;
+    border-radius: 8px;
+    background: var(--light-gray);
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #d1d5db;
+}
+
+.noticia-titulo {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    display: block;
+    margin-bottom: 3px;
+}
+
+.noticia-excerpt {
+    font-size: 12px;
+    color: var(--medium-gray);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ============================================================
+   UPLOAD DE IMAGEN (create / edit)
+   ============================================================ */
+.noticia-upload-container {
+    position: relative;
+}
+
+.noticia-upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    border: 3px dashed var(--border);
+    border-radius: 14px;
+    background: var(--light-gray);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    user-select: none;
+    min-height: 140px;
+    overflow: hidden;
+}
+
+.noticia-upload-box:hover {
+    border-color: var(--primary);
+    background: rgba(139,21,56,0.02);
+}
+
+.noticia-upload-box.drag-over {
+    border-color: var(--primary);
+    background: rgba(139,21,56,0.05);
+}
+
+.noticia-upload-icon {
+    font-size: 42px;
+    color: var(--primary);
+    opacity: 0.7;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.noticia-upload-hint {
+    font-size: 14px;
+    color: var(--medium-gray);
+    margin: 0 0 6px;
+}
+
+.noticia-upload-specs {
+    font-size: 12px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin: 0;
+}
+
+.noticia-image-preview {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .noticia-thumb,
+    .noticia-thumb-placeholder {
+        width: 48px;
+        height: 34px;
+    }
+}

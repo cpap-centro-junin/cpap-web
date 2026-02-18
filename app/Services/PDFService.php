@@ -89,14 +89,19 @@ class PDFService
         string $codigoVerificacion,
         string $urlVerificacion
     ): void {
-        // Configuración del QR
-        $qrSize = 35; // Tamaño en mm
-        $margenDerecho = 10;
-        $margenSuperior = 10;
+        // Desactivar salto de página automático para evitar páginas extra
+        // cuando el texto del código/URL queda cerca del borde inferior
+        $pdf->SetAutoPageBreak(false);
 
-        // Posición del QR (esquina superior derecha)
-        $qrX = $size['width'] - $qrSize - $margenDerecho;
-        $qrY = $margenSuperior;
+        // Configuración del QR
+        $qrSize = 35;  // Tamaño en mm
+        $margenDerecho  = 10;
+        $margenInferior = 15;
+        $espacioTexto   = 42; // mm para código + URL + watermark debajo del QR
+
+        // Posición del QR (esquina inferior derecha, suficientemente arriba)
+        $qrX = $size['width']  - $qrSize - $margenDerecho;
+        $qrY = $size['height'] - $qrSize - $espacioTexto - $margenInferior;
 
         // Insertar imagen QR
         $qrFullPath = public_path($qrImagePath);
@@ -104,21 +109,23 @@ class PDFService
             $pdf->Image($qrFullPath, $qrX, $qrY, $qrSize, $qrSize, 'PNG');
         }
 
-        // Agregar código de verificación debajo del QR
+        // Código de verificación (debajo del QR, sin solaparse con la URL)
+        // El UUID ocupa ~3 líneas en 35mm → ~9mm de alto a 7pt
         $pdf->SetFont('Arial', 'B', 7);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetXY($qrX, $qrY + $qrSize + 2);
         $pdf->MultiCell($qrSize, 3, "Codigo:\n{$codigoVerificacion}", 0, 'C');
 
-        // Agregar URL en texto pequeño
+        // URL de verificación (separada del bloque de código)
+        // Se ubica con offset fijo para no depender de cuántas líneas ocupó el código
         $pdf->SetFont('Arial', '', 5);
-        $pdf->SetXY($qrX, $qrY + $qrSize + 10);
+        $pdf->SetXY($qrX, $qrY + $qrSize + 20);
         $pdf->MultiCell($qrSize, 2, $urlVerificacion, 0, 'C');
 
-        // Agregar marca de agua "CPAP - Documento Verificable"
+        // Marca de agua "Documento Verificable"
         $pdf->SetFont('Arial', 'I', 8);
         $pdf->SetTextColor(139, 21, 56); // Color vino CPAP
-        $pdf->SetXY($qrX - 10, $qrY + $qrSize + 16);
+        $pdf->SetXY($qrX - 10, $qrY + $qrSize + 32);
         $pdf->MultiCell($qrSize + 20, 3, "Documento Verificable", 0, 'C');
     }
 }

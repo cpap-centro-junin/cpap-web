@@ -75,6 +75,10 @@ Route::resource('colegiados', ColegiadoController::class)->names([
 Route::patch('/colegiados/{colegiado}/toggle-estado', [ColegiadoController::class, 'toggleEstado'])
     ->name('admin.colegiados.toggle-estado');
 
+// Descargar CV de un colegiado
+Route::get('/colegiados/{colegiado}/descargar-cv', [ColegiadoController::class, 'descargarCV'])
+    ->name('admin.colegiados.descargar-cv');
+
 // ============================================
 // RUTAS DE HABILITACIONES
 // ============================================

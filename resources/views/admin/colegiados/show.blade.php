@@ -11,19 +11,22 @@
     @if(session('success'))
         <div class="alert alert-success">
             <i class="fas fa-check-circle"></i>
-            {{ session('success') }}
+            <div class="alert-body">
+                {{ session('success') }}
 
-            @if(session('codigo_generado'))
-                <div class="alert-code-block">
-                    <strong>Código de verificación generado:</strong>
-                    <code>{{ session('codigo_generado') }}</code>
-                    <br>
-                    <strong>URL de verificación:</strong><br>
-                    <a href="{{ session('url_verificacion') }}" target="_blank">
-                        {{ session('url_verificacion') }}
-                    </a>
-                </div>
-            @endif
+                @if(session('codigo_generado'))
+                    <div class="alert-code-block">
+                        <div class="alert-code-row">
+                            <span class="alert-code-label">Código de verificación:</span>
+                            <code>{{ session('codigo_generado') }}</code>
+                        </div>
+                        <div class="alert-code-row">
+                            <span class="alert-code-label">URL de verificación:</span>
+                            <a href="{{ session('url_verificacion') }}" target="_blank">{{ session('url_verificacion') }}</a>
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
     @endif
 
@@ -42,13 +45,13 @@
             <h1 class="page-title">{{ $colegiado->nombre_completo }}</h1>
             <p class="page-subtitle">{{ $colegiado->codigo_cpap }} &mdash; {{ $colegiado->dni }}</p>
         </div>
-        <div class="d-flex gap-3">
-            <a href="{{ route('admin.colegiados.edit', $colegiado) }}" class="btn btn-warning">
-                <i class="fas fa-edit"></i>
-                Editar
+        <div class="action-header-buttons">
+            <a href="{{ route('admin.colegiados.edit', $colegiado) }}" class="btn btn-lg btn-secondary-outline">
+                <i class="fas fa-pencil-alt"></i>
+                Editar Información
             </a>
-            <a href="{{ route('admin.habilitaciones.create', $colegiado) }}" class="btn btn-primary">
-                <i class="fas fa-file-upload"></i>
+            <a href="{{ route('admin.habilitaciones.create', $colegiado) }}" class="btn btn-lg btn-primary">
+                <i class="fas fa-certificate"></i>
                 Subir Habilitación
             </a>
         </div>
@@ -160,7 +163,7 @@
                     <div class="info-group">
                         <label>Curriculum Vitae</label>
                         <p>
-                            <a href="{{ Storage::url($colegiado->cv_path) }}" target="_blank" class="btn-link">
+                            <a href="{{ route('admin.colegiados.descargar-cv', $colegiado) }}" target="_blank" rel="noopener" class="btn-link">
                                 <i class="fas fa-file-pdf text-danger"></i>
                                 Descargar CV
                             </a>
@@ -203,7 +206,7 @@
                             <div class="habilitacion-code">
                                 <strong>Código de Verificación:</strong>
                                 <code>{{ $habilitacion->codigo_verificacion }}</code>
-                                <button onclick="navigator.clipboard.writeText('{{ $habilitacion->codigo_verificacion }}')" class="btn-copy" title="Copiar código">
+                                <button onclick="copiarTexto(this, '{{ $habilitacion->codigo_verificacion }}')" class="btn-copy" title="Copiar código">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
@@ -211,7 +214,7 @@
                             <div class="habilitacion-url">
                                 <strong>URL de Verificación:</strong>
                                 <a href="{{ $habilitacion->url_corta }}" target="_blank">{{ $habilitacion->url_corta }}</a>
-                                <button onclick="navigator.clipboard.writeText('{{ $habilitacion->url_corta }}')" class="btn-copy" title="Copiar URL">
+                                <button onclick="copiarTexto(this, '{{ $habilitacion->url_corta }}')" class="btn-copy" title="Copiar URL">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
@@ -235,10 +238,11 @@
                                 </a>
 
                                 @if($habilitacion->activo)
-                                    <form action="{{ route('admin.habilitaciones.revocar', $habilitacion) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('admin.habilitaciones.revocar', $habilitacion) }}" method="POST" class="d-inline" id="form-revocar-{{ $habilitacion->id }}">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('¿Revocar este documento?')">
+                                        <button type="button" class="btn btn-sm btn-warning"
+                                                onclick="confirmRevocar('form-revocar-{{ $habilitacion->id }}')">
                                             <i class="fas fa-ban"></i>
                                             Revocar
                                         </button>
@@ -254,10 +258,11 @@
                                     </form>
                                 @endif
 
-                                <form action="{{ route('admin.habilitaciones.destroy', $habilitacion) }}" method="POST" class="d-inline">
+                                <form action="{{ route('admin.habilitaciones.destroy', $habilitacion) }}" method="POST" class="d-inline" id="form-del-hab-{{ $habilitacion->id }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar permanentemente?')">
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                            onclick="confirmDeleteHabilitacion('form-del-hab-{{ $habilitacion->id }}')">
                                         <i class="fas fa-trash"></i>
                                         Eliminar
                                     </button>
@@ -282,3 +287,55 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function copiarTexto(btn, texto) {
+    navigator.clipboard.writeText(texto).then(() => {
+        const icon = btn.querySelector('i');
+        icon.className = 'fas fa-check';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            icon.className = 'fas fa-copy';
+            btn.classList.remove('copied');
+        }, 1800);
+    });
+}
+
+function confirmRevocar(formId) {
+    Swal.fire({
+        title: '¿Revocar habilitación?',
+        html: 'El documento quedará marcado como <strong>REVOCADO</strong> y el colegiado no aparecerá como habilitado en verificaciones públicas.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f57c00',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-ban"></i> Sí, revocar',
+        cancelButtonText: 'Cancelar',
+        focusCancel: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+
+function confirmDeleteHabilitacion(formId) {
+    Swal.fire({
+        title: '¿Eliminar documento?',
+        html: 'Se eliminará permanentemente el documento PDF, el código QR y el código de verificación. Esta acción <strong>no se puede deshacer</strong>.',
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        focusCancel: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+</script>
+@endpush

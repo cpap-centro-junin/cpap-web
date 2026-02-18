@@ -7,14 +7,6 @@
 
 <div class="admin-container">
 
-    {{-- Mensajes de éxito --}}
-    @if(session('success'))
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            {{ session('success') }}
-        </div>
-    @endif
-
     {{-- Header con botón crear --}}
     <div class="page-header">
         <div>
@@ -51,7 +43,7 @@
                 Buscar
             </button>
             @if(request()->anyFilled(['buscar', 'estado']))
-                <a href="{{ route('admin.colegiados.index') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.colegiados.index', ['sort' => $sort, 'order' => $order]) }}" class="btn btn-secondary">
                     <i class="fas fa-times"></i>
                     Limpiar
                 </a>
@@ -66,12 +58,42 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Código CPAP</th>
-                            <th>DNI</th>
-                            <th>Nombre Completo</th>
-                            <th>Especialidad</th>
-                            <th>Estado</th>
-                            <th>Fecha Colegiatura</th>
+                            <th>
+                                <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'codigo_cpap', 'order' => $sort === 'codigo_cpap' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Código CPAP
+                                    <i class="fas fa-sort{{ $sort === 'codigo_cpap' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'dni', 'order' => $sort === 'dni' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    DNI
+                                    <i class="fas fa-sort{{ $sort === 'dni' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'nombres', 'order' => $sort === 'nombres' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Nombre Completo
+                                    <i class="fas fa-sort{{ $sort === 'nombres' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'especialidad', 'order' => $sort === 'especialidad' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Especialidad
+                                    <i class="fas fa-sort{{ $sort === 'especialidad' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'estado', 'order' => $sort === 'estado' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Estado
+                                    <i class="fas fa-sort{{ $sort === 'estado' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'fecha_colegiatura', 'order' => $sort === 'fecha_colegiatura' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Fecha Colegiatura
+                                    <i class="fas fa-sort{{ $sort === 'fecha_colegiatura' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
+                                </a>
+                            </th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -120,14 +142,17 @@
                                         <form action="{{ route('admin.colegiados.toggle-estado', $colegiado) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn-icon {{ $colegiado->estado === 'activo' ? 'btn-secondary' : 'btn-success' }}" title="Cambiar estado">
-                                                <i class="fas fa-toggle-{{ $colegiado->estado === 'activo' ? 'off' : 'on' }}"></i>
+                                            <button type="submit" class="btn-icon {{ $colegiado->estado === 'activo' ? 'btn-success' : 'btn-secondary' }}" title="Cambiar estado">
+                                                <i class="fas fa-toggle-{{ $colegiado->estado === 'activo' ? 'on' : 'off' }}"></i>
                                             </button>
                                         </form>
-                                        <form action="{{ route('admin.colegiados.destroy', $colegiado) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar este colegiado?')">
+                                        <form action="{{ route('admin.colegiados.destroy', $colegiado) }}" method="POST" class="d-inline" id="form-delete-{{ $colegiado->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn-icon btn-danger" title="Eliminar">
+                                            <button type="button"
+                                                    class="btn-icon btn-danger"
+                                                    title="Eliminar"
+                                                    onclick="confirmDeleteColegiado('{{ addslashes($colegiado->nombre_completo) }}', 'form-delete-{{ $colegiado->id }}')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -140,9 +165,7 @@
             </div>
 
             {{-- Paginación --}}
-            <div class="pagination-wrapper">
-                {{ $colegiados->links() }}
-            </div>
+            {{ $colegiados->render('pagination.custom') }}
         @else
             <div class="empty-state">
                 <i class="fas fa-users"></i>
@@ -161,3 +184,28 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function confirmDeleteColegiado(nombre, formId) {
+    Swal.fire({
+        title: '¿Eliminar colegiado?',
+        html: `Esta acción eliminará permanentemente a <strong>${nombre}</strong> junto con todos sus documentos de habilitación. Esta acción <strong>no se puede deshacer</strong>.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        focusCancel: true,
+        customClass: {
+            popup: 'swal-admin-popup',
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+</script>
+@endpush
