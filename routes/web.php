@@ -8,7 +8,8 @@ use App\Http\Controllers\VerificacionController;
 use App\Http\Controllers\ColegiadoPublicoController;
 use App\Http\Controllers\Admin\NoticiaController as AdminNoticiaController;
 use App\Http\Controllers\Admin\EventoController  as AdminEventoController;
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 // ============================================
 // PÁGINA PRINCIPAL
@@ -81,23 +82,40 @@ Route::get('/verificar/{codigo}/descargar', [VerificacionController::class, 'des
 // ============================================
 // AUTENTICACIÓN
 // ============================================
+
 Route::middleware('guest')->group(function () {
+
     Route::get('/login', [AuthController::class, 'showLogin']);
     Route::post('/login', [AuthController::class, 'login']);
+
     Route::get('/register', [AuthController::class, 'showRegister']);
     Route::post('/register', [AuthController::class, 'register']);
+
+    Route::get('/forgot-password', [AuthController::class, 'showForgot'])
+        ->name('forgot-password');
+
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])
+        ->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Rutas del panel admin (admin.php)
     Route::prefix('admin')->group(base_path('routes/admin.php'));
 });
+
+
 
 // ============================================
 // ADMIN: NOTICIAS Y EVENTOS (CRUD)

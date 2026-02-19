@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro - CPAP</title>
+    <title>Registro - Colegio de Antropólogos del Perú</title>
 
     @vite(['resources/css/app.css'])
 
@@ -12,21 +12,18 @@
         }
     </style>
 </head>
-
 <body>
 
 <div class="background"></div>
 
 <div class="register-wrapper">
 
-    <div class="register-container">
+    <div class="register-card">
 
-        <div class="logo">
+        <div class="register-header">
             <img src="{{ asset('images/logos/cpap-logo.jpg') }}">
+            <h2>Registro Institucional</h2>
         </div>
-
-        <h2>Crear Cuenta</h2>
-        <p class="intro-text">Colegio de Antropólogos del Perú – Región Centro</p>
 
         @if ($errors->any())
             <div class="error-box">
@@ -38,47 +35,36 @@
 
         <form action="/register" method="POST">
             @csrf
-
             <input type="hidden" name="token" value="{{ $token }}">
 
             <div class="form-row">
-
                 <div class="input-group">
-                    <label>Nombre completo</label>
-                    <input type="text" name="name" required>
+                    <input type="text" name="name" placeholder="Nombre completo" required>
                 </div>
 
                 <div class="input-group">
-                    <label>Correo electrónico</label>
-
                     <input type="email" value="{{ $inv->email ?? '' }}" disabled>
                     <input type="hidden" name="email" value="{{ $inv->email ?? '' }}">
-
-                    <small>Este correo proviene de la invitación</small>
                 </div>
-
             </div>
 
-
-
+ 
             <div class="form-row">
 
-                <div class="input-group">
-                    <label>Contraseña</label>
+                <div class="input-group password-group">
+                    <input type="password" id="password"
+                        name="password"
+                        placeholder="Contraseña"
+                        required>
 
-                    <div class="password-wrapper">
-                        <input type="password" name="password" id="password" required>
-                        <span class="toggle-pass" onclick="togglePassword()">👁</span>
-                    </div>
+                    <span class="toggle-password" onclick="togglePassword('password')">👁</span>
 
-                    <!-- Barra de seguridad -->
                     <div class="strength-bar">
                         <div id="strength-fill"></div>
                     </div>
 
                     <small id="strength-text"></small>
 
-                    <!-- Requisitos -->
                     <ul class="requirements">
                         <li id="req-length">Mínimo 8 caracteres</li>
                         <li id="req-upper">Una mayúscula</li>
@@ -88,30 +74,30 @@
                     </ul>
                 </div>
 
-                <div class="input-group">
-                    <label>Repetir contraseña</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" required>
+                <div class="input-group password-group">
+                    <input type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        placeholder="Repetir contraseña"
+                        required>
+
+                    <span class="toggle-password" onclick="togglePassword('password_confirmation')">👁</span>
+
                     <small id="match-msg"></small>
                 </div>
 
             </div>
 
-
-
             <button class="btn-register" id="registerBtn" disabled>
-                Crear cuenta
+                Crear Cuenta
             </button>
-
-
-            <div class="login-link">
-                <a href="/login">¿Ya tienes cuenta? Inicia sesión</a>
-            </div>
 
         </form>
 
     </div>
 
 </div>
+
 
 <script>
 

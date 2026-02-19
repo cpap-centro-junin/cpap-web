@@ -2,10 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Colegio de Antropólogos</title>
+    <title>Acceso - Colegio de Antropólogos del Perú</title>
 
-    {{-- Estilos principales --}}
-    @vite(['resources/css/app.css', 'resources/js/modules/login.js'])
+    @vite(['resources/css/app.css'])
 
     <style>
         .background {
@@ -13,65 +12,64 @@
         }
     </style>
 </head>
-
 <body>
 
 <div class="background"></div>
 
 <div class="login-wrapper">
 
-    <div class="login-container">
+    <div class="login-card">
 
-        <div class="logo">
-            <img src="{{ asset('images/logos/cpap-logo.jpg') }}" alt="Logo Colegio de Antropólogos">
+        <div class="login-header">
+            <img src="{{ asset('images/logos/cpap-logo.jpg') }}" 
+                 alt="Colegio de Antropólogos del Perú">
+            <h2>Acceso al Administrador</h2>
         </div>
 
-        <h2>Acceso al Administrador</h2>
-        <p class="intro-text">Inicia sesión para gestionar el sistema institucional del Colegio de Antropólogos del Perú – Región Centro.</p>
-
         @if ($errors->any())
-            <p class="error">{{ $errors->first() }}</p>
+            <div class="error-box">
+                {{ $errors->first() }}
+            </div>
         @endif
 
         <form action="/login" method="POST">
             @csrf
 
             <div class="input-group">
-                <label>Email</label>
-                <input type="email" name="email" required>
+                <input type="email"
+                       name="email"
+                       placeholder="Correo institucional"
+                       required>
             </div>
 
-            <div class="input-group">
-                <label>Contraseña</label>
-
-                <div class="password-wrapper">
-                    <input type="password" name="password" id="password" required>
-                    <span class="toggle-pass" onclick="togglePassword()">👁</span>
-                </div>
+            <div class="input-group password-group">
+                <input type="password"
+                       name="password"
+                       id="password"
+                       placeholder="Contraseña"
+                       required>
+                <span class="toggle-password" onclick="togglePassword()">👁</span>
             </div>
 
+            <div class="extra-options">
+                <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+            </div>
 
-            <button class="btn-login" type="submit">Entrar</button>
+            <button type="submit" class="btn-login">
+                Iniciar Sesión
+            </button>
 
-            <p class="register-link">
-                ¿No tienes cuenta? <a href="/register">Crear cuenta</a>
-            </p>
         </form>
 
     </div>
 
 </div>
+
 <script>
-
 function togglePassword(){
-
     const pass = document.getElementById('password');
-
-    pass.type = pass.type === "password"
-        ? "text"
-        : "password";
+    pass.type = pass.type === "password" ? "text" : "password";
 }
-
 </script>
 
 </body>
