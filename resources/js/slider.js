@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const indicatorsContainer = document.getElementById('sliderIndicators');
     
     if (!slider || slides.length === 0) {
-        console.warn('⚠️ Slider no encontrado o sin slides');
+        
         return;
     }
 

@@ -131,3 +131,70 @@
 .logout-btn:active {
     transform: translateY(0);
 }
+
+/* ===========================
+   TOPBAR MENSAJES PREMIUM
+   =========================== */
+
+.topbar-messages{
+    position: relative;
+    margin-right: 24px;
+}
+
+/* Contenedor circular */
+.messages-icon{
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(123,30,58,0.08);
+    color: var(--primary);
+    font-size: 18px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+/* Hover elegante */
+.messages-icon:hover{
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(123,30,58,0.4);
+}
+
+/* Badge moderno */
+.topbar-badge{
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: linear-gradient(135deg, #ff4d4d, #c1121f);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 7px;
+    border-radius: 50%;
+    min-width: 20px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    animation: smoothPulse 2s infinite;
+}
+
+/* Animación elegante */
+@keyframes smoothPulse{
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,0,0,0.5);
+    }
+    50% {
+        transform: scale(1.12);
+        box-shadow: 0 0 0 6px rgba(255,0,0,0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255,0,0,0);
+    }
+}

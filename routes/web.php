@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\NoticiaController as AdminNoticiaController;
 use App\Http\Controllers\Admin\EventoController  as AdminEventoController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ContactoController;
+use App\Http\Controllers\ColegiaturaController;
+
 
 // ============================================
 // PÁGINA PRINCIPAL
@@ -45,6 +48,14 @@ Route::get('/nosotros/consejo-directivo', function () {
     $consejo = \App\Models\Directivo::where('activo', true)->orderBy('orden')->orderBy('id')->get();
     return view('nosotros.consejo-directivo', compact('consejo'));
 })->name('nosotros.consejo-directivo');
+
+// CONTACTO PUBLICO
+Route::get('/contacto', [ContactoController::class, 'index'])
+    ->name('contacto.index');
+
+Route::post('/contacto', [ContactoController::class, 'send'])
+    ->name('contact.send');
+
 
 // ============================================
 // ACTUALIDAD: NOTICIAS Y EVENTOS (PÚBLICO)
@@ -114,6 +125,11 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->group(base_path('routes/admin.php'));
 });
+
+//COLEGIATURA
+
+Route::get('/colegiatura', [ColegiaturaController::class, 'index'])
+    ->name('colegiatura.index');
 
 
 

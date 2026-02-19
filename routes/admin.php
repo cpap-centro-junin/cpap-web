@@ -125,3 +125,20 @@ Route::resource('anuncios', \App\Http\Controllers\Admin\PopupAnuncioController::
 
 Route::patch('/anuncios/{anuncio}/toggle', [\App\Http\Controllers\Admin\PopupAnuncioController::class, 'toggleActivo'])
     ->name('admin.anuncios.toggle');
+
+    use App\Http\Controllers\Admin\ContactMessageController;
+
+//MENSAJES
+
+Route::get('/mensajes', [ContactMessageController::class, 'index'])
+    ->name('admin.mensajes.index');
+
+Route::get('/mensajes/{message}', [ContactMessageController::class, 'show'])
+    ->name('admin.mensajes.show');
+
+Route::post('/mensajes/{message}/responder', [ContactMessageController::class, 'responder'])
+    ->name('admin.mensajes.responder');
+
+Route::delete('/mensajes/{message}', 
+    [ContactMessageController::class, 'destroy'])
+    ->name('admin.mensajes.destroy');

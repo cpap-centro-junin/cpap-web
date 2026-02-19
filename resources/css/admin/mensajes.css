@@ -1,0 +1,322 @@
+.messages-card{
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+.messages-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.messages-header h3{
+    font-weight:700;
+    margin:0;
+}
+
+.messages-count{
+    font-size:14px;
+    color:#666;
+}
+
+.messages-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+}
+
+.messages-table thead{
+    background:#f8f9fb;
+}
+
+.messages-table th{
+    text-align:left;
+    padding:14px;
+    font-weight:600;
+    color:#555;
+}
+
+.messages-table td{
+    padding:14px;
+    border-bottom:1px solid #f0f0f0;
+}
+
+.messages-table tr:hover{
+    background:#fafafa;
+}
+
+.row-new{
+    background:rgba(123,30,58,0.04);
+}
+
+.badge-new{
+    background:#e63946;
+    color:white;
+    padding:4px 8px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.badge-read{
+    background:#d1e7dd;
+    color:#0f5132;
+    padding:4px 8px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+}
+
+.btn-action{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:8px;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    transition:all 0.2s ease;
+}
+
+.btn-action.view{
+    background:#7b1e3a;
+    color:white;
+}
+
+.btn-action.view:hover{
+    background:#4a0f23;
+}
+
+.btn-action.delete{
+    background:#f8d7da;
+    color:#842029;
+}
+
+.btn-action.delete:hover{
+    background:#f5c2c7;
+}
+
+.empty-row{
+    text-align:center;
+    padding:30px;
+    color:#777;
+}
+
+.pagination-wrapper{
+    margin-top:20px;
+}
+
+/* ===============================
+   MENSAJE DETALLE PREMIUM
+   =============================== */
+
+.message-wrapper{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+/* Header */
+.message-header-card{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.message-avatar{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:white;
+    font-weight:700;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.message-meta h3{
+    margin:0 0 8px 0;
+    font-weight:700;
+}
+
+.meta-info{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    font-size:14px;
+    color:#666;
+}
+
+.meta-info i{
+    margin-right:6px;
+    color:var(--primary);
+}
+
+.message-status{
+    margin-left:auto;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.message-status.unread{
+    background:#ffe5e5;
+    color:#d00000;
+}
+
+.message-status.read{
+    background:#e6f7ee;
+    color:#2a9d8f;
+}
+
+/* Mensaje */
+.message-body-card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.message-content{
+    background:#f9f9f9;
+    padding:18px;
+    border-left:4px solid var(--primary);
+    border-radius:12px;
+    margin-top:12px;
+    line-height:1.6;
+}
+
+/* Respuesta */
+.message-reply-card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.reply-textarea{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:2px solid #eee;
+    transition:all 0.3s ease;
+    font-family:inherit;
+}
+
+.reply-textarea:focus{
+    border-color:var(--primary);
+    box-shadow:0 6px 20px rgba(123,30,58,0.15);
+    outline:none;
+}
+
+/* ===============================
+   UPLOAD PREMIUM
+   =============================== */
+
+.upload-wrapper{
+    position:relative;
+}
+
+.upload-input{
+    display:none;
+}
+
+.upload-box{
+    display:block;
+    border:2px dashed var(--primary);
+    border-radius:18px;
+    padding:35px;
+    text-align:center;
+    background:rgba(123,30,58,0.03);
+    cursor:pointer;
+    transition:all 0.3s ease;
+}
+
+.upload-box:hover{
+    background:rgba(123,30,58,0.08);
+    border-color:var(--primary-dark);
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(123,30,58,0.15);
+}
+
+.upload-icon{
+    font-size:38px;
+    color:var(--primary);
+    margin-bottom:12px;
+}
+
+.upload-text{
+    font-weight:600;
+    margin-bottom:6px;
+}
+
+.upload-subtext{
+    font-size:13px;
+    color:#777;
+}
+
+/* Preview */
+.file-preview{
+    margin-top:15px;
+    background:white;
+    padding:12px 18px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.file-preview i{
+    color:var(--primary);
+}
+
+.remove-file{
+    margin-left:auto;
+    background:none;
+    border:none;
+    color:#c1121f;
+    cursor:pointer;
+    font-size:14px;
+    transition:all 0.2s ease;
+}
+
+.remove-file:hover{
+    transform:scale(1.2);
+}
+
+
+/* Botón */
+.btn-reply{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    margin-top: 3rem;
+}
+
+.btn-reply:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(123,30,58,0.4);
+}

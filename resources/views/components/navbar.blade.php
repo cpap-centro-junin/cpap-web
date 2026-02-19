@@ -57,13 +57,28 @@
                         <i class="fas fa-chevron-down dropdown-icon"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('biblioteca') }}"><i class="fas fa-book"></i> Biblioteca Virtual</a></li>
-                        <li><a href="{{ route('bolsa-trabajo') }}"><i class="fas fa-briefcase"></i> Bolsa de Trabajo</a></li>
-                        <li><a href="{{ url('/#colegiatura') }}"><i class="fas fa-user-graduate"></i> Colegiatura</a></li>
+                        <li>
+                            <a href="{{ route('biblioteca') }}">
+                                <i class="fas fa-book"></i> Biblioteca Virtual
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('bolsa-trabajo') }}">
+                                <i class="fas fa-briefcase"></i> Bolsa de Trabajo
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('colegiatura.index') }}">
+                                <i class="fas fa-user-graduate"></i> Colegiarme
+                            </a>
+                        </li>
                     </ul>
+
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('/#contacto') }}" class="nav-link">
+                    <a href="{{ route('contacto.index') }}" class="nav-link">
                         <i class="fas fa-envelope"></i>
                         Contacto
                     </a>

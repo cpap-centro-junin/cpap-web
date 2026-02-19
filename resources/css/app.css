@@ -53,6 +53,8 @@
 @import './pages/colegiado-perfil.css';
 @import './pages/verificacion.css';
 @import './pages/actualidad.css';
+@import './pages/contacto.css';
+@import './pages/colegiatura.css';
 
 /* ✅ modern.css ELIMINADO - Todo extraído al nuevo sistema */
 /* Admin CSS → resources/css/admin.css (entry point propio en vite.config.js) */

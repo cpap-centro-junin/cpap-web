@@ -1,0 +1,142 @@
+/* HERO coherente con colegiados */
+.colegiatura-hero {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    padding: 110px 0 70px;
+}
+
+/* SECCIÓN FLUJO */
+.colegiatura-flow-section {
+    background: var(--light-gray);
+    padding: 100px 0;
+}
+
+.flow-wrapper {
+    position: relative;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Línea central real */
+.flow-wrapper::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(var(--primary), var(--accent));
+    transform: translateX(-50%);
+}
+
+/* Inicio y Fin */
+.flow-start,
+.flow-end {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 60px;
+    position: relative;
+    z-index: 2;
+    box-shadow: var(--shadow-lg);
+}
+
+.flow-end {
+    background: var(--accent);
+    color: black;
+}
+
+/* Pasos */
+.flow-step {
+    width: 50%;
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.flow-step.left {
+    left: 0;
+    text-align: right;
+    padding-right: 60px;
+}
+
+.flow-step.right {
+    left: 50%;
+    padding-left: 60px;
+}
+
+.flow-card {
+    background: white;
+    padding: 28px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.flow-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.step-number {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.flow-card h3 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: var(--font-bold);
+    margin-bottom: 10px;
+}
+
+.flow-docs ul {
+    margin: 10px 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.flow-docs li {
+    font-size: var(--font-sm);
+    margin-bottom: 6px;
+}
+
+.flow-docs a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.flow-docs a:hover {
+    text-decoration: underline;
+}
+
+.flow-recommend {
+    margin-top: 15px;
+    background: rgba(139,21,56,0.05);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    color: var(--dark-secondary);
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .flow-step,
+    .flow-step.left,
+    .flow-step.right{
+        width:100%;
+        left:0;
+        text-align:left;
+        padding:0 0 0 40px;
+    }
+
+    .flow-wrapper::before{
+        left:20px;
+    }
+}

@@ -74,6 +74,28 @@
                 <i class="fas fa-bullhorn"></i>
                 <span class="menu-text">Anuncios</span>
             </a>
+            @php
+                $unreadMessages = \App\Models\ContactMessage::where('leido', false)->count();
+            @endphp
+
+
+            <a href="{{ route('admin.mensajes.index') }}"
+            class="menu-item {{ request()->routeIs('admin.mensajes*') ? 'active' : '' }}">
+
+                <i class="fas fa-envelope"></i>
+
+                <span class="menu-text">
+                    Mensajes
+                    @if($unreadMessages > 0)
+                        <span class="badge-mensajes">
+                            {{ $unreadMessages }}
+                        </span>
+                    @endif
+                </span>
+            </a>
+
+
+
         </nav>
 
         <div class="sidebar-footer">
@@ -105,6 +127,20 @@
             </div>
 
             <div class="user-info">
+                <div class="topbar-messages">
+
+                    <a href="{{ route('admin.mensajes.index') }}" class="messages-icon">
+                        <i class="fas fa-envelope"></i>
+
+                        @if($unreadMessages > 0)
+                            <span class="topbar-badge">
+                                {{ $unreadMessages }}
+                            </span>
+                        @endif
+                    </a>
+
+                </div>
+
                 <div class="user-avatar">
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
