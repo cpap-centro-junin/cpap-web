@@ -526,11 +526,6 @@
              style="width:100%;display:block;">
     </div>
 </div>
-@endif
-@endsection
-
-@if(isset($anuncio) && $anuncio)
-@push('scripts')
 <script>
 (function(){
     if (!sessionStorage.getItem('popup_dismissed_{{ $anuncio->id }}')) {
@@ -542,8 +537,8 @@ function cerrarPopup() {
     sessionStorage.setItem('popup_dismissed_{{ $anuncio->id }}', '1');
 }
 </script>
-@endpush
 @endif
+@endsection
 
 @push('scripts')
 <script>

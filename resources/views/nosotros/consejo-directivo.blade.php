@@ -3,8 +3,6 @@
 
 @section('title', 'Consejo Directivo - CPAP Región Centro')
 
-@vite(['resources/js/modules/consejo.js'])
-
 @section('content')
 
 <!-- Page Header -->
@@ -28,33 +26,131 @@
     </div>
 </section>
 
-<!-- Equipo de Gobierno -->
+<!-- Banner de gestión -->
+<section class="consejo-banner">
+    <div class="consejo-banner-overlay"></div>
+    <div class="container">
+        <div class="consejo-banner-inner" data-aos="fade-up">
+            <div class="consejo-banner-icon">
+                <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="consejo-banner-text">
+                <span class="consejo-banner-label">Período en funciones</span>
+                <h2>Gestión 2024 – 2026</h2>
+                <p>
+                    El Consejo Directivo es el órgano de gobierno elegido democráticamente por los colegiados,
+                    responsable de la representación, administración y dirección estratégica del CPAP Región Centro.
+                </p>
+            </div>
+            <div class="consejo-banner-stats">
+                @php $totalMiembros = $consejo->count(); @endphp
+                <div class="consejo-banner-stat">
+                    <strong>{{ $totalMiembros ?: '5' }}</strong>
+                    <span>Miembros</span>
+                </div>
+                <div class="consejo-banner-stat">
+                    <strong>2</strong>
+                    <span>Años de gestión</span>
+                </div>
+                <div class="consejo-banner-stat">
+                    <strong>1,250+</strong>
+                    <span>Colegiados representados</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Descripción institucional + funciones -->
+<section class="consejo-intro-section">
+    <div class="container">
+        <div class="consejo-intro-grid">
+            <div class="consejo-intro-text" data-aos="fade-right">
+                <span class="section-badge">Gobierno Institucional</span>
+                <h2>Equipo de Gobierno del CPAP Región Centro</h2>
+                <p>
+                    El Consejo Directivo ejerce sus funciones conforme al Estatuto del Colegio Profesional
+                    de Antropólogos del Perú, velando por los intereses de todos los colegiados y
+                    manteniendo una gestión transparente, participativa y orientada al desarrollo profesional.
+                </p>
+                <ul class="consejo-funciones-list">
+                    <li>
+                        <i class="fas fa-gavel"></i>
+                        <span>Representación legal del CPAP ante entidades públicas y privadas</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Elaboración y ejecución del plan de trabajo institucional</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>Administración transparente de los recursos del colegio</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Organización de capacitaciones, eventos y actividades académicas</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="consejo-intro-visual" data-aos="fade-left">
+                <div class="consejo-estructura">
+                    <h3><i class="fas fa-sitemap"></i> Estructura del Consejo</h3>
+                    <div class="consejo-estructura-list">
+                        <div class="consejo-estructura-item consejo-estructura-item--main">
+                            <i class="fas fa-star"></i>
+                            <span>Decano Regional</span>
+                        </div>
+                        <div class="consejo-estructura-item">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Secretario General</span>
+                        </div>
+                        <div class="consejo-estructura-item">
+                            <i class="fas fa-coins"></i>
+                            <span>Tesorero</span>
+                        </div>
+                        <div class="consejo-estructura-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Secretario de Actas</span>
+                        </div>
+                        <div class="consejo-estructura-item">
+                            <i class="fas fa-users-cog"></i>
+                            <span>Vocales</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Grid de Cards -->
 <section class="section-padding bg-light" id="consejo">
     <div class="container">
 
-        <!-- Header de sección -->
         <div class="section-header text-center" data-aos="fade-up">
             <span class="section-badge">Gestión 2024 – 2026</span>
-            <h2 class="section-title">Equipo de Gobierno</h2>
+            <h2 class="section-title">Nuestros Directivos</h2>
             <p class="section-subtitle">
                 Conoce a los profesionales que lideran el Colegio Profesional de Antropólogos del Perú – Región Centro
             </p>
         </div>
 
-        @php
-            $periodo = $consejo->first()?->periodo ?? '2024 – 2026';
-        @endphp
+        @php $periodo = $consejo->first()?->periodo ?? '2024 – 2026'; @endphp
 
-        <!-- Grid de Cards -->
         @if($consejo->isEmpty())
-        <div class="text-center" style="padding:60px 20px;color:var(--medium-gray);">
-            <i class="fas fa-users" style="font-size:48px;margin-bottom:16px;opacity:0.3;display:block;"></i>
-            <p style="font-size:16px;">El Consejo Directivo se publicará próximamente.</p>
+        <div class="consejo-empty-state" data-aos="fade-up">
+            <i class="fas fa-users"></i>
+            <h3>Información en preparación</h3>
+            <p>El Consejo Directivo se publicará próximamente. Para más información, contáctanos.</p>
+            <a href="{{ url('/#contacto') }}" class="btn btn-primary">
+                <i class="fas fa-envelope"></i>
+                Contáctanos
+            </a>
         </div>
         @else
         <div class="consejo-grid">
             @foreach($consejo as $miembro)
-            <div class="consejo-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+            <div class="consejo-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 80 }}">
 
                 <!-- Foto -->
                 <div class="consejo-card__photo" id="photo-{{ $loop->index }}">
@@ -86,7 +182,7 @@
                     @endif
                 </div>
 
-                <!-- Decoración bottom -->
+                <!-- Footer -->
                 <div class="consejo-card__footer">
                     <span class="consejo-card__periodo">
                         <i class="fas fa-calendar-alt"></i>
@@ -99,14 +195,31 @@
         </div>
         @endif
 
-        <!-- CTA volver -->
-        <div class="text-center mt-5" data-aos="fade-up">
-            <a href="{{ route('home') }}" class="btn btn-outline">
-                <i class="fas fa-arrow-left"></i>
-                Volver al inicio
-            </a>
-        </div>
+    </div>
+</section>
 
+<!-- CTA final -->
+<section class="section-padding">
+    <div class="container">
+        <div class="consejo-cta" data-aos="zoom-in">
+            <div class="consejo-cta-left">
+                <i class="fas fa-handshake consejo-cta-icon"></i>
+                <div>
+                    <h2>¿Quieres formar parte de la comunidad?</h2>
+                    <p>Únete al Colegio Profesional de Antropólogos del Perú – Región Centro y accede a todos los beneficios de estar colegiado.</p>
+                </div>
+            </div>
+            <div class="consejo-cta-right">
+                <a href="{{ url('/#colegiatura') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus"></i>
+                    Proceso de Colegiatura
+                </a>
+                <a href="{{ url('/#contacto') }}" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i>
+                    Contáctanos
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 
