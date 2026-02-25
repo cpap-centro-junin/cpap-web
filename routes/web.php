@@ -19,7 +19,10 @@ use App\Http\Controllers\ColegiaturaController;
 // ============================================
 Route::get('/', function () {
     $anuncio = \App\Models\PopupAnuncio::where('activo', true)->latest()->first();
-    return view('home', compact('anuncio'));
+    $slides = \App\Models\BannerSlide::activos()->get();
+    $config = \App\Models\ConfiguracionInicio::obtener();
+    
+    return view('home', compact('anuncio', 'slides', 'config'));
 })->name('home');
 
 // ============================================

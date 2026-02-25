@@ -173,19 +173,6 @@
             </div>
         </a>
 
-        <a href="{{ route('admin.usuarios') }}" class="card">
-            <div class="card-icon" style="background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);">
-                <i class="fas fa-users-cog"></i>
-            </div>
-            <div class="card-content">
-                <strong>Usuarios</strong>
-                <p>Administrar cuentas de usuario</p>
-            </div>
-            <div class="card-arrow">
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
-
         <a href="{{ route('admin.eventos.index') }}" class="card">
             <div class="card-icon" style="background: linear-gradient(135deg, #e65100 0%, #d84315 100%);">
                 <i class="fas fa-calendar-check"></i>
@@ -206,19 +193,6 @@
             <div class="card-content">
                 <strong>Bolsa de Trabajo</strong>
                 <p>Gestionar ofertas laborales</p>
-            </div>
-            <div class="card-arrow">
-                <i class="fas fa-arrow-right"></i>
-            </div>
-        </a>
-
-        <a href="{{ route('admin.documentos') }}" class="card">
-            <div class="card-icon" style="background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);">
-                <i class="fas fa-file-pdf"></i>
-            </div>
-            <div class="card-content">
-                <strong>Documentos</strong>
-                <p>Gestionar documentación oficial</p>
             </div>
             <div class="card-arrow">
                 <i class="fas fa-arrow-right"></i>

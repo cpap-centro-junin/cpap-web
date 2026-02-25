@@ -89,10 +89,10 @@
                            style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action="{{ route('admin.noticias.destroy', $noticia) }}" method="POST" style="display:inline;"
-                              onsubmit="return confirm('¿Eliminar esta noticia? Esta acción no se puede deshacer.')">
+                        <form action="{{ route('admin.noticias.destroy', $noticia) }}" method="POST" style="display:inline;" class="delete-form" id="form-delete-noticia-{{ $noticia->id }}">
                             @csrf @method('DELETE')
-                            <button type="submit"
+                            <button type="button"
+                                    onclick="confirmDelete('{{ addslashes($noticia->titulo) }}', 'form-delete-noticia-{{ $noticia->id }}')"
                                     style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -124,3 +124,25 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script>
+function confirmDelete(titulo, formId) {
+    Swal.fire({
+        title: '¿Eliminar esta noticia?',
+        html: `Se eliminará permanentemente <strong>"${titulo}"</strong>. Esta acción no se puede deshacer.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+</script>
+@endpush

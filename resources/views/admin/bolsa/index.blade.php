@@ -13,9 +13,23 @@
         <h1 style="font-size:22px;font-weight:700;color:var(--dark);margin:0 0 4px;">Bolsa de Trabajo</h1>
         <p style="color:var(--medium-gray);font-size:14px;margin:0;">{{ $ofertas->total() }} oferta{{ $ofertas->total() !== 1 ? 's' : '' }} en total</p>
     </div>
-    <a href="{{ route('admin.bolsa.create') }}" class="primary-btn">
-        <i class="fas fa-plus"></i> Nueva Oferta
-    </a>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        @php $pendingSolicitudes = \App\Models\BolsaTrabajo::noRevisadas()->count(); @endphp
+        <a href="{{ route('admin.solicitudes.index') }}" 
+           style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:{{ $pendingSolicitudes > 0 ? 'rgba(237,108,2,0.1)' : 'rgba(0,0,0,0.04)' }};color:{{ $pendingSolicitudes > 0 ? '#ed6c02' : 'var(--medium-gray)' }};border:1px solid {{ $pendingSolicitudes > 0 ? 'rgba(237,108,2,0.2)' : 'rgba(0,0,0,0.08)' }};border-radius:10px;text-decoration:none;font-size:14px;font-weight:600;transition:all 0.2s;">
+            <i class="fas fa-clipboard-list"></i>
+            <span>
+                @if($pendingSolicitudes > 0)
+                    {{ $pendingSolicitudes }} Solicitud{{ $pendingSolicitudes !== 1 ? 'es' : '' }} Pendiente{{ $pendingSolicitudes !== 1 ? 's' : '' }}
+                @else
+                    Ver Solicitudes
+                @endif
+            </span>
+        </a>
+        <a href="{{ route('admin.bolsa.create') }}" class="primary-btn">
+            <i class="fas fa-plus"></i> Nueva Oferta
+        </a>
+    </div>
 </div>
 
 {{-- FLASH --}}
@@ -84,8 +98,7 @@
                            style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action="{{ route('admin.bolsa.destroy', $oferta) }}" method="POST" style="display:inline;"
-                              onsubmit="return confirm('¿Eliminar esta oferta? Esta acción no se puede deshacer.')">
+                        <form action="{{ route('admin.bolsa.destroy', $oferta) }}" method="POST" style="display:inline;" class="delete-form">
                             @csrf @method('DELETE')
                             <button type="submit"
                                     style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
@@ -119,3 +132,33 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Confirmación de eliminación con SweetAlert2
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: '¿Eliminar esta oferta?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d32f2f',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+@endpush

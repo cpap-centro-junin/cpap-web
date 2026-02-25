@@ -86,10 +86,10 @@
                            style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action="{{ route('admin.directivos.destroy', $directivo) }}" method="POST" style="display:inline;"
-                              onsubmit="return confirm('¿Eliminar a {{ $directivo->nombre }}?')">
+                        <form action="{{ route('admin.directivos.destroy', $directivo) }}" method="POST" style="display:inline;" class="delete-form" id="form-delete-directivo-{{ $directivo->id }}">
                             @csrf @method('DELETE')
-                            <button type="submit"
+                            <button type="button"
+                                    onclick="confirmDelete('{{ addslashes($directivo->nombre) }}', 'form-delete-directivo-{{ $directivo->id }}')"
                                     style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -120,3 +120,25 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function confirmDelete(nombre, formId) {
+    Swal.fire({
+        title: '¿Eliminar Directivo?',
+        html: `Se eliminará permanentemente a <strong>"${nombre}"</strong> del Consejo Directivo...`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+</script>
+@endpush

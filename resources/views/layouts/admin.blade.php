@@ -41,26 +41,38 @@
         </div>
 
         <nav class="menu">
+            {{-- Dashboard --}}
             <a href="{{ route('admin.dashboard') }}" class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="fas fa-home"></i>
                 <span class="menu-text">Dashboard</span>
             </a>
+
+            {{-- GESTIÓN DE INICIO --}}
+            <div class="menu-separator">
+                <span>Gestión de Inicio</span>
+            </div>
+            <a href="{{ route('admin.inicio.index') }}" class="menu-item {{ request()->routeIs('admin.inicio*') ? 'active' : '' }}">
+                <i class="fas fa-sliders-h"></i>
+                <span class="menu-text">Configurar Home</span>
+            </a>
+
+            {{-- GESTIÓN CPAP --}}
+            <div class="menu-separator">
+                <span>Gestión CPAP</span>
+            </div>
             <a href="{{ route('admin.directivos.index') }}" class="menu-item {{ request()->routeIs('admin.directivos*') ? 'active' : '' }}">
                 <i class="fas fa-user-tie"></i>
                 <span class="menu-text">Directivos</span>
-            </a>
-            <a href="{{ route('admin.invitaciones') }}" class="menu-item {{ request()->routeIs('admin.invitaciones') ? 'active' : '' }}">
-                <i class="fas fa-envelope"></i>
-                <span class="menu-text">Invitaciones</span>
-            </a>
-            <a href="{{ route('admin.usuarios') }}" class="menu-item {{ request()->routeIs('admin.usuarios') ? 'active' : '' }}">
-                <i class="fas fa-users"></i>
-                <span class="menu-text">Usuarios</span>
             </a>
             <a href="{{ route('admin.colegiados.index') }}" class="menu-item {{ request()->routeIs('admin.colegiados*') || request()->routeIs('admin.habilitaciones*') ? 'active' : '' }}">
                 <i class="fas fa-id-card"></i>
                 <span class="menu-text">Colegiados</span>
             </a>
+
+            {{-- CONTENIDO --}}
+            <div class="menu-separator">
+                <span>Contenido</span>
+            </div>
             <a href="{{ route('admin.noticias.index') }}" class="menu-item {{ request()->routeIs('admin.noticias*') ? 'active' : '' }}">
                 <i class="fas fa-newspaper"></i>
                 <span class="menu-text">Noticias</span>
@@ -69,37 +81,23 @@
                 <i class="fas fa-calendar-alt"></i>
                 <span class="menu-text">Eventos</span>
             </a>
-            <a href="{{ route('admin.documentos') }}" class="menu-item {{ request()->routeIs('admin.documentos') ? 'active' : '' }}">
-                <i class="fas fa-file-pdf"></i>
-                <span class="menu-text">Documentos</span>
-            </a>
-            <a href="{{ route('admin.anuncios.index') }}" class="menu-item {{ request()->routeIs('admin.anuncios*') ? 'active' : '' }}">
-                <i class="fas fa-bullhorn"></i>
-                <span class="menu-text">Anuncios</span>
-            </a>
-            <a href="{{ route('admin.normativa.index') }}" class="menu-item {{ request()->routeIs('admin.normativa*') ? 'active' : '' }}">
-                <i class="fas fa-gavel"></i>
-                <span class="menu-text">Normativa</span>
+
+            {{-- RECURSOS --}}
+            <div class="menu-separator">
+                <span>Recursos</span>
+            </div>
+            <a href="{{ route('admin.biblioteca.index') }}" class="menu-item {{ request()->routeIs('admin.biblioteca*') ? 'active' : '' }}">
+                <i class="fas fa-book"></i>
+                <span class="menu-text">Biblioteca</span>
             </a>
             @php
                 $unreadMessages = \App\Models\ContactMessage::where('leido', false)->count();
                 $pendingSolicitudes = \App\Models\BolsaTrabajo::noRevisadas()->count();
             @endphp
-
-
-            <a href="{{ route('admin.biblioteca.index') }}" class="menu-item {{ request()->routeIs('admin.biblioteca*') ? 'active' : '' }}">
-                <i class="fas fa-book"></i>
-                <span class="menu-text">Biblioteca</span>
-            </a>
-            <a href="{{ route('admin.bolsa.index') }}" class="menu-item {{ request()->routeIs('admin.bolsa*') ? 'active' : '' }}">
+            <a href="{{ route('admin.bolsa.index') }}" class="menu-item {{ request()->routeIs('admin.bolsa*') || request()->routeIs('admin.solicitudes*') ? 'active' : '' }}">
                 <i class="fas fa-briefcase"></i>
-                <span class="menu-text">Bolsa de Trabajo</span>
-            </a>
-            <a href="{{ route('admin.solicitudes.index') }}"
-            class="menu-item {{ request()->routeIs('admin.solicitudes*') ? 'active' : '' }}">
-                <i class="fas fa-clipboard-list"></i>
                 <span class="menu-text">
-                    Solicitudes
+                    Bolsa de Trabajo
                     @if($pendingSolicitudes > 0)
                         <span class="badge-mensajes">
                             {{ $pendingSolicitudes }}
@@ -107,12 +105,17 @@
                     @endif
                 </span>
             </a>
-            <a href="{{ route('admin.mensajes.index') }}"
-            class="menu-item {{ request()->routeIs('admin.mensajes*') ? 'active' : '' }}">
+            <a href="{{ route('admin.normativa.index') }}" class="menu-item {{ request()->routeIs('admin.normativa*') ? 'active' : '' }}">
+                <i class="fas fa-gavel"></i>
+                <span class="menu-text">Normativa</span>
+            </a>
 
-
+            {{-- COMUNICACIÓN --}}
+            <div class="menu-separator">
+                <span>Comunicación</span>
+            </div>
+            <a href="{{ route('admin.mensajes.index') }}" class="menu-item {{ request()->routeIs('admin.mensajes*') ? 'active' : '' }}">
                 <i class="fas fa-envelope"></i>
-
                 <span class="menu-text">
                     Mensajes
                     @if($unreadMessages > 0)
@@ -123,7 +126,14 @@
                 </span>
             </a>
 
-
+            {{-- CONFIGURACIÓN --}}
+            <div class="menu-separator">
+                <span>Configuración</span>
+            </div>
+            <a href="{{ route('admin.invitaciones') }}" class="menu-item {{ request()->routeIs('admin.invitaciones') ? 'active' : '' }}">
+                <i class="fas fa-user-plus"></i>
+                <span class="menu-text">Invitaciones</span>
+            </a>
 
         </nav>
 

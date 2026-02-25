@@ -5,6 +5,15 @@
 
 @section('content')
 
+{{-- Breadcrumb --}}
+<div style="margin-bottom:16px;">
+    <a href="{{ route('admin.bolsa.index') }}" 
+       style="display:inline-flex;align-items:center;gap:6px;color:var(--medium-gray);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s;">
+        <i class="fas fa-arrow-left"></i>
+        <span>Volver a Bolsa de Trabajo</span>
+    </a>
+</div>
+
 <div class="msg-list-card">
 
     <div class="msg-list-header">

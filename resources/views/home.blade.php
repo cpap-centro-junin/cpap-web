@@ -8,17 +8,17 @@
     <div class="hero-overlay"></div>
     <div class="container">
         <div class="hero-content" data-aos="fade-up">
-            <span class="hero-badge">Bienvenidos</span>
-            <h1 class="hero-title">Colegio Profesional de<br><span class="gradient-text">Antropólogos del Perú</span></h1>
-            <p class="hero-subtitle">Región Centro - Promoviendo la excelencia profesional y la investigación antropológica desde 1985</p>
+            <span class="hero-badge">{{ $config->hero_badge ?? 'Bienvenidos' }}</span>
+            <h1 class="hero-title">{!! $config->hero_titulo ?? 'Colegio Profesional de<br><span class="gradient-text">Antropólogos del Perú</span>' !!}</h1>
+            <p class="hero-subtitle">{{ $config->hero_subtitulo ?? 'Región Centro - Promoviendo la excelencia profesional y la investigación antropológica desde 1985' }}</p>
             <div class="hero-buttons">
-                <a href="#colegiatura" class="btn btn-primary btn-lg">
-                    <i class="fas fa-user-plus"></i>
-                    Quiero Colegiarme
+                <a href="{{ $config->hero_btn1_url ?? '#colegiatura' }}" class="btn btn-primary btn-lg">
+                    <i class="{{ $config->hero_btn1_icono ?? 'fas fa-user-plus' }}"></i>
+                    {{ $config->hero_btn1_texto ?? 'Quiero Colegiarme' }}
                 </a>
-                <a href="#nosotros" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-info-circle"></i>
-                    Conocer Más
+                <a href="{{ $config->hero_btn2_url ?? '#nosotros' }}" class="btn btn-outline-light btn-lg">
+                    <i class="{{ $config->hero_btn2_icono ?? 'fas fa-info-circle' }}"></i>
+                    {{ $config->hero_btn2_texto ?? 'Conocer Más' }}
                 </a>
             </div>
         </div>
@@ -30,65 +30,51 @@
     <div class="banner-slider-wrapper" id="bannerSliderWrapper">
         <div class="banner-slider" id="bannerSlider">
 
-            <!-- Slide 1: Colegiatura 2026 -->
+            @forelse($slides as $slide)
+            <!-- Slide: {{ $slide->titulo_final }} -->
+            <div class="banner-slide">
+                <img class="slide-bg"
+                     src="{{ $slide->imagen_final }}"
+                     alt="{{ $slide->titulo_final }}"
+                     loading="lazy"
+                     draggable="false"
+                     width="1400" height="620">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    @if($slide->tag)
+                    <span class="slide-tag">{{ $slide->tag }}</span>
+                    @endif
+                    <h3 class="slide-title">{!! $slide->titulo_final !!}</h3>
+                    <div class="slide-divider"></div>
+                    @if($slide->descripcion_final)
+                    <p class="slide-text">{{ $slide->descripcion_final }}</p>
+                    @endif
+                    <a href="{{ $slide->boton_url_final }}" class="slide-btn">
+                        <i class="fas fa-arrow-right"></i> {{ $slide->boton_texto }}
+                    </a>
+                </div>
+            </div>
+            @empty
+            <!-- Slide por defecto si no hay slides configurados -->
             <div class="banner-slide">
                 <img class="slide-bg"
                      src="{{ asset('images/banners/banner-colegiatura.png') }}"
-                     alt="Proceso de Colegiatura 2026"
+                     alt="CPAP Región Centro"
                      loading="lazy"
                      draggable="false"
                      width="1400" height="620">
                 <div class="slide-overlay"></div>
                 <div class="slide-content">
-                    <span class="slide-tag">Proceso de Colegiatura</span>
-                    <h3 class="slide-title">¡Proceso de Colegiatura<br>2026 Abierto!</h3>
+                    <span class="slide-tag">Bienvenidos</span>
+                    <h3 class="slide-title">CPAP<br>Región Centro</h3>
                     <div class="slide-divider"></div>
-                    <p class="slide-text">Únete a nuestra comunidad profesional. Requisitos y formularios disponibles para nuevos colegiados.</p>
-                    <a href="{{ url('/#colegiatura') }}" class="slide-btn">
-                        <i class="fas fa-arrow-right"></i> Ver Más
+                    <p class="slide-text">Colegio Profesional de Antropólogos del Perú</p>
+                    <a href="{{ url('/#nosotros') }}" class="slide-btn">
+                        <i class="fas fa-arrow-right"></i> Conocer Más
                     </a>
                 </div>
             </div>
-
-            <!-- Slide 2: 39 Aniversario -->
-            <div class="banner-slide">
-                <img class="slide-bg"
-                     src="{{ asset('images/noticias/39-Aniversario.jpg') }}"
-                     alt="39 Aniversario CPAP Región Centro"
-                     loading="lazy"
-                     draggable="false"
-                     width="1400" height="620">
-                <div class="slide-overlay"></div>
-                <div class="slide-content">
-                    <span class="slide-tag">Aniversario Institucional</span>
-                    <h3 class="slide-title">Celebramos 39 Años<br>de Trayectoria</h3>
-                    <div class="slide-divider"></div>
-                    <p class="slide-text">Cuatro décadas promoviendo la excelencia en la antropología peruana y la investigación social.</p>
-                    <a href="{{ url('/#noticias') }}" class="slide-btn">
-                        <i class="fas fa-arrow-right"></i> Leer Más
-                    </a>
-                </div>
-            </div>
-
-            <!-- Slide 3: Juramentación -->
-            <div class="banner-slide">
-                <img class="slide-bg"
-                     src="{{ asset('images/noticias/Ceremonia-juramentacion.png') }}"
-                     alt="Ceremonia de Juramentación de Nuevos Colegiados"
-                     loading="lazy"
-                     draggable="false"
-                     width="1400" height="620">
-                <div class="slide-overlay"></div>
-                <div class="slide-content">
-                    <span class="slide-tag">Ceremonia Especial</span>
-                    <h3 class="slide-title">Juramentación de<br>Nuevos Colegiados</h3>
-                    <div class="slide-divider"></div>
-                    <p class="slide-text">Damos la bienvenida a los nuevos profesionales que se unen a nuestra institución.</p>
-                    <a href="{{ url('/#eventos') }}" class="slide-btn">
-                        <i class="fas fa-arrow-right"></i> Ver Galería
-                    </a>
-                </div>
-            </div>
+            @endforelse
 
         </div>
 
@@ -233,7 +219,7 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-content">
-                    <h3 class="stat-number" data-count="1250">0</h3>
+                    <h3 class="stat-number" data-count="{{ $config->stat_colegiados ?? 1250 }}">0</h3>
                     <p class="stat-label">Colegiados</p>
                 </div>
             </div>
@@ -242,7 +228,7 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div class="stat-content">
-                    <h3 class="stat-number" data-count="150">0</h3>
+                    <h3 class="stat-number" data-count="{{ $config->stat_eventos ?? 150 }}">0</h3>
                     <p class="stat-label">Eventos Anuales</p>
                 </div>
             </div>
@@ -251,7 +237,7 @@
                     <i class="fas fa-award"></i>
                 </div>
                 <div class="stat-content">
-                    <h3 class="stat-number" data-count="39">0</h3>
+                    <h3 class="stat-number" data-count="{{ $config->stat_años ?? 39 }}">0</h3>
                     <p class="stat-label">Años de Servicio</p>
                 </div>
             </div>
@@ -260,7 +246,7 @@
                     <i class="fas fa-book"></i>
                 </div>
                 <div class="stat-content">
-                    <h3 class="stat-number" data-count="500">0</h3>
+                    <h3 class="stat-number" data-count="{{ $config->stat_publicaciones ?? 500 }}">0</h3>
                     <p class="stat-label">Publicaciones</p>
                 </div>
             </div>

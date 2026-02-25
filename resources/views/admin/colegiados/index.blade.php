@@ -232,6 +232,7 @@ function confirmDeleteColegiado(nombre, formId) {
         html: `Esta acción eliminará permanentemente a <strong>${nombre}</strong> junto con todos sus documentos de habilitación. Esta acción <strong>no se puede deshacer</strong>.`,
         icon: 'warning',
         showCancelButton: true,
+        reverseButtons: true,
         confirmButtonColor: '#d32f2f',
         cancelButtonColor: '#6c757d',
         confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',

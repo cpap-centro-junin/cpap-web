@@ -84,10 +84,10 @@
                            style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action="{{ route('admin.normativa.destroy', $doc) }}" method="POST" style="display:inline;"
-                              onsubmit="return confirm('¿Eliminar «{{ $doc->titulo }}»?')">
+                        <form action="{{ route('admin.normativa.destroy', $doc) }}" method="POST" style="display:inline;" class="delete-form" id="form-delete-normativa-{{ $doc->id }}">
                             @csrf @method('DELETE')
-                            <button type="submit"
+                            <button type="button"
+                                    onclick="confirmDelete('{{ addslashes($doc->titulo) }}', 'form-delete-normativa-{{ $doc->id }}')"
                                     style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                 <i class="fas fa-trash-alt"></i>
                             </button>

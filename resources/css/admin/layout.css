@@ -111,6 +111,41 @@
     flex: 1;
 }
 
+/* Separador de grupos del menú */
+.menu-separator {
+    margin: 12px 0 8px 0;
+    padding: 0 16px;
+    position: relative;
+}
+
+.menu-separator span {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ocultar texto del separador cuando está colapsado */
+.sidebar.collapsed .menu-separator {
+    padding: 0;
+    margin: 8px 8px 4px 8px;
+}
+
+.sidebar.collapsed .menu-separator span {
+    display: none;
+}
+
+.sidebar.collapsed .menu-separator::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
 .menu-item {
     padding: 14px 16px;
     border-radius: 12px;

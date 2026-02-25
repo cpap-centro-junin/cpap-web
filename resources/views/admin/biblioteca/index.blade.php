@@ -156,10 +156,10 @@
                             <i class="fas fa-file-pdf" style="font-size:13px;"></i>
                         </a>
                         @endif
-                        <form action="{{ route('admin.biblioteca.destroy', $recurso) }}" method="POST"
-                              onsubmit="return confirm('¿Eliminar este recurso?')">
+                        <form action="{{ route('admin.biblioteca.destroy', $recurso) }}" method="POST" class="delete-form" id="form-delete-biblioteca-{{ $recurso->id }}">
                             @csrf @method('DELETE')
-                            <button type="submit"
+                            <button type="button"
+                                    onclick="confirmDelete('{{ addslashes($recurso->titulo) }}', 'form-delete-biblioteca-{{ $recurso->id }}')"
                                     style="width:34px;height:34px;border-radius:8px;background:var(--danger-light);border:1px solid rgba(198,40,40,0.15);display:inline-flex;align-items:center;justify-content:center;color:var(--danger);cursor:pointer;transition:all .2s;"
                                     title="Eliminar">
                                 <i class="fas fa-trash" style="font-size:13px;"></i>
@@ -194,3 +194,25 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script>
+function confirmDelete(titulo, formId) {
+    Swal.fire({
+        title: '¿Eliminar recurso de biblioteca?',
+        html: `Se eliminará permanentemente <strong>"${titulo}"</strong> junto con sus archivos adjuntos. Esta acción no se puede deshacer.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+</script>
+@endpush

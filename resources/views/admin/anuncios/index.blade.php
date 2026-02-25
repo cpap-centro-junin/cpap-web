@@ -66,10 +66,10 @@
                            style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action="{{ route('admin.anuncios.destroy', $anuncio) }}" method="POST" style="display:inline;"
-                              onsubmit="return confirm('¿Eliminar este anuncio?')">
+                        <form action="{{ route('admin.anuncios.destroy', $anuncio) }}" method="POST" style="display:inline;" class="delete-form" id="form-delete-anuncio-{{ $anuncio->id }}">
                             @csrf @method('DELETE')
-                            <button type="submit"
+                            <button type="button"
+                                    onclick="confirmDelete('Anuncio #{{ $anuncio->id }}', 'form-delete-anuncio-{{ $anuncio->id }}')"
                                     style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -95,3 +95,25 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function confirmDelete(titulo, formId) {
+    Swal.fire({
+        title: '¿Eliminar anuncio popup?',
+        html: `Se eliminará permanentemente <strong>"${titulo}"</strong> junto con su imagen. Esta acción no se puede deshacer.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+</script>
+@endpush

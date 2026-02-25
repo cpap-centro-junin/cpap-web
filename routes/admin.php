@@ -8,6 +8,32 @@ Route::get('/dashboard', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
 
+// ============================================
+// GESTIÓN DE INICIO (HOME PÚBLICO)
+// ============================================
+use App\Http\Controllers\Admin\InicioController;
+
+// Dashboard principal de Gestión de Inicio
+Route::get('/inicio', [InicioController::class, 'index'])->name('admin.inicio.index');
+
+// Banner Slides - CRUD
+Route::prefix('inicio/slides')->name('admin.inicio.slides.')->group(function () {
+    Route::get('/', [InicioController::class, 'slidesIndex'])->name('index');
+    Route::get('/create', [InicioController::class, 'slidesCreate'])->name('create');
+    Route::post('/', [InicioController::class, 'slidesStore'])->name('store');
+    Route::get('/{slide}/edit', [InicioController::class, 'slidesEdit'])->name('edit');
+    Route::put('/{slide}', [InicioController::class, 'slidesUpdate'])->name('update');
+    Route::delete('/{slide}', [InicioController::class, 'slidesDestroy'])->name('destroy');
+});
+
+// Hero Section
+Route::get('/inicio/hero/edit', [InicioController::class, 'heroEdit'])->name('admin.inicio.hero.edit');
+Route::put('/inicio/hero', [InicioController::class, 'heroUpdate'])->name('admin.inicio.hero.update');
+
+// Estadísticas
+Route::get('/inicio/estadisticas/edit', [InicioController::class, 'estadisticasEdit'])->name('admin.inicio.estadisticas.edit');
+Route::put('/inicio/estadisticas', [InicioController::class, 'estadisticasUpdate'])->name('admin.inicio.estadisticas.update');
+
 // Directivos
 Route::resource('directivos', \App\Http\Controllers\Admin\DirectivoController::class)->names([
     'index'   => 'admin.directivos.index',
@@ -20,36 +46,19 @@ Route::resource('directivos', \App\Http\Controllers\Admin\DirectivoController::c
 ]);
 
 // Invitaciones
-Route::get('/invitaciones', function () {
-    return view('admin.invitaciones.index');
-})->name('admin.invitaciones');
-
-// Usuarios
-Route::get('/usuarios', function () {
-    return view('admin.usuarios.index');
-})->name('admin.usuarios');
-
-// Contenido
-Route::get('/contenido', function () {
-    return view('admin.contenido.index');
-})->name('admin.contenido');
-
-// Eventos - gestionado por resource route en web.php (admin.eventos.*)
-// Route removida para evitar conflicto con Route::resource('eventos', ...)
-
-// Documentos
-Route::get('/documentos', function () {
-    return view('admin.documentos.index');
-})->name('admin.documentos');
-
-// Invitaciones - Controlador
-
 Route::get('/invitaciones', [App\Http\Controllers\Admin\InvitacionController::class, 'index'])
     ->name('admin.invitaciones');
 
 Route::post('/invitaciones/enviar', [App\Http\Controllers\Admin\InvitacionController::class, 'enviar'])
     ->name('admin.invitaciones.enviar');
 
+// ============================================
+// NOTA: Las siguientes rutas fueron removidas por no tener funcionalidad:
+// - /usuarios (sin implementar)
+// - /documentos (sin implementar)
+// - /contenido (sin usar)
+// - Solicitudes está integrada en Bolsa de Trabajo (ver admin.bolsa.index)
+// ============================================
 
 use App\Http\Controllers\Admin\ColegiadoController;
 use App\Http\Controllers\Admin\HabilitacionController;
