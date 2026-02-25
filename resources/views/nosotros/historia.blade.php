@@ -98,7 +98,7 @@
 
     <!-- Fundación 1985 -->
     <div class="tl-item">
-        <div class="tl-bg" style="background-image:url('{{ asset('images/historia/creacion.jpg') }}')"></div>
+        <div class="tl-bg" style="background-image:url('{{ asset('images/fotos/' . rawurlencode('WhatsApp Image 2025-10-06 at 6.22.24 PM.jpeg')) }}')"></div>
         <div class="tl-year">
             <p>1985</p>
         </div>
@@ -119,7 +119,7 @@
 
     <!-- Consolidación 1995 -->
     <div class="tl-item">
-        <div class="tl-bg" style="background-image:url('{{ asset('images/historia/consolidacion.jpg') }}')"></div>
+        <div class="tl-bg" style="background-image:url('{{ asset('images/noticias/Escuela-profesional-Antropologia.jpg') }}')"></div>
         <div class="tl-year">
             <p>1995</p>
         </div>
@@ -139,7 +139,7 @@
 
     <!-- Región Centro 2008 -->
     <div class="tl-item">
-        <div class="tl-bg" style="background-image:url('{{ asset('images/historia/region-centro.jpg') }}')"></div>
+        <div class="tl-bg" style="background-image:url('{{ asset('images/fotos/' . rawurlencode('WhatsApp Image 2025-10-06 at 6.23.33 PM.jpeg')) }}')"></div>
         <div class="tl-year">
             <p>2008</p>
         </div>
@@ -159,7 +159,7 @@
 
     <!-- Actualidad -->
     <div class="tl-item">
-        <div class="tl-bg" style="background-image:url('{{ asset('images/historia/actualidad.jpg') }}')"></div>
+        <div class="tl-bg" style="background-image:url('{{ asset('images/fotos/' . rawurlencode('WhatsApp Image 2025-10-06 at 6.25.03 PM (1).jpeg')) }}')"></div>
         <div class="tl-year">
             <p>Hoy</p>
         </div>

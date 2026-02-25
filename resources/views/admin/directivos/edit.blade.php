@@ -48,21 +48,14 @@
                     <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Cargo <span style="color:var(--danger);">*</span></label>
                     <select name="cargo" class="admin-input" required>
                         <option value="">— Selecciona un cargo —</option>
-                        @foreach(['Presidente','Vicepresidente','Secretario','Secretaria','Tesorero','Tesorera','Vocal','Vocal 1','Vocal 2','Fiscal','Director'] as $c)
+                        @php $cargos = ['Decano','Vice Decano','Secretario General','Secretaria General','Secretario(a) de Actas','Tesorero','Tesorera','Fiscal','Vocal 1','Vocal 2','Vocal 3']; @endphp
+                        @foreach($cargos as $c)
                         <option value="{{ $c }}" {{ old('cargo', $directivo->cargo) == $c ? 'selected' : '' }}>{{ $c }}</option>
                         @endforeach
-                        {{-- Si el cargo actual no está en la lista predefinida --}}
-                        @if(!in_array($directivo->cargo, ['Presidente','Vicepresidente','Secretario','Secretaria','Tesorero','Tesorera','Vocal','Vocal 1','Vocal 2','Fiscal','Director']))
-                        <option value="{{ $directivo->cargo }}" {{ old('cargo', $directivo->cargo) == $directivo->cargo ? 'selected' : '' }}>{{ $directivo->cargo }}</option>
+                        @if(!in_array($directivo->cargo, $cargos))
+                        <option value="{{ $directivo->cargo }}" selected>{{ $directivo->cargo }}</option>
                         @endif
                     </select>
-                </div>
-
-                <div style="margin-bottom:14px;">
-                    <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Especialidad</label>
-                    <input type="text" name="especialidad" value="{{ old('especialidad', $directivo->especialidad) }}"
-                           placeholder="Ej: Antropología Social, Arqueología, etc."
-                           class="admin-input">
                 </div>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">

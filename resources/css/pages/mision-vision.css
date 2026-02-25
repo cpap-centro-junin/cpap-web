@@ -268,7 +268,9 @@
    ============================================ */
 .mv-impact-section {
     position: relative;
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, #6B0F2A 100%);
+    background:
+        linear-gradient(135deg, rgba(107, 15, 42, 0.88) 0%, rgba(139, 21, 56, 0.84) 50%, rgba(107, 15, 42, 0.9) 100%),
+        url('/images/fondos/antropologos.jpg') center/cover no-repeat;
     padding: 90px 0;
     overflow: hidden;
 }

@@ -57,6 +57,7 @@
 @import "./pages/contacto.css";
 @import "./pages/colegiatura.css";
 @import "./pages/normativa-legal.css";
+@import "./pages/plan-2026.css";
 
 /* ✅ modern.css ELIMINADO - Todo extraído al nuevo sistema */
 /* Admin CSS → resources/css/admin.css (entry point propio en vite.config.js) */

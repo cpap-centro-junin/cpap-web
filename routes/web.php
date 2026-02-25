@@ -18,11 +18,17 @@ use App\Http\Controllers\ColegiaturaController;
 // PÁGINA PRINCIPAL
 // ============================================
 Route::get('/', function () {
-    $anuncio = \App\Models\PopupAnuncio::where('activo', true)->latest()->first();
-    $slides = \App\Models\BannerSlide::activos()->get();
-    $config = \App\Models\ConfiguracionInicio::obtener();
-    
-    return view('home', compact('anuncio', 'slides', 'config'));
+    $anuncio  = \App\Models\PopupAnuncio::where('activo', true)->latest()->first();
+    $slides   = \App\Models\BannerSlide::activos()->get();
+    $config   = \App\Models\ConfiguracionInicio::obtener();
+    $noticias = \App\Models\Noticia::where('activo', true)->latest()->take(3)->get();
+    $eventos  = \App\Models\Evento::where('activo', true)
+                    ->where('fecha_inicio', '>=', now()->toDateString())
+                    ->orderBy('fecha_inicio')
+                    ->take(3)
+                    ->get();
+
+    return view('home', compact('anuncio', 'slides', 'config', 'noticias', 'eventos'));
 })->name('home');
 
 // ============================================
@@ -116,6 +122,10 @@ Route::get('/nosotros/normativa-legal', function () {
 
 Route::get('/nosotros/normativa-legal/{documento}/descargar', [\App\Http\Controllers\Admin\NormativaController::class, 'descargar'])
     ->name('nosotros.normativa.descargar');
+
+Route::get('/nosotros/plan-2026', function () {
+    return view('nosotros.plan-2026');
+})->name('nosotros.plan-2026');
 
 // CONTACTO PUBLICO
 Route::get('/contacto', [ContactoController::class, 'index'])

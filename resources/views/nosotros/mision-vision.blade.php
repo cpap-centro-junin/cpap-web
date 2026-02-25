@@ -63,10 +63,10 @@
                 </div>
                 <div class="mv-split-image" data-aos="fade-left">
                     <div class="mv-split-img-wrap">
-                        <img src="{{ asset('images/noticias/Ceremonia-juramentacion.png') }}"
-                             alt="Misión CPAP – Ceremonia de juramentación"
+                        <img src="{{ asset('images/fotos/' . rawurlencode('WhatsApp Image 2025-10-06 at 6.22.24 PM (1).jpeg')) }}"
+                             alt="Misión CPAP – Reunión de colegiados"
                              loading="lazy"
-                             onerror="this.src='https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=900'">
+                             onerror="this.src='{{ asset('images/noticias/Ceremonia-juramentacion.png') }}'">
                     </div>
                     <div class="mv-floating-stat">
                         <span class="mv-floating-num">39</span>
@@ -83,10 +83,10 @@
             <div class="mv-split-inner mv-split-inner--reversed">
                 <div class="mv-split-image" data-aos="fade-right">
                     <div class="mv-split-img-wrap">
-                        <img src="{{ asset('images/noticias/39-Aniversario.jpg') }}"
-                             alt="Visión CPAP – Proyección nacional"
+                        <img src="{{ asset('images/fotos/' . rawurlencode('WhatsApp Image 2025-10-06 at 6.25.01 PM.jpeg')) }}"
+                             alt="Visión CPAP – Actividad académica regional"
                              loading="lazy"
-                             onerror="this.src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900'">
+                             onerror="this.src='{{ asset('images/noticias/39-Aniversario.jpg') }}'">
                     </div>
                     <div class="mv-floating-stat mv-floating-stat--gold">
                         <span class="mv-floating-num">1,250+</span>

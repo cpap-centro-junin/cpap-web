@@ -211,7 +211,7 @@
 </section>
 
 <!-- Stats Section -->
-<section class="stats-section">
+<section class="stats-section" id="nosotros">
     <div class="container">
         <div class="stats-grid">
             <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
@@ -281,7 +281,7 @@
                 </div>
                 <h3>Certificaciones</h3>
                 <p>Emisión de certificados de habilitación profesional y constancias de colegiatura vigente.</p>
-                <a href="{{ url('/#documentos') }}" class="btn-text">
+                <a href="{{ url('/#colegiatura') }}" class="btn-text">
                     Más Información <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
@@ -321,57 +321,40 @@
         </div>
 
         <div class="news-grid">
-            <article class="news-card" data-aos="fade-up" data-aos-delay="100">
+            @forelse($noticias as $noticia)
+            <article class="news-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                 <div class="news-image">
-                    <img src="{{ asset('images/noticias/39-Aniversario.jpg') }}" alt="39 Aniversario CPAP">
-                    <div class="news-category">Institucional</div>
+                    @if($noticia->imagen)
+                    <img src="{{ $noticia->imagen }}" alt="{{ $noticia->titulo }}">
+                    @else
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--primary),var(--primary-dark,#6b0f2a));display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-newspaper" style="font-size:40px;color:rgba(255,255,255,0.4);"></i>
+                    </div>
+                    @endif
+                    @if($noticia->categoria)
+                    <div class="news-category">{{ $noticia->categoria }}</div>
+                    @endif
                 </div>
                 <div class="news-content">
                     <div class="news-meta">
-                        <span><i class="fas fa-calendar"></i> 15 Ene 2026</span>
+                        <span><i class="fas fa-calendar"></i> {{ $noticia->created_at->format('d M Y') }}</span>
                         <span><i class="fas fa-user"></i> CPAP Centro</span>
                     </div>
-                    <h3>Celebramos 39 Años de Trayectoria Institucional</h3>
-                    <p>Una fecha especial que marca casi cuatro décadas de compromiso con la antropología y el desarrollo profesional en la región centro.</p>
-                    <a href="#" class="btn-text">Leer Más <i class="fas fa-arrow-right"></i></a>
+                    <h3>{{ $noticia->titulo }}</h3>
+                    <p>{{ Str::limit($noticia->resumen ?? $noticia->contenido ?? '', 120) }}</p>
+                    <a href="{{ route('noticias.show', $noticia) }}" class="btn-text">Leer Más <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
-
-            <article class="news-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="news-image">
-                    <img src="{{ asset('images/noticias/Ceremonia-juramentacion.png') }}" alt="Ceremonia de Juramentación">
-                    <div class="news-category">Colegiatura</div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span><i class="fas fa-calendar"></i> 10 Ene 2026</span>
-                        <span><i class="fas fa-user"></i> CPAP Centro</span>
-                    </div>
-                    <h3>Ceremonia de Juramentación de Nuevos Colegiados</h3>
-                    <p>Con gran orgullo damos la bienvenida a los nuevos profesionales que se incorporan a nuestra institución.</p>
-                    <a href="#" class="btn-text">Leer Más <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
-
-            <article class="news-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="news-image">
-                    <img src="{{ asset('images/banners/banner-colegiatura.png') }}" alt="Proceso de Colegiatura 2026">
-                    <div class="news-category">Proceso</div>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span><i class="fas fa-calendar"></i> 02 Ene 2026</span>
-                        <span><i class="fas fa-user"></i> CPAP Centro</span>
-                    </div>
-                    <h3>Proceso de Colegiatura 2026 Oficialmente Abierto</h3>
-                    <p>Invitamos a todos los antropólogos egresados a iniciar su proceso de colegiatura. Requisitos disponibles en nuestra web.</p>
-                    <a href="#colegiatura" class="btn-text">Ver Proceso <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
+            @empty
+            <div class="news-card" data-aos="fade-up" style="grid-column:1/-1;text-align:center;padding:48px;">
+                <i class="fas fa-newspaper" style="font-size:40px;color:var(--medium-gray);margin-bottom:12px;display:block;"></i>
+                <p style="color:var(--medium-gray);">Próximamente publicaremos noticias institucionales.</p>
+            </div>
+            @endforelse
         </div>
 
         <div class="text-center" style="margin-top: 50px;" data-aos="fade-up">
-            <a href="#" class="btn btn-outline">
+            <a href="{{ route('noticias.index') }}" class="btn btn-outline">
                 <i class="fas fa-newspaper"></i>
                 Ver Todas las Noticias
             </a>
@@ -389,38 +372,29 @@
         </div>
 
         <div class="events-timeline">
+            @forelse($eventos as $evento)
+            <div class="event-item" data-aos="fade-right" data-aos-delay="{{ $loop->index * 100 }}">
+                <div class="event-content">
+                    <h3>{{ \Carbon\Carbon::parse($evento->fecha_inicio)->format('d M') }} - {{ $evento->titulo }}</h3>
+                    <p>{{ Str::limit($evento->resumen ?? $evento->descripcion ?? '', 100) }}</p>
+                    <div class="event-meta">
+                        @if($evento->hora_inicio)
+                        <span><i class="fas fa-clock"></i> {{ \Carbon\Carbon::createFromTimeString($evento->hora_inicio)->format('g:i A') }}</span>
+                        @endif
+                        @if($evento->lugar)
+                        <span><i class="fas fa-map-marker-alt"></i> {{ $evento->lugar }}</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @empty
             <div class="event-item" data-aos="fade-right">
-                <div class="event-content">
-                    <h3>15 Feb - Taller de Metodología de Investigación Cualitativa</h3>
-                    <p>Modalidad virtual. Inscripciones abiertas para colegiados.</p>
-                    <div class="event-meta">
-                        <span><i class="fas fa-clock"></i> 6:00 PM - 8:00 PM</span>
-                        <span><i class="fas fa-map-marker-alt"></i> Zoom</span>
-                    </div>
+                <div class="event-content" style="text-align:center;padding:32px;">
+                    <i class="fas fa-calendar-alt" style="font-size:36px;color:var(--medium-gray);margin-bottom:10px;display:block;"></i>
+                    <p style="color:var(--medium-gray);">No hay eventos próximos programados. Revisa nuevamente pronto.</p>
                 </div>
             </div>
-
-            <div class="event-item" data-aos="fade-right" data-aos-delay="100">
-                <div class="event-content">
-                    <h3>20 Feb - Conversatorio: Antropología y Desarrollo Sostenible</h3>
-                    <p>Con la participación de destacados antropólogos de la región.</p>
-                    <div class="event-meta">
-                        <span><i class="fas fa-clock"></i> 7:00 PM - 9:00 PM</span>
-                        <span><i class="fas fa-map-marker-alt"></i> Auditorio CPAP</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item" data-aos="fade-right" data-aos-delay="200">
-                <div class="event-content">
-                    <h3>28 Feb - Asamblea General Ordinaria 2026</h3>
-                    <p>Convocatoria a todos los colegiados hábiles. Agenda e informes disponibles.</p>
-                    <div class="event-meta">
-                        <span><i class="fas fa-clock"></i> 5:00 PM - 8:00 PM</span>
-                        <span><i class="fas fa-map-marker-alt"></i> Local Institucional</span>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </section>

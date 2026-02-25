@@ -9,7 +9,6 @@ class Directivo extends Model
     protected $fillable = [
         'cargo',
         'nombre',
-        'especialidad',
         'foto',
         'periodo',
         'orden',
@@ -26,12 +25,13 @@ class Directivo extends Model
      */
     public function getIconAttribute(): string
     {
-        return match (strtolower($this->cargo)) {
-            'presidente'    => 'fa-star',
-            'vicepresidente'=> 'fa-award',
-            'secretario', 'secretaria' => 'fa-pen-nib',
-            'tesorero', 'tesorera'     => 'fa-coins',
-            default                    => 'fa-handshake',
+        return match (true) {
+            str_contains(strtolower($this->cargo), 'decano') && !str_contains(strtolower($this->cargo), 'vice') => 'fa-star',
+            str_contains(strtolower($this->cargo), 'vice') => 'fa-award',
+            str_contains(strtolower($this->cargo), 'secretari') => 'fa-pen-nib',
+            str_contains(strtolower($this->cargo), 'tesorer') => 'fa-coins',
+            str_contains(strtolower($this->cargo), 'fiscal') => 'fa-balance-scale',
+            default => 'fa-handshake',
         };
     }
 

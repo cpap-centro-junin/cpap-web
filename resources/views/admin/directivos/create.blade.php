@@ -49,20 +49,10 @@
                     <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Cargo <span style="color:var(--danger);">*</span></label>
                     <select name="cargo" class="admin-input" required>
                         <option value="">— Selecciona un cargo —</option>
-                        @foreach(['Presidente','Vicepresidente','Secretario','Secretaria','Tesorero','Tesorera','Vocal','Vocal 1','Vocal 2','Fiscal','Director'] as $c)
+                        @foreach(['Decano','Vice Decano','Secretario General','Secretaria General','Secretario(a) de Actas','Tesorero','Tesorera','Fiscal','Vocal 1','Vocal 2','Vocal 3'] as $c)
                         <option value="{{ $c }}" {{ old('cargo') == $c ? 'selected' : '' }}>{{ $c }}</option>
                         @endforeach
                     </select>
-                    <p style="font-size:11px;color:var(--medium-gray);margin:4px 0 0;">También puedes escribir el cargo directamente en el campo de texto si no aparece en la lista.</p>
-                </div>
-
-                <div style="margin-bottom:14px;">
-                    <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">
-                        Especialidad <span style="color:var(--medium-gray);font-weight:400;">(opcional)</span>
-                    </label>
-                    <input type="text" name="especialidad" value="{{ old('especialidad') }}"
-                           placeholder="Ej: Antropología Social, Arqueología, etc."
-                           class="admin-input">
                 </div>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
