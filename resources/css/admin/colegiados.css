@@ -633,6 +633,7 @@ div.user-avatar-small {
     color: var(--dark);
     font-size: 14px;
     line-height: 1.5;
+    text-align: justify;
 }
 
 .info-group a {

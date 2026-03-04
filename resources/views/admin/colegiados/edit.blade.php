@@ -66,7 +66,7 @@
                 <h3 class="section-title">Identificación</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="codigo_cpap">Código CPAP <span class="required">*</span></label>
+                        <label for="codigo_cpap">Número de Colegiatura <span class="required">*</span></label>
                         <input type="text" class="form-control @error('codigo_cpap') is-invalid @enderror"
                                id="codigo_cpap" name="codigo_cpap" value="{{ old('codigo_cpap', $colegiado->codigo_cpap) }}"
                                placeholder="CPAP-2026-00001" required>
@@ -174,7 +174,19 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="especialidad">Especialidad</label>
+                        <label for="orientacion">Orientación</label>
+                        <input type="text" class="form-control @error('orientacion') is-invalid @enderror"
+                               id="orientacion" name="orientacion" value="{{ old('orientacion', $colegiado->orientacion) }}"
+                               placeholder="Ej: Antropología Cultural">
+                        @error('orientacion')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="especialidad">Especialización</label>
                         <input type="text" class="form-control @error('especialidad') is-invalid @enderror"
                                id="especialidad" name="especialidad" value="{{ old('especialidad', $colegiado->especialidad) }}"
                                placeholder="Ej: Antropología Social">
@@ -185,17 +197,6 @@
                 </div>
                 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="orientacion">
-                            Orientación
-                        </label>
-                        <input type="text" class="form-control @error('orientacion') is-invalid @enderror"
-                               id="orientacion" name="orientacion" value="{{ old('orientacion', $colegiado->orientacion) }}"
-                               placeholder="Ej: Antropología Forense, Etnografía">
-                        @error('orientacion')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                     <div class="form-group">
                         <label for="experiencia_anos">Años de Experiencia</label>
                         <input type="number" class="form-control @error('experiencia_anos') is-invalid @enderror"
@@ -432,7 +433,7 @@
                                 <label class="visibility-field-label">
                                     <div class="visibility-field-label__icon"><i class="fas fa-flask"></i></div>
                                     <div class="visibility-field-label__text">
-                                        <strong>Especialidad</strong>
+                                        <strong>Especialización</strong>
                                         <span>{{ $colegiado->ocultar_especialidad ? 'Oculta en perfil público' : 'Visible en perfil público' }}</span>
                                     </div>
                                     <label class="toggle-switch toggle-switch--sm">

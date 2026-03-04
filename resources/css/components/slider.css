@@ -63,9 +63,9 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    /* Ken Burns: zoom ligero cuando el slide está activo */
-    transform: scale(1.07);
-    transition: transform 8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Ken Burns mejorado: zoom más notorio */
+    transform: scale(1.12);
+    transition: transform 10s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
     user-select: none;
     display: block;

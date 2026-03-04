@@ -16,6 +16,7 @@ class ConfiguracionInicio extends Model
         'hero_badge',
         'hero_titulo',
         'hero_subtitulo',
+        'hero_imagen',
         'hero_btn1_texto',
         'hero_btn1_url',
         'hero_btn1_icono',

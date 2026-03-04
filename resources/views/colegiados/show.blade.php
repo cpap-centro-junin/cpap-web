@@ -39,11 +39,13 @@
             <h1 class="perfil-nombre">{{ $colegiado->nombre_completo }}</h1>
             <p class="perfil-codigo">
                 {{ $colegiado->codigo_cpap }}
-                @if($colegiado->especialidad && !$colegiado->ocultar_especialidad)
-                    &nbsp;&middot;&nbsp; {{ $colegiado->especialidad }}
-                    @if($colegiado->orientacion && !$colegiado->ocultar_orientacion)
-                        &nbsp;&middot;&nbsp; <span style="opacity:0.8;">{{ $colegiado->orientacion }}</span>
+                @if($colegiado->orientacion && !$colegiado->ocultar_orientacion)
+                    &nbsp;&middot;&nbsp; {{ $colegiado->orientacion }}
+                    @if($colegiado->especialidad && !$colegiado->ocultar_especialidad)
+                        &nbsp;&middot;&nbsp; <span style="opacity:0.8;">{{ $colegiado->especialidad }}</span>
                     @endif
+                @elseif($colegiado->especialidad && !$colegiado->ocultar_especialidad)
+                    &nbsp;&middot;&nbsp; {{ $colegiado->especialidad }}
                 @endif
             </p>
             @if($colegiado->estado === 'activo')
@@ -75,17 +77,16 @@
                     Datos Profesionales
                 </h2>
                 <div class="info-grid">
-                    @if($colegiado->especialidad && !$colegiado->ocultar_especialidad)
-                    <div class="info-field">
-                        <label>Especialidad</label>
-                        <span>{{ $colegiado->especialidad }}</span>
-                    </div>
-                    @endif
-
                     @if($colegiado->orientacion && !$colegiado->ocultar_orientacion)
                     <div class="info-field">
                         <label>Orientación</label>
                         <span>{{ $colegiado->orientacion }}</span>
+                    </div>
+                    @endif
+                    @if($colegiado->especialidad && !$colegiado->ocultar_especialidad)
+                    <div class="info-field">
+                        <label>Especialización</label>
+                        <span>{{ $colegiado->especialidad }}</span>
                     </div>
                     @endif
 
@@ -125,7 +126,7 @@
                     @endif
 
                     <div class="info-field">
-                        <label>Código CPAP</label>
+                        <label>Número de Colegiatura</label>
                         <span>{{ $colegiado->codigo_cpap }}</span>
                     </div>
 

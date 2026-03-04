@@ -7,7 +7,7 @@
 .cpap-hero {
     background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 40%, var(--primary-dark) 100%);
     background-size: 400% 400%;
-    padding: 108px 0 60px;
+    padding: 70px 0 70px;
     text-align: center;
     position: relative;
     overflow: hidden;

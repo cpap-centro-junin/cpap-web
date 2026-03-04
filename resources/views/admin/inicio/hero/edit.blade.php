@@ -11,9 +11,116 @@
     </a>
 </div>
 
-<form action="{{ route('admin.inicio.hero.update') }}" method="POST">
+<form action="{{ route('admin.inicio.hero.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
+
+    {{-- SECCIÓN 0: IMAGEN DE FONDO --}}
+    <div class="admin-form-card" style="margin-bottom:24px;">
+        <h2 style="font-size:18px;font-weight:700;color:var(--dark);margin:0 0 24px;padding-bottom:12px;border-bottom:2px solid var(--light-gray);">
+            <i class="fas fa-image" style="color:var(--primary);margin-right:10px;"></i>
+            Imagen de Fondo del Hero
+        </h2>
+
+        <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:24px;margin-bottom:24px;">
+            {{-- Imagen ACTUAL --}}
+            <div>
+                <h3 style="font-size:14px;font-weight:600;color:var(--dark);margin:0 0 12px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-check-circle" style="color:#4CAF50;"></i> Imagen Actual
+                </h3>
+                @if($config->hero_imagen)
+                <div id="imagenActualContainer" style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+                    <img src="{{ Storage::url($config->hero_imagen) }}" alt="Hero Background" 
+                         style="width:100%;height:200px;object-fit:cover;display:block;">
+                    <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:12px;color:white;">
+                        <p style="margin:0;font-size:12px;font-weight:500;">
+                            <i class="fas fa-image"></i> En uso
+                        </p>
+                    </div>
+                </div>
+                @else
+                <div style="border:2px dashed #ddd;border-radius:12px;padding:60px 20px;text-align:center;background:#f9f9f9;">
+                    <i class="fas fa-image" style="font-size:40px;color:#ccc;margin-bottom:12px;display:block;"></i>
+                    <p style="color:var(--medium-gray);font-size:13px;margin:0;">Sin imagen configurada</p>
+                </div>
+                @endif
+            </div>
+
+            {{-- PREVIEW de NUEVA imagen --}}
+            <div>
+                <h3 style="font-size:14px;font-weight:600;color:var(--dark);margin:0 0 12px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-eye" style="color:#2196F3;"></i> Vista Previa (Nueva)
+                </h3>
+                <div id="previewContainer" style="border:2px dashed #2196F3;border-radius:12px;padding:60px 20px;text-align:center;background:#f0f7ff;min-height:200px;display:flex;align-items:center;justify-content:center;">
+                    <div id="previewPlaceholder">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:40px;color:#2196F3;margin-bottom:12px;display:block;"></i>
+                        <p style="color:#1976D2;font-size:13px;margin:0;font-weight:500;">Selecciona una imagen para ver preview</p>
+                    </div>
+                    <img id="previewImage" src="" alt="Preview" style="display:none;width:100%;height:200px;object-fit:cover;border-radius:8px;">
+                </div>
+            </div>
+        </div>
+
+        {{-- Campo de subida --}}
+        <div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label for="hero_imagen" style="display:flex;align-items:center;gap:8px;font-weight:600;color:var(--dark);margin-bottom:10px;">
+                    <i class="fas fa-upload"></i> Subir Nueva Imagen
+                </label>
+                <input type="file" id="hero_imagen" name="hero_imagen" accept="image/jpeg,image/png,image/jpg,image/webp"
+                       class="form-control" style="font-size:14px;padding:12px;" onchange="previewHeroImage(event)">
+                <small style="color:var(--medium-gray);font-size:12px;display:block;margin-top:10px;line-height:1.6;">
+                    📸 <strong>Recomendaciones:</strong><br>
+                    • Tamaño recomendado: <strong>1920x1080px</strong> o superior (Full HD / 4K / 8K)<br>
+                    • Formatos aceptados: JPG, PNG, WEBP<br>
+                    • <strong style="color:#4CAF50;">✓ Hasta 256MB</strong> - Carga imágenes HD sin problemas<br>
+                    • Imagen con buena iluminación para que el texto se lea bien
+                </small>
+                @error('hero_imagen')
+                    <p style="color:var(--danger);font-size:13px;margin:10px 0 0;">{{ $message }}</p>
+                @enderror
+            </div>
+
+            @if($config->hero_imagen)
+            <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:14px;">
+                <p style="color:#856404;font-size:13px;margin:0;line-height:1.6;">
+                    <i class="fas fa-exclamation-triangle" style="color:#ffc107;"></i>
+                    <strong>Nota:</strong> Al subir una nueva imagen, la anterior será reemplazada automáticamente.
+                </p>
+            </div>
+            @endif
+        </div>
+    </div>
+
+    <script>
+    function previewHeroImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('previewImage');
+        const placeholder = document.getElementById('previewPlaceholder');
+        const container = document.getElementById('previewContainer');
+        
+        if (file && file.type.match('image.*')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+                container.style.padding = '0';
+                container.style.border = '2px solid #4CAF50';
+                container.style.background = '#E8F5E9';
+            };
+            
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+            container.style.padding = '60px 20px';
+            container.style.border = '2px dashed #2196F3';
+            container.style.background = '#f0f7ff';
+        }
+    }
+    </script>
 
     {{-- SECCIÓN 1: TEXTOS DE BIENVENIDA --}}
     <div class="admin-form-card" style="margin-bottom:24px;">

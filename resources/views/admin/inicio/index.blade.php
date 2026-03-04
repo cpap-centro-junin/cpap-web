@@ -63,14 +63,22 @@
                 <i class="fas fa-text-height" style="font-size:26px;color:#2196F3;"></i>
             </div>
             <div style="flex:1;">
-                <h3 style="font-size:19px;font-weight:700;margin:0 0 6px;color:var(--dark);">Título y Botones</h3>
-                <p style="font-size:13px;color:var(--medium-gray);margin:0;line-height:1.5;">Texto de bienvenida y botones principales</p>
+                <h3 style="font-size:19px;font-weight:700;margin:0 0 6px;color:var(--dark);">Hero: Imagen y Textos</h3>
+                <p style="font-size:13px;color:var(--medium-gray);margin:0;line-height:1.5;">Imagen de fondo, título y botones principales</p>
             </div>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #f0f0f0;">
-            <span style="font-size:12px;color:var(--medium-gray);">
-                <i class="fas fa-font" style="color:#2196F3;margin-right:6px;"></i>Personalizar mensaje de inicio
-            </span>
+            <div style="display:flex;gap:12px;">
+                @if($config->hero_imagen)
+                <span style="background:rgba(76,175,80,0.12);color:#2E7D32;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;">
+                    <i class="fas fa-image" style="font-size:10px;"></i> Con imagen
+                </span>
+                @else
+                <span style="background:rgba(255,152,0,0.12);color:#E65100;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;">
+                    <i class="fas fa-exclamation-circle" style="font-size:10px;"></i> Sin imagen
+                </span>
+                @endif
+            </div>
             <i class="fas fa-arrow-right" style="color:#2196F3;font-size:16px;"></i>
         </div>
     </a>

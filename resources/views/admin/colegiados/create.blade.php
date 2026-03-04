@@ -30,7 +30,7 @@
                 <h3 class="section-title">Identificación</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="codigo_cpap">Código CPAP <span class="required">*</span></label>
+                        <label for="codigo_cpap">Número de Colegiatura <span class="required">*</span></label>
                         <input type="text" class="form-control @error('codigo_cpap') is-invalid @enderror"
                                id="codigo_cpap" name="codigo_cpap" value="{{ old('codigo_cpap') }}"
                                placeholder="CPAP-2026-00001" required>
@@ -131,7 +131,19 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="especialidad">Especialidad <span class="text-muted" style="font-size:11px;font-weight:400;">(opcional)</span></label>
+                        <label for="orientacion">Orientación <span class="text-muted" style="font-size:11px;font-weight:400;">(opcional)</span></label>
+                        <input type="text" class="form-control @error('orientacion') is-invalid @enderror"
+                               id="orientacion" name="orientacion" value="{{ old('orientacion') }}"
+                               placeholder="Ej: Antropología Cultural">
+                        @error('orientacion')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="especialidad">Especialización <span class="text-muted" style="font-size:11px;font-weight:400;">(opcional)</span></label>
                         <input type="text" class="form-control @error('especialidad') is-invalid @enderror"
                                id="especialidad" name="especialidad" value="{{ old('especialidad') }}"
                                placeholder="Ej: Antropología Social">
@@ -142,17 +154,6 @@
                 </div>
                 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="orientacion">
-                            Orientación <span class="text-muted" style="font-size:11px;font-weight:400;">(opcional)</span>
-                        </label>
-                        <input type="text" class="form-control @error('orientacion') is-invalid @enderror"
-                               id="orientacion" name="orientacion" value="{{ old('orientacion') }}"
-                               placeholder="Ej: Antropología Forense, Etnografía">
-                        @error('orientacion')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                     <div class="form-group">
                         <label for="experiencia_anos">Años de Experiencia <span class="text-muted" style="font-size:11px;font-weight:400;">(opcional)</span></label>
                         <input type="number" class="form-control @error('experiencia_anos') is-invalid @enderror"
@@ -382,8 +383,8 @@
                                 <label class="visibility-field-label">
                                     <div class="visibility-field-label__icon"><i class="fas fa-flask"></i></div>
                                     <div class="visibility-field-label__text">
-                                        <strong>Especialidad</strong>
-                                        <span>Ocultar especialidad en perfil público</span>
+                                        <strong>Especialización</strong>
+                                        <span>Ocultar especialización en perfil público</span>
                                     </div>
                                     <label class="toggle-switch toggle-switch--sm">
                                         <input type="checkbox" name="ocultar_especialidad" value="1" {{ old('ocultar_especialidad') ? 'checked' : '' }}>

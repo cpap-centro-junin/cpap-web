@@ -71,7 +71,7 @@
                         <tr>
                             <th>
                                 <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'codigo_cpap', 'order' => $sort === 'codigo_cpap' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
-                                    Código CPAP
+                                    N° de Colegiatura
                                     <i class="fas fa-sort{{ $sort === 'codigo_cpap' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
                                 </a>
                             </th>
@@ -89,7 +89,7 @@
                             </th>
                             <th>
                                 <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'especialidad', 'order' => $sort === 'especialidad' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
-                                    Especialidad / Orientación
+                                    Especialización / Orientación
                                     <i class="fas fa-sort{{ $sort === 'especialidad' ? ($order === 'asc' ? '-up' : '-down') : '' }}"></i>
                                 </a>
                             </th>
@@ -135,14 +135,16 @@
                                     </div>
                                 </td>
                                 <td>
-                                    @if($colegiado->especialidad)
-                                        <span class="text-muted">{{ $colegiado->especialidad }}</span>
-                                        @if($colegiado->orientacion)
+                                    @if($colegiado->orientacion)
+                                        <span class="text-muted">{{ $colegiado->orientacion }}</span>
+                                        @if($colegiado->especialidad)
                                             <br>
                                             <small class="orientacion-sub">
-                                                <i class="fas fa-angle-right"></i> {{ $colegiado->orientacion }}
+                                                <i class="fas fa-angle-right"></i> {{ $colegiado->especialidad }}
                                             </small>
                                         @endif
+                                    @elseif($colegiado->especialidad)
+                                        <span class="text-muted">{{ $colegiado->especialidad }}</span>
                                     @else
                                         <span class="text-muted fst-italic">No especificada</span>
                                     @endif

@@ -53,11 +53,21 @@
 
                 {{-- Info profesional --}}
                 <div class="sidebar-info">
+                    @if($colegiado->orientacion)
+                    <div class="sidebar-field">
+                        <i class="fas fa-compass"></i>
+                        <div>
+                            <label>Orientación</label>
+                            <span>{{ $colegiado->orientacion }}</span>
+                        </div>
+                    </div>
+                    @endif
+
                     @if($colegiado->especialidad)
                     <div class="sidebar-field">
                         <i class="fas fa-briefcase"></i>
                         <div>
-                            <label>Especialidad</label>
+                            <label>Especialización</label>
                             <span>{{ $colegiado->especialidad }}</span>
                         </div>
                     </div>

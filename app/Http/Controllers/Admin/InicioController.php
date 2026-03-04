@@ -181,6 +181,7 @@ class InicioController extends Controller
             'hero_badge'       => 'nullable|string|max:50',
             'hero_titulo'      => 'nullable|string',
             'hero_subtitulo'   => 'nullable|string',
+            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp',
             'hero_btn1_texto'  => 'nullable|string|max:50',
             'hero_btn1_url'    => 'nullable|string|max:500',
             'hero_btn1_icono'  => 'nullable|string|max:50',
@@ -190,6 +191,20 @@ class InicioController extends Controller
         ]);
 
         $config = ConfiguracionInicio::obtener();
+
+        // Procesar imagen si se sube una nueva
+        if ($request->hasFile('hero_imagen')) {
+            // Eliminar imagen anterior si existe
+            if ($config->hero_imagen && Storage::disk('public')->exists($config->hero_imagen)) {
+                Storage::disk('public')->delete($config->hero_imagen);
+            }
+            
+            $imagen = $request->file('hero_imagen');
+            $nombreImagen = 'hero_' . time() . '.' . $imagen->getClientOriginalExtension();
+            $imagen->storeAs('hero', $nombreImagen, 'public');
+            $data['hero_imagen'] = 'hero/' . $nombreImagen;
+        }
+
         $config->update($data);
 
         return redirect()->route('admin.inicio.index')

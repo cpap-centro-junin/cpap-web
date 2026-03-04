@@ -72,7 +72,7 @@ class BibliotecaPublicController extends Controller
 
         $totalRecursos = RecursoBiblioteca::activos()->count();
 
-        return view('biblioteca', compact('recursos', 'destacados', 'conteos', 'totalRecursos'));
+        return view('biblioteca.index', compact('recursos', 'destacados', 'conteos', 'totalRecursos'));
     }
 
     /**
@@ -94,7 +94,7 @@ class BibliotecaPublicController extends Controller
             ->take(3)
             ->get();
 
-        return view('biblioteca-detalle', compact('recurso', 'relacionados'));
+        return view('biblioteca.show', compact('recurso', 'relacionados'));
     }
 
     /**

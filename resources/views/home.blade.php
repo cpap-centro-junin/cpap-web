@@ -4,10 +4,13 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="hero" id="inicio">
+<section class="hero hero--home" id="inicio" 
+         @if($config->hero_imagen)
+         style="background-image: url('{{ Storage::url($config->hero_imagen) }}');"
+         @endif>
     <div class="hero-overlay"></div>
     <div class="container">
-        <div class="hero-content" data-aos="fade-up">
+        <div class="hero-content" data-aos="fade-right">
             <span class="hero-badge">{{ $config->hero_badge ?? 'Bienvenidos' }}</span>
             <h1 class="hero-title">{!! $config->hero_titulo ?? 'Colegio Profesional de<br><span class="gradient-text">Antropólogos del Perú</span>' !!}</h1>
             <p class="hero-subtitle">{{ $config->hero_subtitulo ?? 'Región Centro - Promoviendo la excelencia profesional y la investigación antropológica desde 1985' }}</p>

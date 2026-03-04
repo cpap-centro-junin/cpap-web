@@ -132,22 +132,16 @@
                         Grado {{ $colegiado->ocultar_grado_academico ? 'oculto' : 'visible' }}
                     </span>
                 @endif
-                @if($colegiado->especialidad)
-                    <span class="vis-badge {{ $colegiado->ocultar_especialidad ? 'vis-badge--hidden' : 'vis-badge--visible' }}">
-                        <i class="fas fa-flask"></i>
-                        Especialidad {{ $colegiado->ocultar_especialidad ? 'oculta' : 'visible' }}
-                    </span>
-                @endif
-                @if($colegiado->especializacion_detalle)
-                    <span class="vis-badge {{ $colegiado->ocultar_especializacion_detalle ? 'vis-badge--hidden' : 'vis-badge--visible' }}">
-                        <i class="fas fa-list-ul"></i>
-                        Detalle Espec. {{ $colegiado->ocultar_especializacion_detalle ? 'oculto' : 'visible' }}
-                    </span>
-                @endif
                 @if($colegiado->orientacion)
                     <span class="vis-badge {{ $colegiado->ocultar_orientacion ? 'vis-badge--hidden' : 'vis-badge--visible' }}">
                         <i class="fas fa-compass"></i>
                         Orientación {{ $colegiado->ocultar_orientacion ? 'oculta' : 'visible' }}
+                    </span>
+                @endif
+                @if($colegiado->especialidad)
+                    <span class="vis-badge {{ $colegiado->ocultar_especialidad ? 'vis-badge--hidden' : 'vis-badge--visible' }}">
+                        <i class="fas fa-flask"></i>
+                        Especialización {{ $colegiado->ocultar_especialidad ? 'oculta' : 'visible' }}
                     </span>
                 @endif
                 @if($colegiado->diplomados)
@@ -316,10 +310,24 @@
                     </div>
                 @endif
 
+                @if($colegiado->orientacion)
+                    <div class="info-group">
+                        <label>
+                            Orientación
+                            @if($colegiado->ocultar_orientacion)
+                                <span class="field-hidden-indicator" title="Oculto en perfil público">
+                                    <i class="fas fa-eye-slash"></i>
+                                </span>
+                            @endif
+                        </label>
+                        <p>{{ $colegiado->orientacion }}</p>
+                    </div>
+                @endif
+
                 @if($colegiado->especialidad)
                     <div class="info-group">
                         <label>
-                            Especialidad
+                            Especialización
                             @if($colegiado->ocultar_especialidad)
                                 <span class="field-hidden-indicator" title="Oculto en perfil público">
                                     <i class="fas fa-eye-slash"></i>
@@ -341,20 +349,6 @@
                             @endif
                         </label>
                         <p style="white-space: pre-line;">{{ $colegiado->especializacion_detalle }}</p>
-                    </div>
-                @endif
-
-                @if($colegiado->orientacion)
-                    <div class="info-group">
-                        <label>
-                            Orientación
-                            @if($colegiado->ocultar_orientacion)
-                                <span class="field-hidden-indicator" title="Oculto en perfil público">
-                                    <i class="fas fa-eye-slash"></i>
-                                </span>
-                            @endif
-                        </label>
-                        <p>{{ $colegiado->orientacion }}</p>
                     </div>
                 @endif
 

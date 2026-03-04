@@ -67,8 +67,8 @@
                         'recommend' => 'Conservar comprobante de pago.'
                     ],
                     [
-                        'title' => 'Registro Oficial y Código CPAP',
-                        'content' => 'Asignación de código profesional y habilitación.',
+                        'title' => 'Registro Oficial y Número de Colegiatura',
+                        'content' => 'Asignación de número profesional y habilitación.',
                         'docs' => [],
                         'recommend' => 'Puedes verificar tu estado en el directorio.'
                     ],

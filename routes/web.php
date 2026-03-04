@@ -60,7 +60,7 @@ Route::get('/bolsa-trabajo', function (\Illuminate\Http\Request $request) {
 
     $ofertas = $query->orderBy('fecha_publicacion', 'desc')->paginate(12)->withQueryString();
 
-    return view('bolsa-trabajo', compact('ofertas'));
+    return view('bolsa-trabajo.index', compact('ofertas'));
 })->name('bolsa-trabajo');
 
 Route::post('/bolsa-trabajo/solicitar', function (\Illuminate\Http\Request $request) {

@@ -14,7 +14,7 @@
         </div>
         @if($buscar)
             <h3>No se encontró ningún colegiado<br>para <em>"{{ $buscar }}"</em></h3>
-            <p>Prueba con el DNI completo, apellidos o código CPAP exacto.</p>
+            <p>Prueba con el DNI completo, apellidos o número de colegiatura exacto.</p>
         @else
             <h3>No se encontraron colegiados</h3>
             <p>No hay registros que coincidan con los filtros seleccionados.</p>
@@ -51,9 +51,15 @@
                     <div class="card-name">{{ $colegiado->nombre_completo }}</div>
                     <div class="card-code">{{ $colegiado->codigo_cpap }}</div>
                     <div class="card-specialty">
-                        {{ $colegiado->especialidad ?? 'Antropólogo Profesional' }}
                         @if($colegiado->orientacion)
-                            <br><small style="opacity:0.75; font-size:11px;">{{ $colegiado->orientacion }}</small>
+                            {{ $colegiado->orientacion }}
+                            @if($colegiado->especialidad)
+                                <br><small style="opacity:0.75; font-size:11px;">{{ $colegiado->especialidad }}</small>
+                            @endif
+                        @elseif($colegiado->especialidad)
+                            {{ $colegiado->especialidad }}
+                        @else
+                            Antropólogo Profesional
                         @endif
                     </div>
                     <div>
