@@ -82,6 +82,12 @@
 
                     <form action="{{ route('contact.send') }}" method="POST" id="contactForm">
                         @csrf
+                        {{-- Honeypot: campo invisible para bots --}}
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        <input type="hidden" name="_timestamp" id="formTimestamp">
+
                         @if ($errors->any())
                             <div class="ctc-form-errors">
                                 @foreach ($errors->all() as $error)
@@ -117,6 +123,12 @@
                             <textarea name="mensaje" id="ctc-mensaje" rows="6"
                                       placeholder="Escribe tu consulta o comentario aquí..."
                                       required></textarea>
+                        </div>
+
+                        <input type="hidden" name="recaptcha_token" id="recaptchaToken">
+
+                        <div class="ctc-recaptcha-wrapper" style="margin-bottom: 20px;">
+                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                         </div>
 
                         <button type="submit" class="ctc-submit-btn" id="submitBtn">
@@ -212,32 +224,60 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
     const form = document.getElementById("contactForm");
     const btn  = document.getElementById("submitBtn");
+
+    // Registrar timestamp cuando se carga el formulario
+    document.getElementById("formTimestamp").value = Math.floor(Date.now() / 1000);
+
     form.addEventListener("submit", function(e){
         e.preventDefault();
+
+        // Verificar que el usuario completó el reCAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            Swal.fire({ icon: "warning", title: "Verificaci\u00f3n requerida", text: "Por favor, marca la casilla \"No soy un robot\".", confirmButtonColor: "#8B1538" });
+            return;
+        }
+
         btn.classList.add("loading");
         btn.disabled = true;
+
+        // Guardar el token en el hidden field
+        document.getElementById("recaptchaToken").value = recaptchaResponse;
+
         fetch(form.action, {
             method: "POST",
             body: new FormData(form),
-            headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" }
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Accept": "application/json"
+            }
         })
-        .then(r => { if(!r.ok) throw new Error(); return r.json(); })
+        .then(r => {
+            if(!r.ok){
+                return r.json().then(d => { throw d; });
+            }
+            return r.json();
+        })
         .then(data => {
             btn.classList.remove("loading");
             btn.disabled = false;
             if(data.success){
                 form.reset();
+                grecaptcha.reset();
                 Swal.fire({ icon: "success", title: "Mensaje enviado", text: data.message, confirmButtonColor: "#8B1538" });
             }
         })
-        .catch(() => {
+        .catch((err) => {
             btn.classList.remove("loading");
             btn.disabled = false;
-            Swal.fire({ icon: "error", title: "Error", text: "Hubo un problema al enviar el mensaje." });
+            grecaptcha.reset();
+            const msg = (err && err.message) ? err.message : "Hubo un problema al enviar el mensaje.";
+            Swal.fire({ icon: "error", title: "Error", text: msg });
         });
     });
 });

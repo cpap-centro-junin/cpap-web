@@ -32,7 +32,7 @@
                 @else
                 <span class="msg-detail-muted"><i class="fas fa-phone"></i> Sin teléfono</span>
                 @endif
-                <span><i class="fas fa-calendar-alt"></i> {{ $message->created_at->format('d/m/Y H:i') }}</span>
+                <span><i class="fas fa-calendar-alt"></i> {{ $message->created_at->format('d/m/Y h:i A') }}</span>
             </div>
         </div>
     </div>

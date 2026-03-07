@@ -50,7 +50,7 @@
             <div class="msg-row-right">
                 <div class="msg-date">
                     <i class="fas fa-clock"></i>
-                    {{ $msg->created_at->format('d/m/Y') }}
+                    {{ $msg->created_at->format('d/m/Y h:i A') }}
                 </div>
                 <div class="msg-actions">
                     <a href="{{ route('admin.mensajes.show', $msg) }}" class="msg-btn msg-btn--view">
