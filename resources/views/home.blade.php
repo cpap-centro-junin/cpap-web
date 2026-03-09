@@ -273,7 +273,7 @@
                 </div>
                 <h3>Colegiatura</h3>
                 <p>Proceso de incorporación y actualización de colegiados con requisitos claros y transparentes.</p>
-                <a href="#colegiatura" class="btn-text">
+                <a href="{{ url('/colegiatura') }}" class="btn-text">
                     Ver Proceso <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
@@ -284,7 +284,7 @@
                 </div>
                 <h3>Certificaciones</h3>
                 <p>Emisión de certificados de habilitación profesional y constancias de colegiatura vigente.</p>
-                <a href="{{ url('/#colegiatura') }}" class="btn-text">
+                <a href="{{ url('/colegiados') }}" class="btn-text">
                     Más Información <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
@@ -445,68 +445,115 @@
             <p class="section-subtitle">Sigue estos pasos para formar parte de nuestra comunidad profesional</p>
         </div>
 
-        <div class="membership-steps">
-            <div class="step-card" data-aos="zoom-in" data-aos-delay="100">
-                <div class="step-number">1</div>
-                <div class="step-icon">
-                    <i class="fas fa-file-alt"></i>
+        <!-- Timeline de Pasos con Conectores -->
+        <div class="membership-timeline">
+            <!-- Línea Conectora (detrás de las tarjetas) -->
+            <div class="timeline-line" data-aos="fade-right" data-aos-delay="200"></div>
+
+            <!-- Paso 1: Formato y Descarga -->
+            <div class="timeline-step" data-aos="fade-up" data-aos-delay="100">
+                <div class="timeline-step-card">
+                    <div class="timeline-step-badge">
+                        <span class="badge-number">1</span>
+                    </div>
+                    <div class="timeline-step-icon">
+                        <i class="fas fa-file-download"></i>
+                    </div>
+                    <h3 class="timeline-step-title">Formato de Inscripción</h3>
+                    <p class="timeline-step-description">Descarga e información inicial</p>
+                    <ul class="timeline-step-list">
+                        <li><i class="fas fa-check-circle"></i> Descargar formato oficial de inscripción</li>
+                        <li><i class="fas fa-check-circle"></i> Revisar requisitos documentarios</li>
+                        <li><i class="fas fa-check-circle"></i> Preparar título profesional y DNI</li>
+                        <li><i class="fas fa-check-circle"></i> Foto carnet y declaración jurada</li>
+                    </ul>
                 </div>
-                <h3>Requisitos</h3>
-                <ul class="step-list">
-                    <li>Título profesional de Antropólogo</li>
-                    <li>DNI vigente (copia)</li>
-                    <li>Certificado de estudios</li>
-                    <li>Pago por derecho de inscripción</li>
-                </ul>
             </div>
 
-            <div class="step-card" data-aos="zoom-in" data-aos-delay="200">
-                <div class="step-number">2</div>
-                <div class="step-icon">
-                    <i class="fas fa-upload"></i>
+            <!-- Paso 2: Pago Regional -->
+            <div class="timeline-step" data-aos="fade-up" data-aos-delay="200">
+                <div class="timeline-step-card">
+                    <div class="timeline-step-badge">
+                        <span class="badge-number">2</span>
+                    </div>
+                    <div class="timeline-step-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3 class="timeline-step-title">Pago Regional</h3>
+                    <p class="timeline-step-description">Depósito en Caja Huancayo</p>
+                    <ul class="timeline-step-list">
+                        <li><i class="fas fa-check-circle"></i> Depositar S/. 490.00 en Caja Huancayo</li>
+                        <li><i class="fas fa-check-circle"></i> Cuenta CDD Región Centro</li>
+                        <li><i class="fas fa-check-circle"></i> Escanear baucher de pago</li>
+                        <li><i class="fas fa-check-circle"></i> Enviar comprobante en PDF al correo</li>
+                    </ul>
                 </div>
-                <h3>Presentación</h3>
-                <ul class="step-list">
-                    <li>Llenar formulario de inscripción</li>
-                    <li>Adjuntar documentos escaneados</li>
-                    <li>Enviar a secretaría</li>
-                    <li>Esperar confirmación de recepción</li>
-                </ul>
             </div>
 
-            <div class="step-card" data-aos="zoom-in" data-aos-delay="300">
-                <div class="step-number">3</div>
-                <div class="step-icon">
-                    <i class="fas fa-check-circle"></i>
+            <!-- Paso 3: Documentación -->
+            <div class="timeline-step" data-aos="fade-up" data-aos-delay="300">
+                <div class="timeline-step-card">
+                    <div class="timeline-step-badge">
+                        <span class="badge-number">3</span>
+                    </div>
+                    <div class="timeline-step-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3 class="timeline-step-title">Envío de Requisitos</h3>
+                    <p class="timeline-step-description">Documentación completa en PDF</p>
+                    <ul class="timeline-step-list">
+                        <li><i class="fas fa-check-circle"></i> Formato de inscripción llenado</li>
+                        <li><i class="fas fa-check-circle"></i> Copia de título y DNI en PDF</li>
+                        <li><i class="fas fa-check-circle"></i> Foto carnet digital</li>
+                        <li><i class="fas fa-check-circle"></i> Enviar todo a cpap.rc@gmail.com</li>
+                    </ul>
                 </div>
-                <h3>Aprobación</h3>
-                <ul class="step-list">
-                    <li>Revisión de documentos</li>
-                    <li>Verificación de requisitos</li>
-                    <li>Aprobación por consejo directivo</li>
-                    <li>Notificación de resultado</li>
-                </ul>
             </div>
 
-            <div class="step-card" data-aos="zoom-in" data-aos-delay="400">
-                <div class="step-number">4</div>
-                <div class="step-icon">
-                    <i class="fas fa-gavel"></i>
+            <!-- Paso 4: Pago Nacional -->
+            <div class="timeline-step" data-aos="fade-up" data-aos-delay="400">
+                <div class="timeline-step-card">
+                    <div class="timeline-step-badge">
+                        <span class="badge-number">4</span>
+                    </div>
+                    <div class="timeline-step-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="timeline-step-title">Pago Nacional</h3>
+                    <p class="timeline-step-description">Finalización del proceso</p>
+                    <ul class="timeline-step-list">
+                        <li><i class="fas fa-check-circle"></i> Depositar S/. 210.00 en BCP</li>
+                        <li><i class="fas fa-check-circle"></i> Cuenta Consejo Directivo Nacional</li>
+                        <li><i class="fas fa-check-circle"></i> Enviar baucher nacional en PDF</li>
+                        <li><i class="fas fa-check-circle"></i> Registro y habilitación oficial</li>
+                    </ul>
                 </div>
-                <h3>Juramentación</h3>
-                <ul class="step-list">
-                    <li>Ceremonia de juramentación</li>
-                    <li>Entrega de certificado</li>
-                    <li>Registro en padrón nacional</li>
-                    <li>Activación de beneficios</li>
-                </ul>
             </div>
         </div>
 
-        <div class="text-center" style="margin-top: 50px;" data-aos="fade-up">
-            <a href="{{ url('/contacto') }}" class="btn btn-primary btn-lg">
+        <!-- Nota de Costos -->
+        <div class="text-center" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="450">
+            <div style="background: linear-gradient(135deg, #8B1538 0%, #C41E3A 100%); padding: 25px 40px; border-radius: 16px; display: inline-block; box-shadow: 0 10px 40px rgba(139, 21, 56, 0.3);">
+                <p style="color: white; margin: 0; font-size: 1rem; font-weight: 600; margin-bottom: 8px;">
+                    <i class="fas fa-info-circle" style="margin-right: 8px;"></i>Inversión Total de Colegiatura
+                </p>
+                <p style="color: #FFD700; margin: 0; font-size: 2.2rem; font-weight: 900; letter-spacing: 1px;">
+                    S/. 700.00
+                </p>
+                <p style="color: rgba(255, 255, 255, 0.9); margin: 0; font-size: 0.9rem; margin-top: 8px;">
+                    S/. 490 (Regional) + S/. 210 (Nacional)
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center" style="margin-top: 40px;" data-aos="fade-up" data-aos-delay="500">
+            <a href="{{ route('colegiatura.index') }}" class="btn btn-primary btn-lg" style="margin-right: 15px;">
+                <i class="fas fa-file-alt"></i>
+                Ver Proceso Completo
+            </a>
+            <a href="{{ url('/contacto') }}" class="btn btn-outline btn-lg">
                 <i class="fas fa-envelope"></i>
-                Iniciar Proceso de Colegiatura
+                Consultar Dudas
             </a>
         </div>
     </div>
