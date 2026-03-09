@@ -1,6 +1,6 @@
 {
   "resources/css/admin.css": {
-    "file": "assets/admin-Ed_gNqtq.css",
+    "file": "assets/admin-DAfGFlbt.css",
     "src": "resources/css/admin.css",
     "isEntry": true,
     "name": "admin",
@@ -18,7 +18,7 @@
     ]
   },
   "resources/css/anuncios-slider.css": {
-    "file": "assets/anuncios-slider-B-TuSRWL.css",
+    "file": "assets/anuncios-slider-C3U7vDyY.css",
     "src": "resources/css/anuncios-slider.css",
     "isEntry": true,
     "name": "anuncios-slider",
@@ -27,7 +27,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-DjCBybsb.css",
+    "file": "assets/app-CiaK6M4D.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
