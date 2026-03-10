@@ -17,8 +17,6 @@
 body.admin-layout {
     background: var(--admin-bg);
     display: block;
-    overflow: hidden;
-    height: 100vh;
     margin: 0;
     padding: 0;
 }

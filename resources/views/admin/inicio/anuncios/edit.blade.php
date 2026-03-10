@@ -38,7 +38,7 @@
 
 @section('content')
 
-<div style="max-width:720px;">
+<div style="width:100%;">
 
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
         <a href="{{ route('admin.inicio.anuncios.index') }}"

@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div style="max-width:760px;">
+<div style="width:100%;">
 
     {{-- HEADER --}}
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">

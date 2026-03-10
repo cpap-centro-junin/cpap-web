@@ -14,7 +14,7 @@
    CONTENEDOR Y ENCABEZADOS DE PÁGINA
    ============================================================ */
 .admin-container {
-    max-width: 1300px;
+    width: 100%;
     padding: 0 4px;
 }
 

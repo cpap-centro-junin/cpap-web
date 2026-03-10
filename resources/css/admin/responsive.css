@@ -3,7 +3,7 @@
    resources/css/admin/responsive.css
    ============================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
     /* Sidebar oculto en mobile */
     .sidebar {
         position: fixed;
@@ -100,9 +100,9 @@
         padding-bottom: 80px;
     }
 
-    /* Content full width */
+    /* Content full width en mobile */
     .content {
-        width: 100%;
+        margin-left: 0 !important;
     }
 
     /* Cards 1 columna */
@@ -116,7 +116,7 @@
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 480px) {
     .sidebar {
         width: 240px;
         left: -240px;

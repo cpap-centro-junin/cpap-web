@@ -218,13 +218,15 @@ const toggleBtn  = document.getElementById('toggleSidebar');
 const hamburger  = document.getElementById('hamburger');
 const sidebar    = document.getElementById('adminSidebar');
 const overlay    = document.getElementById('overlay');
+const wrapper    = document.querySelector('.admin-wrapper');
 
 // Desktop: colapsa/expande sidebar
 // Mobile:  abre/cierra el drawer
 function toggleSidebar() {
-    if (window.innerWidth > 900) {
+    if (window.innerWidth > 768) {
         // ── DESKTOP: colapsar / expandir ──
         sidebar.classList.toggle('collapsed');
+        wrapper.classList.toggle('sidebar-collapsed');
         // Guardar preferencia en localStorage
         const isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebar-collapsed', isCollapsed);
@@ -241,10 +243,11 @@ function closeMobileSidebar() {
 }
 
 // Restaurar estado guardado al cargar (solo desktop)
-if (window.innerWidth > 900) {
+if (window.innerWidth > 768) {
     const savedCollapsed = localStorage.getItem('sidebar-collapsed');
     if (savedCollapsed === 'true') {
         sidebar.classList.add('collapsed');
+        wrapper.classList.add('sidebar-collapsed');
     }
 }
 
@@ -255,13 +258,13 @@ if (overlay)   overlay.addEventListener('click', closeMobileSidebar);
 // Cerrar mobile drawer al hacer click en un item
 document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', function() {
-        if (window.innerWidth <= 900) closeMobileSidebar();
+        if (window.innerWidth <= 768) closeMobileSidebar();
     });
 });
 
 // Limpiar estado mobile al redimensionar a desktop
 window.addEventListener('resize', function() {
-    if (window.innerWidth > 900) closeMobileSidebar();
+    if (window.innerWidth > 768) closeMobileSidebar();
 });
 </script>
 
