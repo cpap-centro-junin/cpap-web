@@ -201,6 +201,32 @@
     line-height: 1.65;
 }
 
+/* Lista interna dentro de un paso */
+.col-step-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+}
+
+.col-step-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: var(--font-sm);
+    color: var(--dark-secondary);
+}
+
+.col-step-list li i {
+    color: var(--primary);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.col-step-list li strong {
+    color: var(--dark);
+}
+
 .col-step-note {
     margin-top: 12px;
     padding: 10px 14px;
@@ -668,5 +694,59 @@
     .hero-pill {
         padding: 8px 16px;
         font-size: 13px;
+    }
+}
+
+/* ---- BOTONES DE DESCARGA PDF ---- */
+.col-download-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.col-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.35);
+}
+
+.col-download-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(220, 53, 69, 0.5);
+    background: linear-gradient(135deg, #c82333 0%, #a71d2a 100%);
+    color: #ffffff;
+}
+
+.col-download-btn i {
+    font-size: 1.3rem;
+}
+
+/* Variante dorada para habilitación */
+.col-download-btn--gold {
+    background: linear-gradient(135deg, #C9A961 0%, #D4AF37 100%);
+    box-shadow: 0 8px 25px rgba(201, 169, 97, 0.4);
+}
+
+.col-download-btn--gold:hover {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+    box-shadow: 0 12px 35px rgba(201, 169, 97, 0.6);
+}
+
+@media (max-width: 768px) {
+    .col-download-btn {
+        padding: 14px 24px;
+        font-size: 0.9rem;
+    }
+
+    .col-download-btn i {
+        font-size: 1.1rem;
     }
 }

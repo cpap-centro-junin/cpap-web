@@ -39,54 +39,123 @@
             <div class="col-step">
                 <div class="col-step-icon"><span>01</span></div>
                 <div class="col-step-body">
-                    <h3>Descargar formato de inscripción</h3>
-                    <p>Ingresa a la web institucional y descarga el formato oficial de inscripción para colegiatura.</p>
+                    <h3>Descargar formatos de inscripción</h3>
+                    <p>Descarga los formatos oficiales desde la página web institucional <strong>Región Centro</strong> o <strong>Nacional</strong>.</p>
                 </div>
             </div>
 
             <div class="col-step">
                 <div class="col-step-icon"><span>02</span></div>
                 <div class="col-step-body">
-                    <h3>Depositar S/. 490.00 – Región Centro</h3>
-                    <p>Realiza el depósito en la cuenta del CDD Región Centro en <strong>Caja Huancayo</strong>.</p>
-                    <div class="col-step-note">
-                        <i class="fas fa-university"></i> Cuenta CDD Región Centro – Caja Huancayo
-                    </div>
+                    <h3>Rellenar y escanear documentos</h3>
+                    <p>Completa y escanea los siguientes documentos:</p>
+                    <ul class="col-step-list">
+                        <li><i class="fas fa-file-alt"></i> Solicitud de inscripción CPAP</li>
+                        <li><i class="fas fa-file-alt"></i> Ficha de inscripción</li>
+                        <li><i class="fas fa-file-signature"></i> Declaración Jurada simple</li>
+                    </ul>
                 </div>
             </div>
 
             <div class="col-step">
                 <div class="col-step-icon"><span>03</span></div>
                 <div class="col-step-body">
-                    <h3>Enviar baucher de pago regional</h3>
-                    <p>Escanea o captura el baucher y envíalo en formato <strong>PDF</strong> al correo institucional.</p>
+                    <h3>Constancia SUNEDU</h3>
+                    <p>Descargar el <strong>Certificado o Constancia de SUNEDU</strong> del Título Profesional.</p>
                 </div>
             </div>
 
             <div class="col-step">
                 <div class="col-step-icon"><span>04</span></div>
                 <div class="col-step-body">
-                    <h3>Adjuntar requisitos documentarios</h3>
-                    <p>Prepara y envía todos los requisitos en PDF al correo institucional: título, DNI, foto carnet, declaración jurada, entre otros.</p>
+                    <h3>Título Profesional</h3>
+                    <p>Título Profesional <strong>fedateado</strong> por la Universidad de origen o <strong>legalizado</strong> por una Notaría.</p>
+                    <div class="col-step-note">
+                        <i class="fas fa-globe-americas"></i> Títulos del extranjero: presentar título revalidado por la SUNEDU
+                    </div>
                 </div>
             </div>
 
             <div class="col-step">
                 <div class="col-step-icon"><span>05</span></div>
                 <div class="col-step-body">
-                    <h3>Depositar S/. 210.00 – Consejo Nacional</h3>
-                    <p>Realiza el depósito en la cuenta del Consejo Directivo Nacional en <strong>BCP</strong>.</p>
-                    <div class="col-step-note">
-                        <i class="fas fa-university"></i> Cuenta Consejo Directivo Nacional – BCP
-                    </div>
+                    <h3>Copia de DNI</h3>
+                    <p>Copia simple del <strong>Documento Nacional de Identidad</strong> (ambas caras).</p>
                 </div>
             </div>
 
             <div class="col-step">
                 <div class="col-step-icon"><span>06</span></div>
                 <div class="col-step-body">
-                    <h3>Enviar baucher de pago nacional</h3>
-                    <p>Escanea o captura el baucher nacional y envíalo en formato <strong>PDF</strong>.</p>
+                    <h3>Depósito Región Centro – S/. 490.00</h3>
+                    <p>Depositar en la cuenta del CDD Región Centro:</p>
+                    <div class="col-step-note">
+                        <i class="fas fa-university"></i> <strong>Caja Huancayo:</strong> 1070352110004988965
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-step">
+                <div class="col-step-icon"><span>07</span></div>
+                <div class="col-step-body">
+                    <h3>Enviar voucher regional</h3>
+                    <p>Tomar captura y/o escanear el voucher del depósito y enviarlo por WhatsApp.</p>
+                    <div class="col-step-note">
+                        <i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> 943 667 317
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-step">
+                <div class="col-step-icon"><span>08</span></div>
+                <div class="col-step-body">
+                    <h3>Depósito Nacional – S/. 210.00</h3>
+                    <p>Depositar en la cuenta del Consejo Directivo Nacional:</p>
+                    <div class="col-step-note">
+                        <i class="fas fa-university"></i> <strong>BCP:</strong> 21508875589036
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-step">
+                <div class="col-step-icon"><span>09</span></div>
+                <div class="col-step-body">
+                    <h3>Enviar voucher nacional</h3>
+                    <p>Tomar captura y/o escanear el voucher del depósito nacional y enviarlo por WhatsApp.</p>
+                    <div class="col-step-note">
+                        <i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> 943 667 317
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-step">
+                <div class="col-step-icon"><span>10</span></div>
+                <div class="col-step-body">
+                    <h3>Fotografía digital</h3>
+                    <p>Una fotografía digital <strong>tamaño pasaporte</strong> con vestido formal en formato <strong>JPG</strong>.</p>
+                </div>
+            </div>
+
+            <div class="col-step">
+                <div class="col-step-icon"><span>11</span></div>
+                <div class="col-step-body">
+                    <h3>Firma digital</h3>
+                    <p>Firma digital escaneada en formato <strong>JPG</strong>.</p>
+                </div>
+            </div>
+
+            <div class="col-step">
+                <div class="col-step-icon"><span>12</span></div>
+                <div class="col-step-body">
+                    <h3>Enviar documentación completa</h3>
+                    <p>Adjuntar todos los requisitos y enviarlos al correo institucional:</p>
+                    <ul class="col-step-list">
+                        <li><i class="fas fa-file-pdf"></i> <strong>En PDF:</strong> Pasos 2, 3, 4, 5, 7 y 9</li>
+                        <li><i class="fas fa-image"></i> <strong>En JPG:</strong> Pasos 10 y 11</li>
+                    </ul>
+                    <div class="col-step-note">
+                        <i class="fas fa-envelope"></i> <strong>Correo:</strong> cpap.rc@gmail.com
+                    </div>
                 </div>
             </div>
 
@@ -113,6 +182,14 @@
                     <div class="col-payment-label">Total Colegiatura</div>
                 </div>
             </div>
+        </div>
+
+        {{-- Botón descargar PDF --}}
+        <div class="col-download-section" data-aos="fade-up" data-aos-delay="250">
+            <a href="{{ asset('assets/documents/proceso-colegiacion.pdf') }}" target="_blank" class="col-download-btn">
+                <i class="fas fa-file-pdf"></i>
+                <span>Descargar Guía de Colegiación (PDF)</span>
+            </a>
         </div>
     </div>
 </section>
@@ -199,6 +276,14 @@
                 <p><i class="fas fa-heart"></i> <strong>Descuento 30%:</strong> por enfermedad o maternidad prematura, previa solicitud y evaluación.</p>
             </div>
         </div>
+
+        {{-- Botón descargar PDF --}}
+        <div class="col-download-section" data-aos="fade-up" data-aos-delay="250">
+            <a href="{{ asset('assets/documents/proceso-habilitacion.pdf') }}" target="_blank" class="col-download-btn col-download-btn--gold">
+                <i class="fas fa-file-pdf"></i>
+                <span>Descargar Guía de Habilitación (PDF)</span>
+            </a>
+        </div>
     </div>
 </section>
 
@@ -270,6 +355,14 @@
                     <p style="color: white;">Documento oficial que acredita tu capacidad profesional como antropólogo habilitado. Vigencia trimestral o semestral según disposición del Consejo Directivo.</p>
                 </div>
             </div>
+        </div>
+
+        {{-- Botón descargar PDF --}}
+        <div class="col-download-section" data-aos="fade-up" data-aos-delay="250">
+            <a href="{{ asset('assets/documents/reglamento-habilitaciones.pdf') }}" target="_blank" class="col-download-btn">
+                <i class="fas fa-file-pdf"></i>
+                <span>Descargar Reglamento de Habilitaciones (PDF)</span>
+            </a>
         </div>
     </div>
 </section>

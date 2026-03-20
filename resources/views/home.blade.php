@@ -442,119 +442,144 @@
         <div class="section-header text-center" data-aos="fade-up">
             <span class="section-badge">Únete a Nosotros</span>
             <h2 class="section-title">Proceso de Colegiatura</h2>
-            <p class="section-subtitle">Sigue estos pasos para formar parte de nuestra comunidad profesional</p>
+            <p class="section-subtitle">12 pasos para formar parte de nuestra comunidad profesional</p>
         </div>
 
-        <!-- Timeline de Pasos con Conectores -->
-        <div class="membership-timeline">
-            <!-- Línea Conectora (detrás de las tarjetas) -->
-            <div class="timeline-line" data-aos="fade-right" data-aos-delay="200"></div>
+        <!-- Lista de 12 Pasos Compacta -->
+        <div class="home-steps-grid" data-aos="fade-up" data-aos-delay="100">
 
-            <!-- Paso 1: Formato y Descarga -->
-            <div class="timeline-step" data-aos="fade-up" data-aos-delay="100">
-                <div class="timeline-step-card">
-                    <div class="timeline-step-badge">
-                        <span class="badge-number">1</span>
-                    </div>
-                    <div class="timeline-step-icon">
-                        <i class="fas fa-file-download"></i>
-                    </div>
-                    <h3 class="timeline-step-title">Formato de Inscripción</h3>
-                    <p class="timeline-step-description">Descarga e información inicial</p>
-                    <ul class="timeline-step-list">
-                        <li><i class="fas fa-check-circle"></i> Descargar formato oficial de inscripción</li>
-                        <li><i class="fas fa-check-circle"></i> Revisar requisitos documentarios</li>
-                        <li><i class="fas fa-check-circle"></i> Preparar título profesional y DNI</li>
-                        <li><i class="fas fa-check-circle"></i> Foto carnet y declaración jurada</li>
-                    </ul>
+            <!-- Paso 1 -->
+            <div class="home-step">
+                <div class="home-step-number">01</div>
+                <div class="home-step-content">
+                    <h4>Descargar formatos de inscripción</h4>
+                    <p>Formatos oficiales web Región Centro o Nacional</p>
                 </div>
             </div>
 
-            <!-- Paso 2: Pago Regional -->
-            <div class="timeline-step" data-aos="fade-up" data-aos-delay="200">
-                <div class="timeline-step-card">
-                    <div class="timeline-step-badge">
-                        <span class="badge-number">2</span>
-                    </div>
-                    <div class="timeline-step-icon">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <h3 class="timeline-step-title">Pago Regional</h3>
-                    <p class="timeline-step-description">Depósito en Caja Huancayo</p>
-                    <ul class="timeline-step-list">
-                        <li><i class="fas fa-check-circle"></i> Depositar S/. 490.00 en Caja Huancayo</li>
-                        <li><i class="fas fa-check-circle"></i> Cuenta CDD Región Centro</li>
-                        <li><i class="fas fa-check-circle"></i> Escanear baucher de pago</li>
-                        <li><i class="fas fa-check-circle"></i> Enviar comprobante en PDF al correo</li>
-                    </ul>
+            <!-- Paso 2 -->
+            <div class="home-step">
+                <div class="home-step-number">02</div>
+                <div class="home-step-content">
+                    <h4>Rellenar y escanear documentos</h4>
+                    <p>Solicitud CPAP, ficha y declaración jurada</p>
                 </div>
             </div>
 
-            <!-- Paso 3: Documentación -->
-            <div class="timeline-step" data-aos="fade-up" data-aos-delay="300">
-                <div class="timeline-step-card">
-                    <div class="timeline-step-badge">
-                        <span class="badge-number">3</span>
-                    </div>
-                    <div class="timeline-step-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
-                    <h3 class="timeline-step-title">Envío de Requisitos</h3>
-                    <p class="timeline-step-description">Documentación completa en PDF</p>
-                    <ul class="timeline-step-list">
-                        <li><i class="fas fa-check-circle"></i> Formato de inscripción llenado</li>
-                        <li><i class="fas fa-check-circle"></i> Copia de título y DNI en PDF</li>
-                        <li><i class="fas fa-check-circle"></i> Foto carnet digital</li>
-                        <li><i class="fas fa-check-circle"></i> Enviar todo a cpap.rc@gmail.com</li>
-                    </ul>
+            <!-- Paso 3 -->
+            <div class="home-step">
+                <div class="home-step-number">03</div>
+                <div class="home-step-content">
+                    <h4>Constancia SUNEDU</h4>
+                    <p>Certificado del Título Profesional</p>
                 </div>
             </div>
 
-            <!-- Paso 4: Pago Nacional -->
-            <div class="timeline-step" data-aos="fade-up" data-aos-delay="400">
-                <div class="timeline-step-card">
-                    <div class="timeline-step-badge">
-                        <span class="badge-number">4</span>
-                    </div>
-                    <div class="timeline-step-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <h3 class="timeline-step-title">Pago Nacional</h3>
-                    <p class="timeline-step-description">Finalización del proceso</p>
-                    <ul class="timeline-step-list">
-                        <li><i class="fas fa-check-circle"></i> Depositar S/. 210.00 en BCP</li>
-                        <li><i class="fas fa-check-circle"></i> Cuenta Consejo Directivo Nacional</li>
-                        <li><i class="fas fa-check-circle"></i> Enviar baucher nacional en PDF</li>
-                        <li><i class="fas fa-check-circle"></i> Registro y habilitación oficial</li>
-                    </ul>
+            <!-- Paso 4 -->
+            <div class="home-step">
+                <div class="home-step-number">04</div>
+                <div class="home-step-content">
+                    <h4>Título Profesional</h4>
+                    <p>Fedateado por universidad o legalizado</p>
                 </div>
             </div>
+
+            <!-- Paso 5 -->
+            <div class="home-step">
+                <div class="home-step-number">05</div>
+                <div class="home-step-content">
+                    <h4>Copia de DNI</h4>
+                    <p>Documento Nacional de Identidad (ambas caras)</p>
+                </div>
+            </div>
+
+            <!-- Paso 6 - DESTACADO -->
+            <div class="home-step home-step--payment">
+                <div class="home-step-number home-step-number--gold">06</div>
+                <div class="home-step-content">
+                    <h4>Depósito Región Centro – S/. 490.00</h4>
+                    <p><i class="fas fa-university"></i> <strong>Caja Huancayo:</strong> 1070352110004988965</p>
+                </div>
+            </div>
+
+            <!-- Paso 7 -->
+            <div class="home-step">
+                <div class="home-step-number">07</div>
+                <div class="home-step-content">
+                    <h4>Enviar voucher regional</h4>
+                    <p><i class="fab fa-whatsapp"></i> WhatsApp <strong>943 667 317</strong></p>
+                </div>
+            </div>
+
+            <!-- Paso 8 - DESTACADO -->
+            <div class="home-step home-step--payment">
+                <div class="home-step-number home-step-number--gold">08</div>
+                <div class="home-step-content">
+                    <h4>Depósito Nacional – S/. 210.00</h4>
+                    <p><i class="fas fa-university"></i> <strong>BCP:</strong> 21508875589036</p>
+                </div>
+            </div>
+
+            <!-- Paso 9 -->
+            <div class="home-step">
+                <div class="home-step-number">09</div>
+                <div class="home-step-content">
+                    <h4>Enviar voucher nacional</h4>
+                    <p><i class="fab fa-whatsapp"></i> WhatsApp <strong>943 667 317</strong></p>
+                </div>
+            </div>
+
+            <!-- Paso 10 -->
+            <div class="home-step">
+                <div class="home-step-number">10</div>
+                <div class="home-step-content">
+                    <h4>Fotografía digital</h4>
+                    <p>Tamaño pasaporte, vestido formal (JPG)</p>
+                </div>
+            </div>
+
+            <!-- Paso 11 -->
+            <div class="home-step">
+                <div class="home-step-number">11</div>
+                <div class="home-step-content">
+                    <h4>Firma digital</h4>
+                    <p>Firma escaneada en formato JPG</p>
+                </div>
+            </div>
+
+            <!-- Paso 12 - DESTACADO FINAL -->
+            <div class="home-step">
+                <div class="home-step-number">12</div>
+                <div class="home-step-content">
+                    <h4>Enviar documentación completa</h4>
+                    <p><i class="fas fa-envelope"></i> <strong>cpap.rc@gmail.com</strong> (PDF: pasos 2,3,4,5,7,9 + JPG: 10,11)</p>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Nota de Costos -->
-        <div class="text-center" style="margin-top: 50px;" data-aos="fade-up" data-aos-delay="450">
-            <div style="background: linear-gradient(135deg, #8B1538 0%, #C41E3A 100%); padding: 25px 40px; border-radius: 16px; display: inline-block; box-shadow: 0 10px 40px rgba(139, 21, 56, 0.3);">
-                <p style="color: white; margin: 0; font-size: 1rem; font-weight: 600; margin-bottom: 8px;">
-                    <i class="fas fa-info-circle" style="margin-right: 8px;"></i>Inversión Total de Colegiatura
-                </p>
-                <p style="color: #FFD700; margin: 0; font-size: 2.2rem; font-weight: 900; letter-spacing: 1px;">
-                    S/. 700.00
-                </p>
-                <p style="color: rgba(255, 255, 255, 0.9); margin: 0; font-size: 0.9rem; margin-top: 8px;">
-                    S/. 490 (Regional) + S/. 210 (Nacional)
-                </p>
+        <!-- Total y Botones -->
+        <div class="home-colegiatura-footer" data-aos="fade-up" data-aos-delay="200">
+            <div class="home-total-box">
+                <div class="total-label">Inversión Total</div>
+                <div class="total-amount">S/. 700.00</div>
+                <div class="total-breakdown">S/. 490 (Regional) + S/. 210 (Nacional)</div>
             </div>
-        </div>
 
-        <div class="text-center" style="margin-top: 40px;" data-aos="fade-up" data-aos-delay="500">
-            <a href="{{ route('colegiatura.index') }}" class="btn btn-primary btn-lg" style="margin-right: 15px;">
-                <i class="fas fa-file-alt"></i>
-                Ver Proceso Completo
-            </a>
-            <a href="{{ url('/contacto') }}" class="btn btn-outline btn-lg">
-                <i class="fas fa-envelope"></i>
-                Consultar Dudas
-            </a>
+            <div class="home-cta-buttons">
+                <a href="{{ asset('assets/documents/proceso-colegiacion.pdf') }}" target="_blank" class="btn-pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    Descargar Guía Completa
+                </a>
+                <a href="{{ route('colegiatura.index') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-list-ol"></i>
+                    Ver Detalles Ampliados
+                </a>
+                <a href="{{ url('/contacto') }}" class="btn btn-outline btn-lg">
+                    <i class="fas fa-question-circle"></i>
+                    ¿Tienes Dudas?
+                </a>
+            </div>
         </div>
     </div>
 </section>
