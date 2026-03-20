@@ -61,6 +61,48 @@
     </div>
 </section>
 
+<!-- Foto Grupal del Consejo Directivo -->
+<section class="consejo-foto-grupal">
+    <div class="container">
+        <div class="consejo-foto-card" data-aos="zoom-in">
+            <div class="consejo-foto-imagen">
+                <img src="/images/consejo-directivo/foto-grupal.jpg"
+                     alt="Consejo Directivo CPAP Región Centro - Gestión 2024-2026"
+                     loading="lazy">
+            </div>
+            <div class="consejo-foto-caption">
+                <span class="consejo-foto-badge">
+                    <i class="fas fa-users"></i>
+                    Gestión 2024 – 2026
+                </span>
+                <h3>Consejo Directivo del CPAP Región Centro</h3>
+                <p>Comprometidos con el desarrollo profesional y la representación de los antropólogos de la región</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Imagen institucional adicional -->
+<section class="consejo-foto-secundaria">
+    <div class="container">
+        <div class="consejo-foto-card" data-aos="zoom-in">
+            <div class="consejo-foto-imagen">
+                <img src="/images/consejo-directivo/header-bg.jpg"
+                     alt="Imagen institucional del Consejo Directivo"
+                     loading="lazy">
+            </div>
+            <div class="consejo-foto-caption">
+                <span class="consejo-foto-badge">
+                    <i class="fas fa-image"></i>
+                    Imagen institucional
+                </span>
+                <h3>Consejo Directivo - CPAP Región Centro</h3>
+                <p>Registro visual institucional del equipo de dirección</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Descripción institucional + funciones -->
 <section class="consejo-intro-section">
     <div class="container">

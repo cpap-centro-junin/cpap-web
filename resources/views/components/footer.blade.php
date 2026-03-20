@@ -82,7 +82,7 @@
                         <li>
                             <i class="fas fa-clock"></i>
                             <div class="footer-contact-info">
-                                Lun - Vie: 9:00 AM - 6:00 PM
+                                Lun - Vie: 9:00 AM - 1:00 PM
                             </div>
                         </li>
                     </ul>

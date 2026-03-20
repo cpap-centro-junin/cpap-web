@@ -284,18 +284,18 @@
 }
 
 .card-avatar {
-    width: 72px;
-    height: 72px;
-    border-radius: var(--radius-circle);
+    width: 92px;
+    height: 92px;
+    border-radius: var(--radius-lg);
     border: 3px solid white;
     box-shadow: var(--shadow-md);
     object-fit: cover;
 }
 
 .card-avatar-placeholder {
-    width: 72px;
-    height: 72px;
-    border-radius: var(--radius-circle);
+    width: 92px;
+    height: 92px;
+    border-radius: var(--radius-lg);
     border: 3px solid white;
     box-shadow: var(--shadow-md);
     background: linear-gradient(135deg, var(--secondary-dark), var(--accent));

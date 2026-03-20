@@ -53,6 +53,10 @@
 
                 {{-- Info profesional --}}
                 <div class="sidebar-info">
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-user-graduate"></i>
+                        Información Profesional
+                    </div>
                     @if($colegiado->orientacion)
                     <div class="sidebar-field">
                         <i class="fas fa-compass"></i>
@@ -94,6 +98,10 @@
 
                 {{-- Info del documento --}}
                 <div class="sidebar-doc">
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-file-certificate"></i>
+                        Datos del Documento
+                    </div>
                     <div class="sidebar-field">
                         <i class="fas fa-calendar-alt"></i>
                         <div>

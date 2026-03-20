@@ -4,6 +4,105 @@
    ============================================ */
 
 /* ============================================
+   SECCIÓN FOTO GRUPAL DEL CONSEJO
+   ============================================ */
+.consejo-foto-grupal {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.consejo-foto-secundaria {
+    padding: 0 0 60px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.consejo-foto-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(139, 21, 56, 0.12);
+    border: 1px solid var(--border);
+}
+
+.consejo-foto-imagen {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.consejo-foto-imagen img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.consejo-foto-card:hover .consejo-foto-imagen img {
+    transform: scale(1.02);
+}
+
+.consejo-foto-caption {
+    padding: 28px 32px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: white;
+}
+
+.consejo-foto-caption h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-xl);
+    font-weight: var(--font-extrabold);
+    margin-bottom: 8px;
+    color: white;
+}
+
+.consejo-foto-caption p {
+    font-size: var(--font-sm);
+    opacity: 0.9;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.consejo-foto-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius-full);
+    font-size: var(--font-xs);
+    font-weight: var(--font-semibold);
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .consejo-foto-grupal {
+        padding: 40px 0;
+    }
+
+    .consejo-foto-secundaria {
+        padding: 0 0 40px;
+    }
+
+    .consejo-foto-card {
+        margin: 0 16px;
+        border-radius: var(--radius-xl);
+    }
+
+    .consejo-foto-caption {
+        padding: 20px 24px;
+    }
+
+    .consejo-foto-caption h3 {
+        font-size: var(--font-lg);
+    }
+}
+
+/* ============================================
    GRID DE CARDS
    3 en primera fila, 2 centrados en segunda
    ============================================ */

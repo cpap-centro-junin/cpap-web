@@ -155,7 +155,7 @@
                             <div class="ctc-info-item-icon ctc-icon--primary"><i class="fas fa-clock"></i></div>
                             <div class="ctc-info-item-body">
                                 <strong>Horario de Atención</strong>
-                                <span>Lunes a viernes · 09:00 a.m. – 06:00 p.m.</span>
+                                <span>Lunes a viernes · 09:00 a.m. – 01:00 p.m.</span>
                             </div>
                         </div>
                         <div class="ctc-info-item">
