@@ -118,19 +118,22 @@
     transition: transform 0.3s ease;
 }
 
-.nav-link:hover,
-.nav-link.active {
-    background: linear-gradient(135deg, rgba(139, 21, 56, 0.08) 0%, rgba(255, 107, 107, 0.08) 100%);
-    color: var(--primary);
-    transform: translateY(-2px);
-}
+/* Estilos de .nav-link.active SOLO en DESKTOP */
+@media (min-width: 769px) {
+    .nav-link:hover,
+    .nav-link.active {
+        background: linear-gradient(135deg, rgba(139, 21, 56, 0.08) 0%, rgba(255, 107, 107, 0.08) 100%);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
 
-.nav-link:hover i {
-    transform: scale(1.1);
-}
+    .nav-link:hover i {
+        transform: scale(1.1);
+    }
 
-.nav-link.active {
-    background: linear-gradient(135deg, rgba(139, 21, 56, 0.12) 0%, rgba(255, 107, 107, 0.12) 100%);
+    .nav-link.active {
+        background: linear-gradient(135deg, rgba(139, 21, 56, 0.12) 0%, rgba(255, 107, 107, 0.12) 100%);
+    }
 }
 
 /* DROPDOWN MENU */
@@ -305,6 +308,16 @@
 }
 
 @media (max-width: 768px) {
+    /* RESET: Anular todos los estilos de .active globales en mobile */
+    .navbar-menu .nav-link {
+        color: #2c3e50 !important;
+    }
+    
+    /* Solo aplicar rojo si es la página actual Y está en un dropdown ABIERTO */
+    .navbar-menu .dropdown.active > .nav-link.active {
+        color: var(--primary) !important;
+    }
+    
     .navbar-toggle {
         display: flex;
     }
@@ -369,18 +382,64 @@
         border-radius: 14px;
     }
 
+    /* Cuando dropdown está CERRADO y NO es página actual - completamente limpio */
+    .dropdown:not(.active) > .nav-link:not(.active) {
+        background: transparent;
+        color: #2c3e50;
+        border-left: none;
+        padding-left: 20px;
+        font-weight: 600;
+    }
+    
+    /* Cuando dropdown está CERRADO pero es ruta activa - rojo */
+    .dropdown:not(.active) > .nav-link.active {
+        background: linear-gradient(135deg, rgba(139, 21, 56, 0.14) 0%, rgba(255, 107, 107, 0.12) 100%);
+        color: var(--primary);
+        font-weight: 700;
+        border-left: 3px solid var(--primary);
+        padding-left: 17px;
+    }
+    
+    /* Cuando dropdown está ABIERTO y es ruta activa - rojo intenso */
+    .dropdown.active > .nav-link.active {
+        background: linear-gradient(135deg, rgba(139, 21, 56, 0.14) 0%, rgba(255, 107, 107, 0.12) 100%);
+        color: var(--primary);
+        font-weight: 700;
+        border-left: 3px solid var(--primary);
+        padding-left: 17px;
+    }
+    
+    /* Cuando dropdown está ABIERTO pero NO es ruta activa - GRIS PURO */
+    .dropdown.active:not(:has(> .nav-link.active)) > .nav-link {
+        background: rgba(130, 130, 130, 0.1) !important;
+        color: #2c3e50 !important;
+        border-left: none !important;
+        padding-left: 20px !important;
+        font-weight: 600;
+    }
+    
+    /* FORCE RESET: Cuando dropdown está CERRADO, NO puede tener rojo a menos que sea la ruta actual */
+    .dropdown:not(.active) > .nav-link:not(.active) {
+        color: #2c3e50 !important;
+        background: transparent !important;
+    }
+
     .dropdown-menu {
         position: static;
-        opacity: 1;
-        visibility: visible;
+        opacity: 0;
+        visibility: hidden;
         transform: none;
         box-shadow: none;
         margin-top: 8px;
         margin-left: 20px;
-        background: rgba(139, 21, 56, 0.04);
+        background: rgba(130, 130, 130, 0.08);
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
+        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                    padding 0.3s ease,
+                    opacity 0.3s ease,
+                    visibility 0.3s ease,
+                    background 0.3s ease;
         padding: 0 8px;
         border: none;
     }
@@ -388,11 +447,31 @@
     .dropdown.active .dropdown-menu {
         max-height: 500px;
         padding: 8px;
+        opacity: 1;
+        visibility: visible;
+        background: rgba(130, 130, 130, 0.1);
+    }
+    
+    /* Indicador visual: cuando un dropdown con ruta activa se abre */
+    .dropdown.active:has(> .nav-link.active) .dropdown-menu {
+        background: rgba(139, 21, 56, 0.08);
     }
 
     .dropdown-icon {
         margin-left: auto;
         order: 2;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-block;
+        will-change: transform;
+    }
+
+    .dropdown.active .dropdown-icon {
+        transform: rotate(180deg);
+    }
+    
+    /* Asegurar que el icono vuelve a su posición cuando se cierra */
+    .dropdown:not(.active) .dropdown-icon {
+        transform: rotate(0deg);
     }
 
     .navbar-cta {

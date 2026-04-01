@@ -109,13 +109,28 @@
 
 @push('scripts')
 <script>
-// Navbar Functionality - Moderno
+// Navbar Functionality - Moderno con Accordion Responsive
 document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.getElementById('navbar');
     const toggle = document.getElementById('navbarToggle');
     const menu = document.getElementById('navbarMenu');
     const overlay = document.getElementById('navbarOverlay');
     const dropdowns = document.querySelectorAll('.dropdown');
+
+    // ============================================
+    // 1. INICIALIZAR DROPDOWNS SEGÚN RUTA ACTIVA
+    // ============================================
+    function initializeDropdownsForCurrentRoute() {
+        dropdowns.forEach(dropdown => {
+            // OPCIÓN B: Mantener dropdowns cerrados pero indicar ruta activa
+            // El nav-link.active muestará visualmente dónde estamos
+            // El dropdown NO se abre automáticamente
+            dropdown.classList.remove('active');
+        });
+    }
+    
+    // Inicializar al cargar
+    initializeDropdownsForCurrentRoute();
 
     // Hamburger toggle
     if (toggle && menu) {
@@ -124,6 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
             menu.classList.toggle('active');
             toggle.classList.toggle('active');
             overlay.classList.toggle('active');
+            
+            // Al cerrar el menú desde el toggle, mantener dropdowns activos por ruta
+            if (!menu.classList.contains('active')) {
+                initializeDropdownsForCurrentRoute();
+            }
         });
 
         // Close menu when clicking overlay
@@ -131,18 +151,62 @@ document.addEventListener('DOMContentLoaded', function() {
             menu.classList.remove('active');
             toggle.classList.remove('active');
             overlay.classList.remove('active');
+            initializeDropdownsForCurrentRoute();
         });
     }
 
-    // Dropdown toggle for mobile
+    // ============================================
+    // 2. ACCORDION BEHAVIOR EN MOBILE
+    // ============================================
+    
+    // Funciones helper para abrir/cerrar dropdowns explícitamente
+    function openDropdown(dropdown) {
+        // Cerrar todos los demás (accordion)
+        dropdowns.forEach(other => {
+            if (other !== dropdown && other.classList.contains('active')) {
+                closeDropdown(other);
+            }
+        });
+        dropdown.classList.add('active');
+    }
+    
+    function closeDropdown(dropdown) {
+        dropdown.classList.remove('active');
+    }
+    
+    function toggleDropdown(dropdown) {
+        if (dropdown.classList.contains('active')) {
+            closeDropdown(dropdown);
+        } else {
+            openDropdown(dropdown);
+        }
+    }
+    
     dropdowns.forEach(dropdown => {
         const link = dropdown.querySelector('.nav-link');
+        
+        // Evento click en el nav-link (previne click en icono también)
         link.addEventListener('click', function(e) {
             if (window.innerWidth <= 768) {
                 e.preventDefault();
-                dropdown.classList.toggle('active');
+                e.stopPropagation();
+                toggleDropdown(dropdown);
             }
         });
+        
+        // Agregar click al dropdown-menu para evitar bugs de propagación
+        const menu = dropdown.querySelector('.dropdown-menu');
+        if (menu) {
+            menu.addEventListener('click', function(e) {
+                // Si hace click en un link dentro del menú, cerrar después de navegar
+                if (e.target.tagName === 'A') {
+                    // Dejar que se navegue, pero cerrar el menú si se va a otra página
+                    setTimeout(() => {
+                        closeDropdown(dropdown);
+                    }, 100);
+                }
+            });
+        }
     });
 
     // Navbar scroll effect - throttled con requestAnimationFrame para evitar lag
