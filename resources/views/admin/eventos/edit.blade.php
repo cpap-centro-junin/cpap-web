@@ -241,14 +241,3 @@ dz.addEventListener('drop', e => {
 @endpush
 
 @endsection
-    const f = e.dataTransfer.files[0];
-    if (f && f.type.startsWith('image/')) {
-        const dt = new DataTransfer(); dt.items.add(f);
-        const inp = document.getElementById('imgInput');
-        inp.files = dt.files; handleImg(inp);
-    }
-});
-</script>
-@endpush
-
-@endsection
