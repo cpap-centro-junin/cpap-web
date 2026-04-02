@@ -308,14 +308,18 @@
 }
 
 @media (max-width: 768px) {
-    /* RESET: Anular todos los estilos de .active globales en mobile */
-    .navbar-menu .nav-link {
+    /* RESET: Anular todos los estilos de .active globales en mobile (excepto active) */
+    .navbar-menu .nav-link:not(.active) {
         color: #2c3e50 !important;
     }
     
-    /* Solo aplicar rojo si es la página actual Y está en un dropdown ABIERTO */
-    .navbar-menu .dropdown.active > .nav-link.active {
+    /* Aplicar rojo si es la página actual (tanto en dropdowns como en links diretos) */
+    .navbar-menu .nav-link.active {
         color: var(--primary) !important;
+        background: linear-gradient(135deg, rgba(139, 21, 56, 0.14) 0%, rgba(255, 107, 107, 0.12) 100%);
+        font-weight: 700;
+        border-left: 3px solid var(--primary);
+        padding-left: 17px;
     }
     
     .navbar-toggle {
