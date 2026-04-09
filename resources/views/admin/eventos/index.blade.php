@@ -169,7 +169,6 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDelete(titulo, formId) {
     Swal.fire({

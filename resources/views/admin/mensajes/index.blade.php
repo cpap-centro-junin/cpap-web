@@ -187,7 +187,6 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 // Confirmación para eliminación individual desde columna acciones
 document.querySelectorAll('.delete-form').forEach(form => {

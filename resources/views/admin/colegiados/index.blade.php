@@ -215,7 +215,6 @@
 
 
 @push('scripts')
-<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDeleteColegiado(nombre, formId) {
     Swal.fire({

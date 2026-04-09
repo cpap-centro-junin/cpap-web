@@ -177,7 +177,6 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
     // Manejo de delete individual (compatible con bulk actions)
     document.querySelectorAll('.delete-form').forEach(form => {
