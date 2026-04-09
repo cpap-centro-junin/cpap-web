@@ -270,7 +270,11 @@
                         </div>
                     </div>
                     <div class="bolsa-field bolsa-field-full">
+                        <label for="sol_descripcion"><i class="fas fa-align-left"></i> Descripción del puesto <span>*</span></label>
                         <textarea id="sol_descripcion" name="descripcion" rows="6" placeholder="Describe detalladamente los requisitos, funciones principales, beneficios y cualquier información relevante del puesto..." required></textarea>
+                        <small class="char-counter" style="display: block; margin-top: 6px; color: #aaa; font-size: 0.75rem;">
+                            <span id="descriptionCharCount">0</span> caracteres
+                        </small>
                     </div>
                 </div>
             </div>
@@ -376,12 +380,20 @@
             if (data.success) {
                 success.style.display = 'flex';
             } else {
-                // Mostrar errores
-                let msg = data.message || 'Error al enviar la solicitud.';
+                // Mostrar errores con SweetAlert2
+                let errorMsg = data.message || 'Error al enviar la solicitud.';
                 if (data.errors) {
-                    msg = Object.values(data.errors).flat().join('\n');
+                    const errorList = Object.entries(data.errors).map(([field, messages]) => {
+                        return `<strong>${field}:</strong> ${messages.join(', ')}`;
+                    }).join('<br>');
+                    errorMsg = errorList;
                 }
-                alert(msg);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en la solicitud',
+                    html: errorMsg,
+                    confirmButtonColor: '#8b1538'
+                });
                 form.style.display = '';
                 btn.disabled = false;
             }
@@ -390,12 +402,27 @@
             loading.style.display = 'none';
             form.style.display = '';
             btn.disabled = false;
-            alert('Error de conexión. Inténtalo de nuevo.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No pudimos conectar con el servidor. Inténtalo de nuevo.',
+                confirmButtonColor: '#8b1538'
+            });
         });
     });
 })();
 
-// ============ Buscador con filtros ============
+    // Contador de caracteres para descripción
+    const descriptionField = document.getElementById('sol_descripcion');
+    const charCounter = document.getElementById('descriptionCharCount');
+    
+    if (descriptionField && charCounter) {
+        descriptionField.addEventListener('input', function() {
+            charCounter.textContent = this.value.length;
+        });
+    }
+
+    // ============ Buscador con filtros ============
 (function() {
     const baseUrl = '{{ route("bolsa-trabajo") }}';
 

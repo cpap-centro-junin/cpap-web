@@ -63,12 +63,12 @@
     ]"
 />
 
-{{-- TABLA --}}
-<div class="admin-table">
+<div class="admin-table" data-table-name="biblioteca">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$recursos" loopIteration="header" />
                     <th style="width:50px;">Portada</th>
                     <th>Título / Autor</th>
                 <th>Tipo</th>
@@ -83,6 +83,7 @@
         <tbody>
             @forelse($recursos as $recurso)
             <tr>
+                <x-admin-row-number-cell :items="$recursos" :loopIteration="$loop->iteration" :itemId="$recurso->id" />
                 {{-- Portada --}}
                 <td>
                     @if($recurso->imagen_portada)
@@ -190,7 +191,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="9">
+                <td colspan="10">
                     <div class="empty-state">
                         <i class="fas fa-book"></i>
                         <h3>No hay recursos</h3>
@@ -207,12 +208,15 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'biblioteca'" />
+
 {{-- PAGINACIÓN --}}
 {{ $recursos->links('pagination.admin') }}
 
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDelete(titulo, formId) {
     Swal.fire({

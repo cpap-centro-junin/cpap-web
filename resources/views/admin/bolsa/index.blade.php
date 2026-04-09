@@ -78,11 +78,12 @@
 />
 
 {{-- TABLA --}}
-<div class="admin-table">
+<div class="admin-table" data-table-name="bolsa">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$ofertas" loopIteration="header" />
                     <th>Título</th>
                     <th>Empresa</th>
                 <th>Ubicación</th>
@@ -97,6 +98,7 @@
         <tbody>
             @forelse($ofertas as $oferta)
             <tr>
+                <x-admin-row-number-cell :items="$ofertas" :loopIteration="$loop->iteration" :itemId="$oferta->id" />
                 <td>
                     <div style="font-weight:600;color:var(--dark);font-size:14px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px;">
                         {{ $oferta->titulo }}
@@ -151,7 +153,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="9">
+                <td colspan="10">
                     <div class="empty-state">
                         <i class="fas fa-briefcase"></i>
                         <p>No hay ofertas de trabajo registradas.<br>Crea tu primera oferta para comenzar.</p>
@@ -167,11 +169,14 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'bolsa'" />
+
 {{ $ofertas->links('pagination.admin') }}
 
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

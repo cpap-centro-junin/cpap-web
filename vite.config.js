@@ -14,6 +14,7 @@ export default defineConfig({
                 'resources/css/anuncios-slider.css',
                 'resources/js/app.js',
                 'resources/js/admin/diseno.js',
+                'resources/js/admin-bulk-actions.js',
                 'resources/js/modules/mision-vision.js',
                 'resources/js/modules/consejo.js',
                 'resources/js/modules/historia.js',

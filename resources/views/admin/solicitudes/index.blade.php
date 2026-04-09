@@ -36,21 +36,25 @@
         :searchField="'q'"
         :route="route('admin.solicitudes.index')"
         :clearRoute="route('admin.solicitudes.index')"
-        :filters="[
-            [
-                'field' => 'estado',
-                'label' => 'Estado',
-                'options' => [
-                    'revisado' => 'Revisadas',
-                    'no-revisado' => 'No revisadas',
-                ]
-            ],
-        ]"
+        :filters="[]"
     />
 
-    <div class="msg-list-body">
+    <div class="msg-list-body" data-table-name="solicitudes">
+        {{-- ENCABEZADO CON CHECKBOX --}}
+        <div class="msg-row msg-row--header">
+            <div class="msg-checkbox-col">
+                <input type="checkbox" id="select-all-items" class="form-check-input" title="Seleccionar/deseleccionar todo">
+            </div>
+            <div class="msg-row-main">
+                <div style="font-size:12px;color:var(--medium-gray);">Solicitante / Oferta</div>
+            </div>
+        </div>
         @forelse($solicitudes as $sol)
         <div class="msg-row {{ !$sol->revisado ? 'msg-row--new' : '' }}">
+
+            <div class="msg-checkbox-col">
+                <input type="checkbox" name="selected_ids[]" class="form-check-input" value="{{ $sol->id }}">
+            </div>
 
             <div class="msg-avatar">
                 {{ strtoupper(substr($sol->nombre_contacto ?? $sol->empresa ?? 'S', 0, 2)) }}
@@ -84,7 +88,7 @@
                     <a href="{{ route('admin.solicitudes.show', $sol) }}" class="msg-btn msg-btn--view">
                         <i class="fas fa-eye"></i> Ver
                     </a>
-                    <form action="{{ route('admin.solicitudes.rechazar', $sol) }}" method="POST" class="delete-form">
+                    <form action="{{ route('admin.solicitudes.rechazar', $sol) }}" method="POST" class="delete-form" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="msg-btn msg-btn--delete">
@@ -104,30 +108,101 @@
         @endforelse
     </div>
 
+    <!-- Bulk Actions Bar -->
+    <x-admin-bulk-actions-bar :tableName="'solicitudes'" />
+
 {{ $solicitudes->links('pagination.admin') }}
 
 </div>
 
 @endsection
 
+@push('styles')
+<style>
+    .msg-checkbox-col {
+        width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #7b1e3a;
+        border-radius: 3px;
+    }
+
+    .msg-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .msg-row-main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .msg-row-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    .msg-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .msg-checkbox-col {
+            width: 60px;
+        }
+        
+        .msg-row-right {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .msg-date {
+            font-size: 12px;
+        }
+    }
+</style>
+@endpush
+
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
-document.querySelectorAll('.delete-form').forEach(form => {
-    form.addEventListener('submit', function(e){
-        e.preventDefault();
-        Swal.fire({
-            title: '¿Rechazar solicitud?',
-            text: "Se eliminará la solicitud de oferta. Esta acción no se puede deshacer.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#7b1e3a',
-            cancelButtonColor: '#999',
-            confirmButtonText: 'Sí, rechazar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if(result.isConfirmed) form.submit();
+    // Manejo de delete individual (compatible con bulk actions)
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e){
+            // Verificar si bulk actions está activo
+            const bulkActionsBar = document.getElementById('bulk-actions-bar');
+            if (bulkActionsBar && bulkActionsBar.style.display !== 'none') {
+                e.preventDefault();
+                return; // Bloquear si hay bulk actions activas
+            }
+
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Rechazar solicitud?',
+                text: "Se eliminará la solicitud de oferta. Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#7b1e3a',
+                cancelButtonColor: '#999',
+                confirmButtonText: 'Sí, rechazar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if(result.isConfirmed) form.submit();
+            });
         });
     });
-});
 </script>
 @endpush

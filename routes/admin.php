@@ -47,7 +47,7 @@ Route::resource('directivos', \App\Http\Controllers\Admin\DirectivoController::c
 
 // Invitaciones
 Route::get('/invitaciones', [App\Http\Controllers\Admin\InvitacionController::class, 'index'])
-    ->name('admin.invitaciones');
+    ->name('admin.invitaciones.index');
 
 Route::post('/invitaciones/enviar', [App\Http\Controllers\Admin\InvitacionController::class, 'enviar'])
     ->name('admin.invitaciones.enviar');
@@ -253,3 +253,11 @@ Route::resource('biblioteca', \App\Http\Controllers\Admin\BibliotecaController::
     'update'  => 'admin.biblioteca.update',
     'destroy' => 'admin.biblioteca.destroy',
 ]);
+
+// ============================================
+// ACCIONES EN LOTE
+// ============================================
+
+use App\Http\Controllers\Admin\BulkActionController;
+
+Route::post('/bulk-action', [BulkActionController::class, 'bulkAction'])->name('admin.bulk.action');

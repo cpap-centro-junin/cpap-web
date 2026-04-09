@@ -65,11 +65,12 @@
 </div>
 @endif
 
-<div class="admin-table">
+<div class="admin-table" data-table-name="slides">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$slides" loopIteration="header" />
                     <th style="width:80px;">Preview</th>
                     <th>Título</th>
                 <th>Tipo</th>
@@ -82,6 +83,7 @@
         <tbody>
             @forelse($slides as $slide)
             <tr>
+                <x-admin-row-number-cell :items="$slides" :loopIteration="$loop->iteration" :itemId="$slide->id" />
                 <td>
                     @if($slide->imagen_final)
                         <img src="{{ $slide->imagen_final }}" alt="{{ $slide->titulo }}"
@@ -167,7 +169,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     <div class="empty-state">
                         <i class="fas fa-images"></i>
                         <p>No hay slides registrados.<br>Crea el primer slide del banner.</p>
@@ -183,6 +185,8 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'slides'" />
+
 {{-- Paginación --}}
 {{ $slides->links('pagination.admin') }}
 
@@ -194,6 +198,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDeleteSlide(titulo, formId) {
     Swal.fire({

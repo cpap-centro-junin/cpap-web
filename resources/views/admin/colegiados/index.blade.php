@@ -49,9 +49,10 @@
     <div class="table-card">
         @if($colegiados->count() > 0)
             <div class="table-responsive">
-                <table class="table">
+                <table class="table" data-table-name="colegiados">
                     <thead>
                         <tr>
+                            <x-admin-row-number-cell :items="$colegiados" loopIteration="header" />
                             <th>
                                 <a href="{{ route('admin.colegiados.index', array_merge(request()->query(), ['sort' => 'codigo_cpap', 'order' => $sort === 'codigo_cpap' && $order === 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
                                     N° de Colegiatura
@@ -94,6 +95,7 @@
                     <tbody>
                         @foreach($colegiados as $colegiado)
                             <tr class="{{ $colegiado->perfil_oculto ? 'row-perfil-oculto' : '' }}">
+                                <x-admin-row-number-cell :items="$colegiados" :loopIteration="$loop->iteration" :itemId="$colegiado->id" />
                                 <td>
                                     <strong class="text-primary">{{ $colegiado->codigo_cpap }}</strong>
                                 </td>
@@ -188,6 +190,8 @@
                 </table>
             </div>
 
+            <x-admin-bulk-actions-bar :tableName="'colegiados'" />
+
             {{-- Paginación --}}
             {{ $colegiados->links('pagination.admin') }}
         @else
@@ -209,7 +213,9 @@
 
 @endsection
 
+
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDeleteColegiado(nombre, formId) {
     Swal.fire({

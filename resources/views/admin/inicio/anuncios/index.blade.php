@@ -49,11 +49,12 @@
     <span>Puedes tener <strong>varios anuncios activos</strong> al mismo tiempo. Todos los activos se mostrarán en el popup de la página de inicio con navegación de flechas.</span>
 </div>
 
-<div class="admin-table">
+<div class="admin-table" data-table-name="anuncios">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$anuncios" loopIteration="header" />
                     <th style="width:120px;">Vista Previa</th>
                     <th>Título (interno)</th>
                     <th style="text-align:center;">Estado</th>
@@ -64,6 +65,7 @@
         <tbody>
             @forelse($anuncios as $anuncio)
             <tr>
+                <x-admin-row-number-cell :items="$anuncios" :loopIteration="$loop->iteration" :itemId="$anuncio->id" />
                 <td>
                     <img src="{{ $anuncio->imagen }}" alt="{{ $anuncio->titulo }}"
                          style="width:100px;height:70px;object-fit:cover;border-radius:6px;display:block;">
@@ -119,12 +121,15 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'anuncios'" />
+
 {{-- Paginación --}}
 {{ $anuncios->links('pagination.admin') }}
 
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDelete(titulo, formId) {
     Swal.fire({

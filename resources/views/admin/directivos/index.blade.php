@@ -51,11 +51,12 @@
 </div>
 @endif
 
-<div class="admin-table">
+<div class="admin-table" data-table-name="directivos">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$directivos" loopIteration="header" />
                     <th style="width:60px;">Foto</th>
                     <th>Nombre</th>
                     <th>Cargo</th>
@@ -68,6 +69,7 @@
         <tbody>
             @forelse($directivos as $directivo)
             <tr>
+                <x-admin-row-number-cell :items="$directivos" :loopIteration="$loop->iteration" :itemId="$directivo->id" />
                 <td>
                     @if($directivo->foto)
                         <img src="{{ $directivo->foto }}" alt="{{ $directivo->nombre }}"
@@ -116,7 +118,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="8">
+                <td colspan="9">
                     <div class="empty-state">
                         <i class="fas fa-users-cog"></i>
                         <p>No hay directivos registrados.<br>Agrega los miembros del Consejo Directivo.</p>
@@ -132,6 +134,8 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'directivos'" />
+
 {{-- Paginación --}}
 {{ $directivos->links('pagination.admin') }}
 
@@ -143,6 +147,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDelete(nombre, formId) {
     Swal.fire({

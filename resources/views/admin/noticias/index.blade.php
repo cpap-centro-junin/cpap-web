@@ -64,11 +64,12 @@
 />
 
 {{-- TABLA --}}
-<div class="admin-table">
+<div class="admin-table" data-table-name="noticias">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$noticias" loopIteration="header" />
                     <th style="width:60px;">Portada</th>
                     <th>Título</th>
                     <th>Categoría</th>
@@ -81,6 +82,7 @@
         <tbody>
             @forelse($noticias as $noticia)
             <tr>
+                <x-admin-row-number-cell :items="$noticias" :loopIteration="$loop->iteration" :itemId="$noticia->id" />
                 <td>
                     @if($noticia->imagen)
                         <img src="{{ $noticia->imagen }}" alt=""
@@ -157,11 +159,14 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'noticias'" />
+
 {{ $noticias->links('pagination.admin') }}
 
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDelete(titulo, formId) {
     Swal.fire({

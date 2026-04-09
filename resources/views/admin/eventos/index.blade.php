@@ -55,11 +55,12 @@
 />
 
 {{-- TABLA --}}
-<div class="admin-table">
+<div class="admin-table" data-table-name="eventos">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$eventos" loopIteration="header" />
                     <th style="width:60px;">Portada</th>
                     <th>Título</th>
                     <th>Categoría</th>
@@ -71,6 +72,7 @@
         <tbody>
             @forelse($eventos as $evento)
             <tr>
+                <x-admin-row-number-cell :items="$eventos" :loopIteration="$loop->iteration" :itemId="$evento->id" />
                 <td>
                     @if($evento->imagen_portada)
                         <img src="{{ $evento->imagen_portada }}" alt=""
@@ -160,11 +162,14 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'eventos'" />
+
 {{ $eventos->links('pagination.admin') }}
 
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
 <script>
 function confirmDelete(titulo, formId) {
     Swal.fire({

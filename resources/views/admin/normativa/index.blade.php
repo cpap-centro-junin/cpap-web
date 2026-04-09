@@ -49,11 +49,12 @@
 </div>
 @endif
 
-<div class="admin-table">
+<div class="admin-table" data-table-name="normativa">
     <div class="admin-table-wrapper">
         <table>
             <thead>
                 <tr>
+                    <x-admin-row-number-cell :items="$documentos" loopIteration="header" />
                     <th style="width:50px;">Ícono</th>
                     <th>Título</th>
                     <th>Archivo PDF</th>
@@ -65,6 +66,7 @@
         <tbody>
             @forelse($documentos as $doc)
             <tr>
+                <x-admin-row-number-cell :items="$documentos" :loopIteration="$loop->iteration" :itemId="$doc->id" />
                 <td>
                     <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:10px;display:flex;align-items:center;justify-content:center;">
                         <i class="{{ $doc->icono }}" style="color:white;font-size:16px;"></i>
@@ -132,6 +134,8 @@
     </div>
 </div>
 
+<x-admin-bulk-actions-bar :tableName="'normativa'" />
+
 {{-- Paginación --}}
 {{ $documentos->links('pagination.admin') }}
 
@@ -141,3 +145,7 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/admin-bulk-actions.js') }}"></script>
+@endpush
