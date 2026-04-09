@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BulkActionController extends Controller
 {
@@ -53,24 +54,57 @@ class BulkActionController extends Controller
 
     private function deleteAction($table, $ids)
     {
+        // Para tablas con archivos asociados, limpiar antes de eliminar
+        match($table) {
+            'galeria' => $this->deleteWithFiles(\App\Models\GaleriaImagen::class, $ids, 'imagen', 'public'),
+            'slides' => $this->deleteWithFiles(\App\Models\BannerSlide::class, $ids, 'imagen', 'public'),
+            'normativa' => $this->deleteWithFiles(\App\Models\NormativaDocumento::class, $ids, 'archivo_pdf', 'public'),
+            'biblioteca' => $this->deleteBiblioteca($ids),
+            default => $this->deleteSimple($table, $ids),
+        };
+
+        return ['message' => count($ids) . ' elemento(s) eliminado(s) correctamente'];
+    }
+
+    private function deleteSimple($table, $ids)
+    {
         match($table) {
             'noticias' => \App\Models\Noticia::whereIn('id', $ids)->delete(),
             'eventos' => \App\Models\Evento::whereIn('id', $ids)->delete(),
             'bolsa' => \App\Models\BolsaTrabajo::whereIn('id', $ids)->delete(),
-            'galeria' => \App\Models\GaleriaImagen::whereIn('id', $ids)->delete(),
             'mensajes' => \App\Models\ContactMessage::whereIn('id', $ids)->delete(),
             'solicitudes' => \App\Models\BolsaTrabajo::whereIn('id', $ids)->delete(),
             'directivos' => \App\Models\Directivo::whereIn('id', $ids)->delete(),
-            'normativa' => \App\Models\NormativaDocumento::whereIn('id', $ids)->delete(),
             'invitaciones' => \App\Models\Invitacion::whereIn('id', $ids)->delete(),
-            'slides' => \App\Models\BannerSlide::whereIn('id', $ids)->delete(),
             'anuncios' => \App\Models\PopupAnuncio::whereIn('id', $ids)->delete(),
             'colegiados' => \App\Models\Colegiado::whereIn('id', $ids)->delete(),
-            'biblioteca' => \App\Models\RecursoBiblioteca::whereIn('id', $ids)->delete(),
             default => throw new \Exception('Tabla no soportada'),
         };
+    }
 
-        return ['message' => count($ids) . ' elemento(s) eliminado(s) correctamente'];
+    private function deleteWithFiles($modelClass, $ids, $fileField, $disk)
+    {
+        $items = $modelClass::whereIn('id', $ids)->get();
+        foreach ($items as $item) {
+            if ($item->$fileField && !str_starts_with($item->$fileField, 'data:') && Storage::disk($disk)->exists($item->$fileField)) {
+                Storage::disk($disk)->delete($item->$fileField);
+            }
+        }
+        $modelClass::whereIn('id', $ids)->delete();
+    }
+
+    private function deleteBiblioteca($ids)
+    {
+        $items = \App\Models\RecursoBiblioteca::whereIn('id', $ids)->get();
+        foreach ($items as $item) {
+            if ($item->imagen_portada && Storage::disk('public')->exists($item->imagen_portada)) {
+                Storage::disk('public')->delete($item->imagen_portada);
+            }
+            if ($item->archivo_pdf && Storage::disk('public')->exists($item->archivo_pdf)) {
+                Storage::disk('public')->delete($item->archivo_pdf);
+            }
+        }
+        \App\Models\RecursoBiblioteca::whereIn('id', $ids)->delete();
     }
 
     private function activateAction($table, $ids)

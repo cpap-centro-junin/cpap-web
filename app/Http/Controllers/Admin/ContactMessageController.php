@@ -76,6 +76,10 @@ class ContactMessageController extends Controller
     }
     public function destroy(ContactMessage $message)
     {
+        if ($message->archivo_respuesta && \Illuminate\Support\Facades\Storage::disk('public')->exists($message->archivo_respuesta)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($message->archivo_respuesta);
+        }
+
         $message->delete();
 
         return back()->with('success', 'Mensaje eliminado correctamente.');

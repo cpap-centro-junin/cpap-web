@@ -213,7 +213,7 @@ class InicioController extends Controller
             'hero_badge'       => 'nullable|string|max:50',
             'hero_titulo'      => 'nullable|string',
             'hero_subtitulo'   => 'nullable|string',
-            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'hero_btn1_texto'  => 'nullable|string|max:50',
             'hero_btn1_url'    => 'nullable|string|max:500',
             'hero_btn1_icono'  => 'nullable|string|max:50',

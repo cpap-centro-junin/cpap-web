@@ -339,6 +339,16 @@ class ColegiadoController extends Controller
             Storage::delete($colegiado->cv_path);
         }
 
+        // Limpiar archivos de habilitaciones asociadas
+        foreach ($colegiado->habilitaciones as $habilitacion) {
+            if ($habilitacion->documento_path && Storage::exists($habilitacion->documento_path)) {
+                Storage::delete($habilitacion->documento_path);
+            }
+            if ($habilitacion->qr_path && file_exists(public_path($habilitacion->qr_path))) {
+                @unlink(public_path($habilitacion->qr_path));
+            }
+        }
+
         $colegiado->delete();
 
         return redirect()->route('admin.colegiados.index')

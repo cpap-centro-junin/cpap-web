@@ -95,7 +95,7 @@ class BannerSlide extends Model
         }
         
         if ($this->tipo === 'evento' && $this->evento && !$this->imagen) {
-            return $this->evento->imagen;
+            return $this->evento->imagen_portada;
         }
         
         // Si la imagen es una ruta de storage, convertirla a URL pública

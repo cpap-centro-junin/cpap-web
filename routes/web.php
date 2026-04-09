@@ -227,7 +227,7 @@ Route::get('/verificar/{codigo}/descargar', [VerificacionController::class, 'des
 
 Route::middleware('guest')->group(function () {
 
-    Route::get('/login', [AuthController::class, 'showLogin']);
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::get('/register', [AuthController::class, 'showRegister']);
@@ -254,7 +254,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::prefix('admin')->group(base_path('routes/admin.php'));
+    Route::prefix('admin')->middleware('admin')->group(base_path('routes/admin.php'));
 });
 
 //COLEGIATURA
@@ -267,7 +267,7 @@ Route::get('/colegiatura', [ColegiaturaController::class, 'index'])
 // ============================================
 // ADMIN: NOTICIAS Y EVENTOS (CRUD)
 // ============================================
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('noticias', AdminNoticiaController::class);
-    Route::resource('eventos', AdminEventoController::class);
+    Route::resource('eventos', AdminEventoController::class)->except(['show']);
 });
