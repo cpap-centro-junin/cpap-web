@@ -158,19 +158,7 @@
     margin-left: 12px;
 }
 
-.form-check-input {
-    cursor: pointer;
-    width: 1.1rem;
-    height: 1.1rem;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    accent-color: #0d6efd;
-}
 
-.form-check-input:checked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
 
 @media (max-width: 768px) {
     .msg-row {

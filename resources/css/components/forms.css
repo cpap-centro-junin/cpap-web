@@ -172,12 +172,25 @@ select.form-control:focus {
 }
 
 .form-check-input {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all var(--transition-fast);
+    width: 22px !important;
+    height: 22px !important;
+    border: 2.5px solid #d0d0d0 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background-color: #ffffff !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+}
+
+.form-check-input:hover:not(:disabled) {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.08) !important;
 }
 
 .form-check-input[type="radio"] {
@@ -185,13 +198,40 @@ select.form-control:focus {
 }
 
 .form-check-input:checked {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: #8b1538 !important;
+    border-color: #8b1538 !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 50% 50% !important;
+    box-shadow: 0 2px 8px rgba(139, 21, 56, 0.25) !important;
+}
+
+.form-check-input:checked[type="radio"] {
+    background-image: radial-gradient(circle, #ffffff 35%, transparent 35%);
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .form-check-input:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.1);
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(139, 21, 56, 0.15) !important;
+    border-color: #8b1538 !important;
+}
+
+.form-check-input:checked:focus {
+    box-shadow: 0 0 0 4px rgba(139, 21, 56, 0.2), 0 2px 8px rgba(139, 21, 56, 0.25) !important;
+}
+
+.form-check-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.form-check-input:checked:disabled {
+    background-color: #d0d0d0;
+    border-color: #d0d0d0;
 }
 
 .form-check-label {

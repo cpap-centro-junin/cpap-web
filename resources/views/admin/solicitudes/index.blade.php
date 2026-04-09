@@ -127,14 +127,6 @@
         flex-shrink: 0;
     }
 
-    .form-check-input {
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-        accent-color: #7b1e3a;
-        border-radius: 3px;
-    }
-
     .msg-row {
         display: flex;
         align-items: center;
