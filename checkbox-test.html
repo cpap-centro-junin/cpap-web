@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox Test - CPAP Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #8b1538;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .test-group {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .test-group:last-child {
+            border-bottom: none;
+        }
+
+        .test-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .checkbox-demo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-demo:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-demo label {
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            user-select: none;
+            flex: 1;
+        }
+
+        /* ESTILOS MEJORADOS DEL CHECKBOX */
+        input[type="checkbox"] {
+            width: 22px !important;
+            height: 22px !important;
+            border: 2.5px solid #d0d0d0 !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            background-color: #ffffff !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            position: relative !important;
+            flex-shrink: 0 !important;
+            vertical-align: middle !important;
+            box-sizing: border-box !important;
+        }
+
+        input[type="checkbox"]:hover:not(:disabled) {
+            border-color: #8b1538 !important;
+            box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.08) !important;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #8b1538 !important;
+            border-color: #8b1538 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e") !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+            background-size: 50% 50% !important;
+            box-shadow: 0 2px 8px rgba(139, 21, 56, 0.25) !important;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 4px rgba(139, 21, 56, 0.15) !important;
+            border-color: #8b1538 !important;
+        }
+
+        input[type="checkbox"]:checked:focus {
+            box-shadow: 0 0 0 4px rgba(139, 21, 56, 0.2), 0 2px 8px rgba(139, 21, 56, 0.25) !important;
+        }
+
+        input[type="checkbox"]:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #1565c0;
+            margin-top: 20px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status.checked {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status.unchecked {
+            background: #f5f5f5;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Prueba de Checkboxes Mejorados</h1>
+        <p class="subtitle">Sistema CPAP - Panel Administrativo</p>
+
+        <!-- Prueba 1: Checkbox básico -->
+        <div class="test-group">
+            <label class="test-label">1. Checkbox Básico</label>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test1">
+                <label for="test1">Haz clic para seleccionar</label>
+                <span class="status unchecked" id="status1">Sin marcar</span>
+            </div>
+        </div>
+
+        <!-- Prueba 2: Checkbox preseleccionado -->
+        <div class="test-group">
+            <label class="test-label">2. Checkbox Pre-seleccionado</label>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test2" checked>
+                <label for="test2">Ya está marcado</label>
+                <span class="status checked" id="status2">Marcado</span>
+            </div>
+        </div>
+
+        <!-- Prueba 3: Múltiples checkboxes -->
+        <div class="test-group">
+            <label class="test-label">3. Selección Múltiple (como en tablas)</label>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test3a">
+                <label for="test3a">Opción A</label>
+            </div>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test3b">
+                <label for="test3b">Opción B</label>
+            </div>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test3c">
+                <label for="test3c">Opción C</label>
+            </div>
+        </div>
+
+        <!-- Prueba 4: Checkbox deshabilitado -->
+        <div class="test-group">
+            <label class="test-label">4. Checkbox Deshabilitado</label>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test4" disabled>
+                <label for="test4" style="opacity: 0.6;">No puedes interactuar</label>
+            </div>
+            <div class="checkbox-demo">
+                <input type="checkbox" id="test5" checked disabled>
+                <label for="test5" style="opacity: 0.6;">Marcado pero deshabilitado</label>
+            </div>
+        </div>
+
+        <div class="info-box">
+            💡 <strong>Pruébalo:</strong> Haz clic en los checkboxes. Deberías ver:
+            <ul style="margin-top: 8px; margin-left: 20px;">
+                <li>Fondo de color #8b1538 cuando está marcado</li>
+                <li>Checkmark blanco en el centro</li>
+                <li>Efecto hover en los bordes</li>
+                <li>Sombra al hacer clic</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Actualizar estados visuales
+        document.getElementById('test1').addEventListener('change', function() {
+            document.getElementById('status1').className = this.checked ? 'status checked' : 'status unchecked';
+            document.getElementById('status1').textContent = this.checked ? 'Marcado' : 'Sin marcar';
+        });
+
+        document.getElementById('test2').addEventListener('change', function() {
+            document.getElementById('status2').className = this.checked ? 'status checked' : 'status unchecked';
+            document.getElementById('status2').textContent = this.checked ? 'Marcado' : 'Sin marcar';
+        });
+    </script>
+</body>
+</html>

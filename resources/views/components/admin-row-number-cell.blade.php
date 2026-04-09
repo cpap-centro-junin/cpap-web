@@ -50,18 +50,6 @@
     min-width: 25px;
 }
 
-.form-check-input {
-    cursor: pointer;
-    width: 1.1rem;
-    height: 1.1rem;
-    border-radius: 3px;
-}
-
-.form-check-input:checked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
 @media (max-width: 768px) {
     .admin-row-number-cell {
         width: 70px;
