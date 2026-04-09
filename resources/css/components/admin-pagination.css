@@ -326,29 +326,33 @@
 
     .pagination-single-row {
         gap: 8px;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .pagination-stats {
-        width: 100%;
+        width: auto;
         font-size: 11px;
         gap: 4px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         order: 1;
     }
 
     .pagination-perpage-selector-inline {
-        width: 100%;
-        justify-content: center;
+        width: auto;
+        justify-content: flex-start;
         order: 2;
+        gap: 4px;
     }
 
     .perpage-select-inline {
-        width: 100%;
-        font-size: 11px;
-        padding: 6px 10px;
-        padding-right: 28px;
+        width: auto;
+        font-size: 10px;
+        padding: 5px 8px;
+        padding-right: 24px;
+        min-width: auto;
     }
 
     .pagination-page-info-inline {
@@ -391,64 +395,79 @@
 
 @media (max-width: 576px) {
     .admin-pagination-wrapper {
-        margin: 20px 0 16px 0;
+        margin: 16px 0 12px 0;
     }
 
     .admin-pagination-container {
-        padding: 10px 12px;
+        padding: 8px 10px;
         border-radius: 8px;
     }
 
+    .pagination-single-row {
+        gap: 6px;
+    }
+
     .pagination-stats {
-        font-size: 10px;
-        gap: 3px;
+        font-size: 9px;
+        gap: 2px;
+        flex-shrink: 0;
     }
 
     .stat-value,
     .stat-total {
-        font-size: 12px;
-        padding: 2px 4px;
+        font-size: 11px;
+        padding: 2px 3px;
     }
 
     .stat-label {
-        font-size: 9px;
+        font-size: 8px;
+    }
+
+    .pagination-perpage-selector-inline {
+        width: auto;
+        gap: 3px;
+        flex-shrink: 0;
     }
 
     .perpage-select-inline {
-        font-size: 10px;
-        padding: 5px 8px;
-        padding-right: 24px;
-        min-width: 55px;
+        font-size: 9px;
+        padding: 4px 6px;
+        padding-right: 20px;
+        min-width: auto;
+        height: 28px;
+        background-size: 12px;
     }
 
     .pagination-page-info-inline {
-        font-size: 10px;
+        font-size: 9px;
     }
 
     .pagination-controls-inline {
         gap: 3px;
+        width: 100%;
+        order: 4;
     }
 
     .pagination-btn-inline {
-        padding: 5px 8px;
-        font-size: 10px;
-        min-height: 30px;
+        padding: 4px 6px;
+        font-size: 9px;
+        min-height: 28px;
     }
 
     .pagination-btn-inline i {
-        font-size: 11px;
-    }
-
-    .page-number-inline {
-        min-width: 26px;
-        height: 26px;
         font-size: 10px;
     }
 
-    .page-ellipsis-inline {
-        min-width: 22px;
-        height: 26px;
+    .page-number-inline {
+        min-width: 24px;
+        height: 24px;
         font-size: 9px;
+    }
+
+    .page-ellipsis-inline {
+        min-width: 20px;
+        height: 24px;
+        font-size: 8px;
     }
 }
 
