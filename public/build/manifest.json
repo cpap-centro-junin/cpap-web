@@ -1,6 +1,6 @@
 {
   "resources/css/admin.css": {
-    "file": "assets/admin-BKMsC0y4.css",
+    "file": "assets/admin-DAG6xYEd.css",
     "src": "resources/css/admin.css",
     "isEntry": true,
     "name": "admin",
@@ -27,7 +27,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-ByrsxF4g.css",
+    "file": "assets/app-C9ndou84.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -45,7 +45,7 @@
     ]
   },
   "resources/css/pages/bolsa-trabajo.css": {
-    "file": "assets/bolsa-trabajo-8-r29Pmg.css",
+    "file": "assets/bolsa-trabajo-BojAod_O.css",
     "src": "resources/css/pages/bolsa-trabajo.css",
     "isEntry": true,
     "name": "bolsa-trabajo",
@@ -63,7 +63,7 @@
     ]
   },
   "resources/js/admin-bulk-actions.js": {
-    "file": "assets/admin-bulk-actions-C4aFbEDZ.js",
+    "file": "assets/admin-bulk-actions-6i5Q7UR2.js",
     "name": "admin-bulk-actions",
     "src": "resources/js/admin-bulk-actions.js",
     "isEntry": true
