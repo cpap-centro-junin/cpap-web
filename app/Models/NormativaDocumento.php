@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesPublicStorage;
 use Illuminate\Database\Eloquent\Model;
 
 class NormativaDocumento extends Model
 {
+    use ResolvesPublicStorage;
     protected $table = 'normativa_documentos';
 
     protected $fillable = [
@@ -30,7 +32,7 @@ class NormativaDocumento extends Model
 
     public function getPdfUrlAttribute(): ?string
     {
-        return $this->archivo_pdf ? asset('storage/' . $this->archivo_pdf) : null;
+        return $this->resolvePublicStorageUrl($this->archivo_pdf);
     }
 
     public static function iconosDisponibles(): array

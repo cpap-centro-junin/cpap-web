@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesPublicStorage;
 use Illuminate\Database\Eloquent\Model;
 
 class Directivo extends Model
 {
+    use ResolvesPublicStorage;
     protected $fillable = [
         'cargo',
         'nombre',
@@ -44,8 +46,6 @@ class Directivo extends Model
 
     public function getFotoAttribute($value): ?string
     {
-        if (!$value) return null;
-        if (str_starts_with($value, 'data:')) return $value;
-        return asset('storage/' . $value);
+        return $this->resolvePublicStorageUrl($value);
     }
 }

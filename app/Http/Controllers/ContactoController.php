@@ -82,7 +82,8 @@ class ContactoController extends Controller
         ]);
 
         // Enviar correo real
-        Mail::to('juancarloschmm@gmail.com')
+        $recipient = config('services.cpap.contact_recipient', config('mail.from.address'));
+        Mail::to($recipient)
             ->send(new ContactMessageMail($message));
 
         return response()->json([

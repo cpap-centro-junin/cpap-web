@@ -80,7 +80,7 @@ class AuthController extends Controller
         'name' => $request->name,
         'email' => $inv->email,
         'password' => bcrypt($request->password),
-        'role' => 'directivo'
+        'role' => 'admin'
     ]);
 
     $inv->update(['usado' => true]);

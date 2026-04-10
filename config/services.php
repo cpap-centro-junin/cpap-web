@@ -45,4 +45,8 @@ return [
         'analytics_id' => env('GOOGLE_ANALYTICS_ID'),
     ],
 
+    'cpap' => [
+        'contact_recipient' => env('CPAP_CONTACT_RECIPIENT', env('MAIL_FROM_ADDRESS')),
+    ],
+
 ];

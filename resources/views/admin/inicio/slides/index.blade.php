@@ -121,12 +121,16 @@
                     @endif
                 </td>
                 <td style="color:var(--medium-gray);font-size:13px;">
-                    @if($slide->tipo === 'noticia' && $slide->noticia)
+                    @php
+                        $noticiaTitulo = $noticiasMap[(string) $slide->noticia_id] ?? null;
+                        $eventoTitulo = $eventosMap[(string) $slide->evento_id] ?? null;
+                    @endphp
+                    @if($slide->tipo === 'noticia' && $noticiaTitulo)
                         <i class="fas fa-link" style="color:var(--info);font-size:11px;"></i>
-                        {{ Str::limit($slide->noticia->titulo, 30) }}
-                    @elseif($slide->tipo === 'evento' && $slide->evento)
+                        {{ Str::limit($noticiaTitulo, 30) }}
+                    @elseif($slide->tipo === 'evento' && $eventoTitulo)
                         <i class="fas fa-link" style="color:var(--info);font-size:11px;"></i>
-                        {{ Str::limit($slide->evento->titulo, 30) }}
+                        {{ Str::limit($eventoTitulo, 30) }}
                     @elseif($slide->tipo === 'personalizado')
                         <span style="color:var(--medium-gray);font-size:12px;">
                             <i class="fas fa-arrow-right" style="font-size:10px;"></i>

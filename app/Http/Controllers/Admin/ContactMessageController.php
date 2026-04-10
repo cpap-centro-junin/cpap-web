@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use App\Support\UploadLimits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RespuestaMensajeMail;
 
 class ContactMessageController extends Controller
 {
+    private const REPLY_ATTACHMENT_MAX_KB = 5120; // 5 MB
+
     public function index(Request $request)
     {
         // Manejar parámetro de items per page
@@ -48,14 +51,19 @@ class ContactMessageController extends Controller
     {
         $message->update(['leido' => true]);
 
-        return view('admin.mensajes.show', compact('message'));
+        $replyAttachmentMaxKb = UploadLimits::effectiveKb(self::REPLY_ATTACHMENT_MAX_KB);
+        $replyAttachmentMaxMb = UploadLimits::formatMbFromKb($replyAttachmentMaxKb);
+
+        return view('admin.mensajes.show', compact('message', 'replyAttachmentMaxMb'));
     }
 
     public function responder(Request $request, ContactMessage $message)
     {
+        $replyAttachmentMaxKb = UploadLimits::effectiveKb(self::REPLY_ATTACHMENT_MAX_KB);
+
         $request->validate([
             'respuesta' => 'required',
-            'archivo' => 'nullable|file|max:2048'
+            'archivo' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,webp|max:' . $replyAttachmentMaxKb,
         ]);
 
         $filePath = null;

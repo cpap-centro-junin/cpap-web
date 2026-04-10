@@ -62,8 +62,8 @@ class SitemapController extends Controller
         $eventos = Evento::where('activo', true)->get();
         foreach ($eventos as $evento) {
             $images = [];
-            if ($evento->imagen) {
-                $images[] = ['loc' => $evento->imagen, 'title' => $evento->titulo];
+            if ($evento->imagen_portada) {
+                $images[] = ['loc' => $evento->imagen_portada, 'title' => $evento->titulo];
             }
             $sitemap .= $this->url(
                 '/eventos/' . $evento->id,

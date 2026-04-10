@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesPublicStorage;
 use Illuminate\Database\Eloquent\Model;
 
 class PopupAnuncio extends Model
 {
+    use ResolvesPublicStorage;
     protected $fillable = [
         'titulo',
         'imagen',
@@ -23,8 +25,6 @@ class PopupAnuncio extends Model
 
     public function getImagenAttribute($value): ?string
     {
-        if (!$value) return null;
-        if (str_starts_with($value, 'data:')) return $value;
-        return asset('storage/' . $value);
+        return $this->resolvePublicStorageUrl($value);
     }
 }

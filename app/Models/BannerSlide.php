@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesPublicStorage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class BannerSlide extends Model
 {
-    use HasFactory;
+    use HasFactory, ResolvesPublicStorage;
 
     protected $fillable = [
         'tipo',
@@ -27,7 +29,36 @@ class BannerSlide extends Model
     protected $casts = [
         'activo' => 'boolean',
         'orden' => 'integer',
+        'noticia_id' => 'string',
+        'evento_id' => 'string',
     ];
+
+    /**
+     * Normaliza IDs foráneos para evitar valores inválidos heredados.
+     */
+    private function normalizeForeignId($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $normalized = trim((string) $value);
+        if ($normalized === '' || !preg_match('/^\d+$/', $normalized)) {
+            return null;
+        }
+
+        return $normalized;
+    }
+
+    public function getNoticiaIdAttribute($value): ?string
+    {
+        return $this->normalizeForeignId($value);
+    }
+
+    public function getEventoIdAttribute($value): ?string
+    {
+        return $this->normalizeForeignId($value);
+    }
 
     /**
      * Scope para obtener solo slides activos ordenados
@@ -58,15 +89,18 @@ class BannerSlide extends Model
      */
     public function getTituloFinalAttribute(): string
     {
-        if ($this->tipo === 'noticia' && $this->noticia) {
-            return $this->titulo ?? $this->noticia->titulo;
+        $noticia = $this->relationLoaded('noticia') ? $this->getRelation('noticia') : null;
+        $evento  = $this->relationLoaded('evento') ? $this->getRelation('evento') : null;
+
+        if ($this->tipo === 'noticia' && $noticia) {
+            return $this->titulo ?? $noticia->titulo;
         }
         
-        if ($this->tipo === 'evento' && $this->evento) {
-            return $this->titulo ?? $this->evento->titulo;
+        if ($this->tipo === 'evento' && $evento) {
+            return $this->titulo ?? $evento->titulo;
         }
         
-        return $this->titulo;
+        return $this->titulo ?? '';
     }
 
     /**
@@ -74,12 +108,15 @@ class BannerSlide extends Model
      */
     public function getDescripcionFinalAttribute(): ?string
     {
-        if ($this->tipo === 'noticia' && $this->noticia) {
-            return $this->descripcion ?? $this->noticia->extracto;
+        $noticia = $this->relationLoaded('noticia') ? $this->getRelation('noticia') : null;
+        $evento  = $this->relationLoaded('evento') ? $this->getRelation('evento') : null;
+
+        if ($this->tipo === 'noticia' && $noticia) {
+            return $this->descripcion ?? $noticia->resumen;
         }
         
-        if ($this->tipo === 'evento' && $this->evento) {
-            return $this->descripcion ?? $this->evento->descripcion;
+        if ($this->tipo === 'evento' && $evento) {
+            return $this->descripcion ?? $evento->descripcion;
         }
         
         return $this->descripcion;
@@ -90,20 +127,27 @@ class BannerSlide extends Model
      */
     public function getImagenFinalAttribute(): ?string
     {
-        if ($this->tipo === 'noticia' && $this->noticia && !$this->imagen) {
-            return $this->noticia->imagen;
+        $noticia = $this->relationLoaded('noticia') ? $this->getRelation('noticia') : null;
+        $evento  = $this->relationLoaded('evento') ? $this->getRelation('evento') : null;
+
+        if ($this->tipo === 'noticia' && $noticia && !$this->imagen) {
+            return $noticia->imagen;
         }
         
-        if ($this->tipo === 'evento' && $this->evento && !$this->imagen) {
-            return $this->evento->imagen_portada;
+        if ($this->tipo === 'evento' && $evento && !$this->imagen) {
+            return $evento->imagen_portada;
         }
         
         // Si la imagen es una ruta de storage, convertirla a URL pública
-        if ($this->imagen && !str_starts_with($this->imagen, 'http')) {
-            return asset('storage/' . $this->imagen);
+        if ($this->imagen && !str_starts_with($this->imagen, 'http') && !str_starts_with($this->imagen, 'data:')) {
+            return $this->resolvePublicStorageUrl($this->imagen);
         }
-        
-        return $this->imagen;
+
+        if ($this->imagen) {
+            return $this->imagen;
+        }
+
+        return asset('images/banners/banner-colegiatura.png');
     }
 
     /**
@@ -111,13 +155,16 @@ class BannerSlide extends Model
      */
     public function getBotonUrlFinalAttribute(): string
     {
+        $noticia = $this->relationLoaded('noticia') ? $this->getRelation('noticia') : null;
+        $evento  = $this->relationLoaded('evento') ? $this->getRelation('evento') : null;
+
         // Para slides vinculados a noticia/evento, SIEMPRE usar la ruta generada
-        if ($this->tipo === 'noticia' && $this->noticia) {
-            return route('noticias.show', $this->noticia->id);
+        if ($this->tipo === 'noticia' && $noticia) {
+            return route('noticias.show', $noticia->id);
         }
         
-        if ($this->tipo === 'evento' && $this->evento) {
-            return route('eventos.show', $this->evento->id);
+        if ($this->tipo === 'evento' && $evento) {
+            return route('eventos.show', $evento->id);
         }
         
         // Para slides personalizados o sin vinculación válida, usar boton_url

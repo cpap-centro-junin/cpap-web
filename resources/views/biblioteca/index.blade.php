@@ -197,8 +197,8 @@
             @foreach($destacados as $dest)
             <div class="resource-card featured" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 + 100 }}">
                 <div class="resource-thumbnail">
-                    @if($dest->imagen_portada)
-                        <img src="{{ asset('storage/' . $dest->imagen_portada) }}" alt="{{ $dest->titulo }}">
+                    @if($dest->imagen_portada_url)
+                        <img src="{{ $dest->imagen_portada_url }}" alt="{{ $dest->titulo }}">
                     @else
                         <i class="fas {{ $dest->tipo_icon }}"></i>
                     @endif
@@ -266,8 +266,8 @@
             @foreach($recursos as $recurso)
             <div class="resource-card" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 100 + 100 }}">
                 <div class="resource-thumbnail">
-                    @if($recurso->imagen_portada)
-                        <img src="{{ asset('storage/' . $recurso->imagen_portada) }}" alt="{{ $recurso->titulo }}">
+                    @if($recurso->imagen_portada_url)
+                        <img src="{{ $recurso->imagen_portada_url }}" alt="{{ $recurso->titulo }}">
                     @else
                         <i class="fas {{ $recurso->tipo_icon }}"></i>
                     @endif

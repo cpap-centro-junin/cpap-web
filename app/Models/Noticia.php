@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesPublicStorage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Noticia extends Model
 {
-    use HasFactory;
+    use HasFactory, ResolvesPublicStorage;
 
     protected $fillable = [
         'titulo',
@@ -27,8 +28,6 @@ class Noticia extends Model
 
     public function getImagenAttribute($value): ?string
     {
-        if (!$value) return null;
-        if (str_starts_with($value, 'data:')) return $value;
-        return asset('storage/' . $value);
+        return $this->resolvePublicStorageUrl($value);
     }
 }

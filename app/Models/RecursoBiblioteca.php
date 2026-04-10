@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\ResolvesPublicStorage;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class RecursoBiblioteca extends Model
 {
+    use ResolvesPublicStorage;
     protected $table = 'biblioteca';
 
     protected $fillable = [
@@ -226,5 +229,17 @@ class RecursoBiblioteca extends Model
             return false;
         }
         return (bool) ($this->archivo_pdf || $this->enlace_externo);
+    }
+
+
+
+    public function getImagenPortadaUrlAttribute(): ?string
+    {
+        return $this->resolvePublicStorageUrl($this->imagen_portada);
+    }
+
+    public function getArchivoPdfUrlAttribute(): ?string
+    {
+        return $this->resolvePublicStorageUrl($this->archivo_pdf);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\QueryException;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\EventoController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\ColegiaturaController;
+use App\Http\Controllers\PublicMediaController;
 
 
 // ============================================
@@ -20,14 +22,30 @@ use App\Http\Controllers\ColegiaturaController;
 // ============================================
 Route::get('/', function () {
     $anuncios = \App\Models\PopupAnuncio::where('activo', true)->latest()->get();
-    $slides   = \App\Models\BannerSlide::activos()->with(['noticia', 'evento'])->get();
+
+    try {
+        $slides = \App\Models\BannerSlide::activos()->with([
+            'noticia:id,titulo,resumen,imagen',
+            'evento:id,titulo,descripcion,imagen_portada',
+        ])->get();
+    } catch (QueryException $e) {
+        report($e);
+        $slides = \App\Models\BannerSlide::activos()->get();
+    }
+
     $config   = \App\Models\ConfiguracionInicio::obtener();
     $noticias = \App\Models\Noticia::where('activo', true)->latest()->take(3)->get();
-    $eventos  = \App\Models\Evento::where('activo', true)
-                    ->where('fecha_inicio', '>=', now()->toDateString())
-                    ->orderBy('fecha_inicio')
-                    ->take(3)
-                    ->get();
+
+    try {
+        $eventos = \App\Models\Evento::where('activo', true)
+            ->where('fecha_inicio', '>=', now()->toDateString())
+            ->orderBy('fecha_inicio')
+            ->take(3)
+            ->get();
+    } catch (QueryException $e) {
+        report($e);
+        $eventos = collect();
+    }
 
     $galeriaDestacadas = \App\Models\GaleriaImagen::destacados()->take(6)->get();
 
@@ -62,6 +80,16 @@ Route::get('/robots.txt', function () {
 
     return response($robots, 200)->header('Content-Type', 'text/plain');
 });
+
+// Fallback para archivos del disco public cuando no existe symlink /storage
+Route::get('/media/public/{path}', [PublicMediaController::class, 'show'])
+    ->where('path', '.*')
+    ->name('media.public');
+
+// Fallback universal para enlaces asset('storage/...') en producción
+Route::get('/storage/{path}', [PublicMediaController::class, 'show'])
+    ->where('path', '.*')
+    ->name('storage.fallback');
 
 // ============================================
 // SERVICIOS PÚBLICOS
@@ -121,7 +149,8 @@ Route::post('/bolsa-trabajo/solicitar', function (\Illuminate\Http\Request $requ
         'activo'             => false,
     ]);
 
-    \Illuminate\Support\Facades\Mail::to('juancarloschmm@gmail.com')
+    $recipient = config('services.cpap.contact_recipient', config('mail.from.address'));
+    \Illuminate\Support\Facades\Mail::to($recipient)
         ->send(new \App\Mail\SolicitudOfertaLaboralMail($oferta));
 
     return response()->json(['success' => true, 'message' => 'Solicitud enviada correctamente.']);

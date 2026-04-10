@@ -103,7 +103,7 @@
                     📸 <strong>Recomendaciones:</strong><br>
                     • Tamaño recomendado: <strong>1920x1080px</strong> o superior (Full HD / 4K / 8K)<br>
                     • Formatos aceptados: JPG, PNG, WEBP<br>
-                    • <strong style="color:#4CAF50;">✓ Hasta 256MB</strong> - Carga imágenes HD sin problemas<br>
+                    • <strong style="color:#4CAF50;">✓ Hasta {{ $heroImageMaxMb }}MB</strong> - Límite real configurado en servidor<br>
                     • Imagen con buena iluminación para que el texto se lea bien
                 </small>
                 @error('hero_imagen')

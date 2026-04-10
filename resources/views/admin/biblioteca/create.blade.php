@@ -96,7 +96,7 @@
                     </h3>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
                         <div>
-                            <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Archivo PDF <span style="color:var(--medium-gray);font-weight:400;">(máx 200MB)</span></label>
+                            <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Archivo PDF <span style="color:var(--medium-gray);font-weight:400;">(máx {{ $pdfMaxMb }}MB)</span></label>
                             <input type="file" name="archivo_pdf" accept=".pdf"
                                    class="admin-input" style="padding:8px;">
                         </div>

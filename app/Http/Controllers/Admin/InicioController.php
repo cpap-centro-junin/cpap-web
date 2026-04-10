@@ -7,11 +7,15 @@ use App\Models\BannerSlide;
 use App\Models\ConfiguracionInicio;
 use App\Models\Noticia;
 use App\Models\Evento;
+use App\Support\UploadLimits;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class InicioController extends Controller
 {
+    private const HERO_IMAGE_MAX_KB = 5120; // 5 MB
+
     // =====================================
     // Dashboard de Gestión de Inicio
     // =====================================
@@ -40,14 +44,14 @@ class InicioController extends Controller
         
         $perpage = session('pagination_perpage', 20);
         
-        $query = BannerSlide::with(['noticia', 'evento']);
+        $query = BannerSlide::query();
 
         // Search by title or tipo
         if ($request->filled('q')) {
             $buscar = $request->q;
             $query->where(function ($q) use ($buscar) {
                 $q->where('titulo', 'like', "%{$buscar}%")
-                  ->orWhere('subtitulo', 'like', "%{$buscar}%");
+                  ->orWhere('tag', 'like', "%{$buscar}%");
             });
         }
 
@@ -62,8 +66,47 @@ class InicioController extends Controller
         }
 
         $slides = $query->orderBy('orden')->paginate($perpage)->withQueryString();
+
+        $noticiasMap = [];
+        $eventosMap = [];
+
+        try {
+            $slideCollection = $slides->getCollection();
+
+            $noticiaIds = $slideCollection
+                ->where('tipo', 'noticia')
+                ->pluck('noticia_id')
+                ->filter()
+                ->map(fn ($id) => trim((string) $id))
+                ->unique()
+                ->values();
+
+            if ($noticiaIds->isNotEmpty()) {
+                $noticiasMap = Noticia::whereIn('id', $noticiaIds)
+                    ->pluck('titulo', 'id')
+                    ->mapWithKeys(fn ($titulo, $id) => [(string) $id => $titulo])
+                    ->all();
+            }
+
+            $eventoIds = $slideCollection
+                ->where('tipo', 'evento')
+                ->pluck('evento_id')
+                ->filter()
+                ->map(fn ($id) => trim((string) $id))
+                ->unique()
+                ->values();
+
+            if ($eventoIds->isNotEmpty()) {
+                $eventosMap = Evento::whereIn('id', $eventoIds)
+                    ->pluck('titulo', 'id')
+                    ->mapWithKeys(fn ($titulo, $id) => [(string) $id => $titulo])
+                    ->all();
+            }
+        } catch (QueryException $e) {
+            report($e);
+        }
         
-        return view('admin.inicio.slides.index', compact('slides'));
+        return view('admin.inicio.slides.index', compact('slides', 'noticiasMap', 'eventosMap'));
     }
 
     public function slidesCreate()
@@ -204,16 +247,21 @@ class InicioController extends Controller
     public function heroEdit()
     {
         $config = ConfiguracionInicio::obtener();
-        return view('admin.inicio.hero.edit', compact('config'));
+        $heroImageMaxKb = UploadLimits::effectiveKb(self::HERO_IMAGE_MAX_KB);
+        $heroImageMaxMb = UploadLimits::formatMbFromKb($heroImageMaxKb);
+
+        return view('admin.inicio.hero.edit', compact('config', 'heroImageMaxMb'));
     }
 
     public function heroUpdate(Request $request)
     {
+        $heroImageMaxKb = UploadLimits::effectiveKb(self::HERO_IMAGE_MAX_KB);
+
         $data = $request->validate([
             'hero_badge'       => 'nullable|string|max:50',
             'hero_titulo'      => 'nullable|string',
             'hero_subtitulo'   => 'nullable|string',
-            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:' . $heroImageMaxKb,
             'hero_btn1_texto'  => 'nullable|string|max:50',
             'hero_btn1_url'    => 'nullable|string|max:500',
             'hero_btn1_icono'  => 'nullable|string|max:50',

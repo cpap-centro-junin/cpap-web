@@ -88,9 +88,9 @@
                 <label class="msg-upload-label" for="archivoInput">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <span>Adjuntar archivo (opcional)</span>
-                    <small>PDF, DOC, JPG, PNG — máx. 5 MB</small>
+                    <small>PDF, DOC, DOCX, JPG, PNG, WEBP — máx. {{ $replyAttachmentMaxMb }} MB</small>
                 </label>
-                <input type="file" name="archivo" id="archivoInput" class="msg-upload-input">
+                <input type="file" name="archivo" id="archivoInput" class="msg-upload-input" accept=".pdf,.doc,.docx,image/jpeg,image/png,image/webp">
                 <div class="msg-file-preview" id="filePreview" style="display:none;">
                     <i class="fas fa-file-alt"></i>
                     <span id="fileName"></span>

@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\RecursoBiblioteca;
+use App\Support\UploadLimits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class BibliotecaController extends Controller
 {
+    private const PDF_MAX_KB = 204800; // 200 MB (se ajusta al límite real del servidor)
+
     /* -------------------------------------------------------
      * INDEX
      * ----------------------------------------------------- */
@@ -63,7 +66,10 @@ class BibliotecaController extends Controller
      * ----------------------------------------------------- */
     public function create()
     {
-        return view('admin.biblioteca.create');
+        $pdfMaxKb = UploadLimits::effectiveKb(self::PDF_MAX_KB);
+        $pdfMaxMb = UploadLimits::formatMbFromKb($pdfMaxKb);
+
+        return view('admin.biblioteca.create', compact('pdfMaxMb'));
     }
 
     /* -------------------------------------------------------
@@ -71,6 +77,8 @@ class BibliotecaController extends Controller
      * ----------------------------------------------------- */
     public function store(Request $request)
     {
+        $pdfMaxKb = UploadLimits::effectiveKb(self::PDF_MAX_KB);
+
         $data = $request->validate([
             'titulo'              => 'required|string|max:255',
             'autor'               => 'required|string|max:255',
@@ -84,7 +92,7 @@ class BibliotecaController extends Controller
             'paginas'             => 'nullable|integer|min:1',
             'idioma'              => 'nullable|string|max:80',
             'enlace_externo'      => 'nullable|url|max:500',
-            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',     // 200 MB
+            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:' . $pdfMaxKb,
             'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // 5 MB
             'copyright_titular'   => 'nullable|string|max:255',
             'copyright_anio'      => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
@@ -133,7 +141,10 @@ class BibliotecaController extends Controller
      * ----------------------------------------------------- */
     public function edit(RecursoBiblioteca $biblioteca)
     {
-        return view('admin.biblioteca.edit', ['recurso' => $biblioteca]);
+        $pdfMaxKb = UploadLimits::effectiveKb(self::PDF_MAX_KB);
+        $pdfMaxMb = UploadLimits::formatMbFromKb($pdfMaxKb);
+
+        return view('admin.biblioteca.edit', ['recurso' => $biblioteca, 'pdfMaxMb' => $pdfMaxMb]);
     }
 
     /* -------------------------------------------------------
@@ -141,6 +152,8 @@ class BibliotecaController extends Controller
      * ----------------------------------------------------- */
     public function update(Request $request, RecursoBiblioteca $biblioteca)
     {
+        $pdfMaxKb = UploadLimits::effectiveKb(self::PDF_MAX_KB);
+
         $data = $request->validate([
             'titulo'              => 'required|string|max:255',
             'autor'               => 'required|string|max:255',
@@ -154,7 +167,7 @@ class BibliotecaController extends Controller
             'paginas'             => 'nullable|integer|min:1',
             'idioma'              => 'nullable|string|max:80',
             'enlace_externo'      => 'nullable|url|max:500',
-            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',      // 200 MB,      // 200 MB
+            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:' . $pdfMaxKb,
             'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'copyright_titular'   => 'nullable|string|max:255',
             'copyright_anio'      => 'nullable|integer|min:1900|max:' . (date('Y') + 1),

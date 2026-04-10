@@ -178,7 +178,7 @@
                          style="border:2px dashed var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;transition:all 0.2s;">
                         <div id="dzContent">
                             <i class="fas fa-cloud-upload-alt" style="font-size:20px;color:var(--border);display:block;margin-bottom:4px;"></i>
-                            <p style="font-size:12px;color:var(--medium-gray);margin:0;">{{ $directivo->foto ? 'Clic para cambiar foto' : 'Clic para agregar foto' }}<br><span style="font-size:11px;">JPG, PNG — máx. 2MB</span></p>
+                            <p style="font-size:12px;color:var(--medium-gray);margin:0;">{{ $directivo->foto ? 'Clic para cambiar foto' : 'Clic para agregar foto' }}<br><span style="font-size:11px;">JPG, PNG, WEBP — máx. 2MB</span></p>
                         </div>
                         <img id="preview" src="" alt="" style="display:none;width:100%;height:120px;object-fit:cover;border-radius:6px;">
                     </div>
