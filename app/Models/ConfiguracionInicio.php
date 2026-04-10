@@ -42,9 +42,24 @@ class ConfiguracionInicio extends Model
         'mostrar_orientaciones' => 'boolean',
     ];
 
-    /**
-     * Obtener la instancia singleton de la configuración
-     */
+    /* ── Accessors para URLs de imágenes ────────────────── */
+
+    public function getHeroImagenUrlAttribute(): ?string
+    {
+        if (!$this->hero_imagen) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->hero_imagen, 'http')) {
+            return $this->hero_imagen;
+        }
+
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->hero_imagen);
+    }
+
+    /* ── Métodos Singleton ───────────────────────────────── */
     public static function obtener()
     {
         $config = self::first();

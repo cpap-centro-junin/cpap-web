@@ -95,13 +95,13 @@
                         <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(139,21,56,0.06);border-radius:8px;font-size:12px;">
                             <i class="fas fa-file-pdf" style="color:var(--primary);font-size:16px;"></i>
                             <span style="color:var(--dark);font-weight:500;">PDF actual cargado</span>
-                            <a href="{{ asset('storage/' . $recurso->archivo_pdf) }}" target="_blank"
+                            <a href="{{ $recurso->archivo_pdf_url }}" target="_blank"
                                style="color:var(--primary);font-weight:600;text-decoration:none;">Ver</a>
                         </div>
                         @endif
                         @if($recurso->imagen_portada)
                         <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(201,169,97,0.1);border-radius:8px;font-size:12px;">
-                            <img src="{{ asset('storage/' . $recurso->imagen_portada) }}" alt="" style="width:30px;height:40px;object-fit:cover;border-radius:4px;">
+                            <img src="{{ $recurso->imagen_portada_url }}" alt="" style="width:30px;height:40px;object-fit:cover;border-radius:4px;">
                             <span style="color:var(--dark);font-weight:500;">Portada actual</span>
                         </div>
                         @endif

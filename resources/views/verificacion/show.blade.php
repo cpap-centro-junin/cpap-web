@@ -31,7 +31,7 @@
                 {{-- Foto y nombre --}}
                 <div class="sidebar-perfil">
                     @if($colegiado->foto && !$colegiado->ocultar_foto)
-                        <img src="{{ Storage::url($colegiado->foto) }}"
+                        <img src="{{ $colegiado->foto_url }}"
                              alt="{{ $colegiado->nombre_completo }}"
                              class="sidebar-avatar">
                     @else

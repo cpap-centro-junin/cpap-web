@@ -11,7 +11,7 @@
 <!-- Hero Section -->
 <section class="hero hero--home" id="inicio" 
          @if($config->hero_imagen)
-         style="background-image: url('{{ Storage::url($config->hero_imagen) }}');"
+         style="background-image: url('{{ $config->hero_imagen_url }}');"
          @endif>
     <div class="hero-overlay"></div>
     <div class="container">

@@ -4,7 +4,7 @@
 @section('seo_title', $recurso->titulo . ' | Biblioteca CPAP Región Centro')
 @section('seo_description', Str::limit(strip_tags($recurso->descripcion ?: ('Recurso de tipo ' . $recurso->tipo_label . ' en la Biblioteca Virtual del CPAP Región Centro.')), 160))
 @section('seo_canonical', route('biblioteca.show', $recurso))
-@section('seo_image', $recurso->imagen_portada ? asset('storage/' . $recurso->imagen_portada) : asset('images/logos/cpap-logo.jpg'))
+@section('seo_image', $recurso->imagen_portada ? $recurso->imagen_portada_url : asset('images/logos/cpap-logo.jpg'))
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('resources/css/pages/biblioteca.css') }}">
@@ -41,7 +41,7 @@
                 <div class="recurso-portada-col">
                     <div class="recurso-portada-wrapper">
                         @if($recurso->imagen_portada)
-                            <img src="{{ asset('storage/' . $recurso->imagen_portada) }}" alt="{{ $recurso->titulo }}" class="recurso-portada-img">
+                            <img src="{{ $recurso->imagen_portada_url }}" alt="{{ $recurso->titulo }}" class="recurso-portada-img">
                         @else
                             <div class="recurso-portada-placeholder">
                                 <i class="fas {{ $recurso->tipo_icon }}"></i>
@@ -207,7 +207,7 @@
             <div class="resource-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 + 100 }}">
                 <div class="resource-thumbnail">
                     @if($rel->imagen_portada)
-                        <img src="{{ asset('storage/' . $rel->imagen_portada) }}" alt="{{ $rel->titulo }}">
+                        <img src="{{ $rel->imagen_portada_url }}" alt="{{ $rel->titulo }}">
                     @else
                         <i class="fas {{ $rel->tipo_icon }}"></i>
                     @endif

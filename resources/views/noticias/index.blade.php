@@ -43,7 +43,7 @@
             @php $main = $destacadas->first(); @endphp
             <a href="{{ route('noticias.show', $main) }}" class="featured-card featured-card--main">
                 @if($main->imagen)
-                    <img src="{{ asset('storage/' . $main->imagen) }}" alt="{{ $main->titulo }}" class="featured-card__image">
+                    <img src="{{ $main->imagen }}" alt="{{ $main->titulo }}" class="featured-card__image">
                 @else
                     <div class="featured-card__placeholder">
                         <i class="fas fa-newspaper"></i>

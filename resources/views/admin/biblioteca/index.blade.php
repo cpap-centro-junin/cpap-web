@@ -86,7 +86,7 @@
                 {{-- Portada --}}
                 <td>
                     @if($recurso->imagen_portada)
-                        <img src="{{ asset('storage/' . $recurso->imagen_portada) }}" alt=""
+                        <img src="{{ $recurso->imagen_portada_url }}" alt=""
                              style="width:44px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
                     @else
                         <div style="width:44px;height:60px;background:var(--light-gray);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--medium-gray);font-size:18px;">
@@ -170,7 +170,7 @@
                             <i class="fas fa-edit" style="font-size:13px;"></i>
                         </a>
                         @if($recurso->archivo_pdf)
-                        <a href="{{ asset('storage/' . $recurso->archivo_pdf) }}" target="_blank"
+                        <a href="{{ $recurso->archivo_pdf_url }}" target="_blank"
                            style="width:34px;height:34px;border-radius:8px;background:rgba(139,21,56,0.08);border:1px solid rgba(139,21,56,0.15);display:inline-flex;align-items:center;justify-content:center;color:var(--primary);text-decoration:none;transition:all .2s;"
                            title="Ver PDF">
                             <i class="fas fa-file-pdf" style="font-size:13px;"></i>

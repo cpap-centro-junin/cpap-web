@@ -98,12 +98,22 @@ class BannerSlide extends Model
             return $this->evento->imagen;
         }
         
-        // Si la imagen es una ruta de storage, convertirla a URL pública
-        if ($this->imagen && !str_starts_with($this->imagen, 'http')) {
-            return asset('storage/' . $this->imagen);
+        if (!$this->imagen) {
+            return null;
         }
-        
-        return $this->imagen;
+
+        // Data URI (base64)
+        if (str_starts_with($this->imagen, 'data:')) {
+            return $this->imagen;
+        }
+
+        // URL externa
+        if (str_starts_with($this->imagen, 'http')) {
+            return $this->imagen;
+        }
+
+        // Ruta de storage local (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->imagen);
     }
 
     /**

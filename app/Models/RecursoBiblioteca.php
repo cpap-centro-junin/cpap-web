@@ -227,4 +227,36 @@ class RecursoBiblioteca extends Model
         }
         return (bool) ($this->archivo_pdf || $this->enlace_externo);
     }
+
+    /** URL del archivo PDF para descarga. */
+    public function getArchivoPdfUrlAttribute(): ?string
+    {
+        if (!$this->archivo_pdf) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->archivo_pdf, 'http')) {
+            return $this->archivo_pdf;
+        }
+
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->archivo_pdf);
+    }
+
+    /** URL de la imagen de portada. */
+    public function getImagenPortadaUrlAttribute(): ?string
+    {
+        if (!$this->imagen_portada) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->imagen_portada, 'http')) {
+            return $this->imagen_portada;
+        }
+
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->imagen_portada);
+    }
 }

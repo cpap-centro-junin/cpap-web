@@ -115,6 +115,43 @@ class Colegiado extends Model
         return $this->habilitaciones()->where('activo', true)->exists();
     }
 
+    /** URL de la foto del colegiado. */
+    public function getFotoUrlAttribute(): ?string
+    {
+        if (!$this->foto) {
+            return null;
+        }
+
+        // Data URI (foto base64)
+        if (str_starts_with($this->foto, 'data:')) {
+            return $this->foto;
+        }
+
+        // URL externa
+        if (str_starts_with($this->foto, 'http')) {
+            return $this->foto;
+        }
+
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->foto);
+    }
+
+    /** URL del CV (archivo PDF). */
+    public function getCvUrlAttribute(): ?string
+    {
+        if (!$this->cv_path) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->cv_path, 'http')) {
+            return $this->cv_path;
+        }
+
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->cv_path);
+    }
+
     // ─── Scopes ──────────────────────────────────────────────────
 
     public function scopeActivos($query)

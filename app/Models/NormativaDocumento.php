@@ -30,7 +30,17 @@ class NormativaDocumento extends Model
 
     public function getPdfUrlAttribute(): ?string
     {
-        return $this->archivo_pdf ? asset('storage/' . $this->archivo_pdf) : null;
+        if (!$this->archivo_pdf) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->archivo_pdf, 'http')) {
+            return $this->archivo_pdf;
+        }
+
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($this->archivo_pdf);
     }
 
     public static function iconosDisponibles(): array

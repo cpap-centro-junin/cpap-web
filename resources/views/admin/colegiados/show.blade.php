@@ -205,7 +205,7 @@
             <div class="card-body">
                 @if($colegiado->foto)
                     <div class="profile-photo">
-                        <img src="{{ Storage::url($colegiado->foto) }}" alt="{{ $colegiado->nombre_completo }}">
+                        <img src="{{ $colegiado->foto_url }}" alt="{{ $colegiado->nombre_completo }}">
                         @if($colegiado->ocultar_foto)
                             <div style="margin-top:6px;">
                                 <span class="field-hidden-indicator" title="Foto oculta en perfil público">

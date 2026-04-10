@@ -57,7 +57,7 @@
             {!! nl2br(e($message->respuesta)) !!}
         </div>
         @if($message->archivo_respuesta)
-        <a href="{{ asset('storage/' . $message->archivo_respuesta) }}" target="_blank" class="msg-file-link">
+        <a href="{{ $message->archivo_respuesta_url }}" target="_blank" class="msg-file-link">
             <i class="fas fa-paperclip"></i> Ver archivo adjunto
         </a>
         @endif
