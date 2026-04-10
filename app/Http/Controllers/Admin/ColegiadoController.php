@@ -86,20 +86,20 @@ class ColegiadoController extends Controller
         $qrPath             = $this->qrService->generarQR($codigoVerificacion, $colegiado->nombre_completo);
 
         $rutaTempRelativa = 'habilitaciones/temp/' . $codigoVerificacion . '_original.pdf';
-        Storage::put($rutaTempRelativa, file_get_contents($archivo));
+        Storage::disk('public')->put($rutaTempRelativa, file_get_contents($archivo));
 
         $urlVerificacion       = url("/v/{$codigoVerificacion}");
         $pdfModificadoTempPath = $this->pdfService->embederQREnPDFTemporal(
-            Storage::path($rutaTempRelativa),
+            Storage::disk('public')->path($rutaTempRelativa),
             $qrPath,
             $codigoVerificacion,
             $urlVerificacion
         );
 
         $documentoPath = 'habilitaciones/' . $codigoVerificacion . '.pdf';
-        Storage::put($documentoPath, file_get_contents($pdfModificadoTempPath));
+        Storage::disk('public')->put($documentoPath, file_get_contents($pdfModificadoTempPath));
 
-        Storage::delete($rutaTempRelativa);
+        Storage::disk('public')->delete($rutaTempRelativa);
         if (file_exists($pdfModificadoTempPath)) {
             @unlink($pdfModificadoTempPath);
         }
@@ -217,8 +217,8 @@ class ColegiadoController extends Controller
         if ($request->hasFile('cv')) {
             $cv       = $request->file('cv');
             $nombreCV = $validated['dni'] . '_cv.pdf';
-            $cv->storeAs('cv', $nombreCV);
-            $validated['cv_path'] = 'cv/' . $nombreCV;
+            $cv->storeAs('colegiados', $nombreCV, 'public');
+            $validated['cv_path'] = 'colegiados/' . $nombreCV;
         }
 
         $colegiado = null;
@@ -309,13 +309,13 @@ class ColegiadoController extends Controller
         }
 
         if ($request->hasFile('cv')) {
-            if ($colegiado->cv_path && Storage::exists($colegiado->cv_path)) {
-                Storage::delete($colegiado->cv_path);
+            if ($colegiado->cv_path && Storage::disk('public')->exists($colegiado->cv_path)) {
+                Storage::disk('public')->delete($colegiado->cv_path);
             }
             $cv       = $request->file('cv');
             $nombreCV = $validated['dni'] . '_cv.pdf';
-            $cv->storeAs('cv', $nombreCV);
-            $validated['cv_path'] = 'cv/' . $nombreCV;
+            $cv->storeAs('colegiados', $nombreCV, 'public');
+            $validated['cv_path'] = 'colegiados/' . $nombreCV;
         }
 
         $colegiado->update($validated);
@@ -354,7 +354,7 @@ class ColegiadoController extends Controller
             abort(404, 'CV no disponible');
         }
 
-        return response()->file(Storage::path($colegiado->cv_path), [
+        return response()->file(Storage::disk('public')->path($colegiado->cv_path), [
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'inline; filename="CV_' . $colegiado->codigo_cpap . '.pdf"',
         ]);

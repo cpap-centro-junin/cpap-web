@@ -132,7 +132,7 @@ class HabilitacionController extends Controller
 
         $nombre = 'Habilitacion_' . $habilitacion->colegiado->codigo_cpap . '.pdf';
 
-        return response()->file(Storage::path($habilitacion->documento_path), [
+        return response()->file(Storage::disk('public')->path($habilitacion->documento_path), [
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $nombre . '"',
         ]);
