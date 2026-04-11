@@ -71,10 +71,13 @@ return [
     | `storage:link` Artisan command is executed. The array keys should be
     | the locations of the links and the values should be their targets.
     |
+    | NOTE: Symlinks are disabled in this configuration.
+    | File storage uses public_path('storage') directly (see 'public' disk config).
+    | This ensures compatibility with hosting providers that don't support symlinks.
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        // Disabled: public_path('storage') => storage_path('app/public'),
     ],
 
 ];

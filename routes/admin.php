@@ -24,6 +24,7 @@ Route::prefix('inicio/slides')->name('admin.inicio.slides.')->group(function () 
     Route::get('/{slide}/edit', [InicioController::class, 'slidesEdit'])->name('edit');
     Route::put('/{slide}', [InicioController::class, 'slidesUpdate'])->name('update');
     Route::delete('/{slide}', [InicioController::class, 'slidesDestroy'])->name('destroy');
+    Route::post('/bulk-toggle', [InicioController::class, 'slidesBulkToggle'])->name('bulk-toggle');
 });
 
 // Hero Section

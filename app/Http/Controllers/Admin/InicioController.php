@@ -197,6 +197,55 @@ class InicioController extends Controller
         return back()->with('success', 'Slide eliminado correctamente.');
     }
 
+    public function slidesBulkToggle(Request $request)
+    {
+        $data = $request->validate([
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:banner_slides,id',
+            'action' => 'required|in:activar,desactivar,eliminar',
+        ]);
+
+        try {
+            $ids = $data['ids'];
+            $action = $data['action'];
+            $count = count($ids);
+
+            switch ($action) {
+                case 'activar':
+                    BannerSlide::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} slide(s) activado(s) correctamente.";
+                    break;
+
+                case 'desactivar':
+                    BannerSlide::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} slide(s) desactivado(s) correctamente.";
+                    break;
+
+                case 'eliminar':
+                    // Obtener slides para eliminar sus imágenes
+                    $slides = BannerSlide::whereIn('id', $ids)->get();
+                    foreach ($slides as $slide) {
+                        if ($slide->imagen && !str_starts_with($slide->imagen, 'http') && \Storage::disk('public')->exists($slide->imagen)) {
+                            \Storage::disk('public')->delete($slide->imagen);
+                        }
+                    }
+                    BannerSlide::whereIn('id', $ids)->delete();
+                    $message = "{$count} slide(s) eliminado(s) correctamente.";
+                    break;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     // =====================================
     // HERO SECTION
     // =====================================
