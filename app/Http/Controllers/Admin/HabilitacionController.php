@@ -88,7 +88,7 @@ class HabilitacionController extends Controller
             $this->eliminarHabilitacionAnterior($colegiado);
 
             // 7. Crear nueva habilitación en BD (guardar ruta relativa)
-            $documentoPath = 'pdf/' . $nombreFinal;
+            $documentoPath = 'public/pdf/' . $nombreFinal;
             $habilitacion = Habilitacion::create([
                 'colegiado_id'       => $colegiado->id,
                 'codigo_verificacion' => $codigoVerificacion,

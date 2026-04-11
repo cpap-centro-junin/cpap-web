@@ -113,7 +113,7 @@ class ColegiadoController extends Controller
             @unlink($pdfModificadoTempPath);
         }
 
-        $documentoPath = 'pdf/' . $nombreFinal;
+        $documentoPath = 'public/pdf/' . $nombreFinal;
         Habilitacion::create([
             'colegiado_id'        => $colegiado->id,
             'codigo_verificacion' => $codigoVerificacion,
@@ -236,7 +236,7 @@ class ColegiadoController extends Controller
             // Guardar foto en public/images/colegiados/
             $nombreFoto = uniqid('foto_') . '.' . $ext;
             file_put_contents($fotoDir . '/' . $nombreFoto, $contenidoFoto);
-            $validated['foto'] = '/public/images/colegiados/' . $nombreFoto;
+            $validated['foto'] = 'public/images/colegiados/' . $nombreFoto;
         }
 
         // Procesar CV
@@ -252,7 +252,7 @@ class ColegiadoController extends Controller
             // Guardar CV en public/pdf/colegiados/
             $nombreCV = uniqid('cv_') . '.pdf';
             $cv->move($cvDir, $nombreCV);
-            $validated['cv_path'] = '/public/pdf/colegiados/' . $nombreCV;
+            $validated['cv_path'] = 'public/pdf/colegiados/' . $nombreCV;
         }
 
         $colegiado = null;
@@ -352,7 +352,7 @@ class ColegiadoController extends Controller
             // Guardar foto en public/images/colegiados/
             $nombreFoto = uniqid('foto_') . '.' . $ext;
             file_put_contents($fotoDir . '/' . $nombreFoto, $contenidoFoto);
-            $validated['foto'] = '/images/colegiados/' . $nombreFoto;
+            $validated['foto'] = 'public/images/colegiados/' . $nombreFoto;
         }
 
         // Procesar CV
@@ -376,7 +376,7 @@ class ColegiadoController extends Controller
             // Guardar CV en public/pdf/colegiados/
             $nombreCV = uniqid('cv_') . '.pdf';
             $cv->move($cvDir, $nombreCV);
-            $validated['cv_path'] = '/pdf/colegiados/' . $nombreCV;
+            $validated['cv_path'] = 'public/pdf/colegiados/' . $nombreCV;
         }
 
         $colegiado->update($validated);
