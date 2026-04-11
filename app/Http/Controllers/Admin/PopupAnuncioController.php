@@ -102,6 +102,56 @@ class PopupAnuncioController extends Controller
         return back()->with('success', 'Anuncio eliminado.');
     }
 
+    public function bulkToggle(Request $request)
+    {
+        $data = $request->validate([
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:popup_anuncios,id',
+            'action' => 'required|in:activar,desactivar,eliminar',
+        ]);
+
+        try {
+            $ids = $data['ids'];
+            $action = $data['action'];
+            $count = count($ids);
+
+            switch ($action) {
+                case 'activar':
+                    PopupAnuncio::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} anuncio(s) activado(s) correctamente.";
+                    break;
+
+                case 'desactivar':
+                    PopupAnuncio::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} anuncio(s) desactivado(s) correctamente.";
+                    break;
+
+                case 'eliminar':
+                    // Obtener anuncios para eliminar sus imágenes
+                    $anuncios = PopupAnuncio::whereIn('id', $ids)->get();
+                    foreach ($anuncios as $anuncio) {
+                        $rawImagen = $anuncio->getOriginal('imagen');
+                        if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
+                            Storage::disk('public')->delete($rawImagen);
+                        }
+                    }
+                    PopupAnuncio::whereIn('id', $ids)->delete();
+                    $message = "{$count} anuncio(s) eliminado(s) correctamente.";
+                    break;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function toggleActivo(PopupAnuncio $anuncio)
     {
         $anuncio->update(['activo' => !$anuncio->activo]);

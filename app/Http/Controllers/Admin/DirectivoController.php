@@ -115,4 +115,54 @@ class DirectivoController extends Controller
 
         return back()->with('success', 'Directivo eliminado.');
     }
+
+    public function bulkToggle(Request $request)
+    {
+        $data = $request->validate([
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:directivos,id',
+            'action' => 'required|in:activar,desactivar,eliminar',
+        ]);
+
+        try {
+            $ids = $data['ids'];
+            $action = $data['action'];
+            $count = count($ids);
+
+            switch ($action) {
+                case 'activar':
+                    Directivo::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} directivo(s) activado(s) correctamente.";
+                    break;
+
+                case 'desactivar':
+                    Directivo::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} directivo(s) desactivado(s) correctamente.";
+                    break;
+
+                case 'eliminar':
+                    // Obtener directivos para eliminar sus fotos
+                    $directivos = Directivo::whereIn('id', $ids)->get();
+                    foreach ($directivos as $directivo) {
+                        $rawFoto = $directivo->getOriginal('foto');
+                        if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
+                            Storage::disk('public')->delete($rawFoto);
+                        }
+                    }
+                    Directivo::whereIn('id', $ids)->delete();
+                    $message = "{$count} directivo(s) eliminado(s) correctamente.";
+                    break;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

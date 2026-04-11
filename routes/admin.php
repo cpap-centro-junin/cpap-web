@@ -45,6 +45,8 @@ Route::resource('directivos', \App\Http\Controllers\Admin\DirectivoController::c
     'update'  => 'admin.directivos.update',
     'destroy' => 'admin.directivos.destroy',
 ]);
+Route::post('/directivos/bulk-toggle', [\App\Http\Controllers\Admin\DirectivoController::class, 'bulkToggle'])
+    ->name('admin.directivos.bulk-toggle');
 
 // Invitaciones
 Route::get('/invitaciones', [App\Http\Controllers\Admin\InvitacionController::class, 'index'])
@@ -139,6 +141,9 @@ Route::resource('inicio/anuncios', \App\Http\Controllers\Admin\PopupAnuncioContr
 
 Route::patch('/inicio/anuncios/{anuncio}/toggle', [\App\Http\Controllers\Admin\PopupAnuncioController::class, 'toggleActivo'])
     ->name('admin.inicio.anuncios.toggle');
+
+Route::post('/inicio/anuncios/bulk-toggle', [\App\Http\Controllers\Admin\PopupAnuncioController::class, 'bulkToggle'])
+    ->name('admin.inicio.anuncios.bulk-toggle');
 
 // NORMATIVA LEGAL
 Route::resource('normativa', \App\Http\Controllers\Admin\NormativaController::class)->names([
