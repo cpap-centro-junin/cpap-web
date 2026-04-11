@@ -80,7 +80,7 @@ class NoticiaController extends Controller
             }
             $nombreImagen = uniqid('noticia_') . '.' . $file->getClientOriginalExtension();
             $file->move($imagenDir, $nombreImagen);
-            $data['imagen'] = '/public/images/noticias/' . $nombreImagen;
+            $data['imagen'] = 'images/noticias/' . $nombreImagen;
         }
 
         Noticia::create($data);

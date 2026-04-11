@@ -206,7 +206,7 @@ class GaleriaController extends Controller
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
             $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
-            $data['imagen'] = 'public/images/galeria/' . basename($filename);
+            $data['imagen'] = 'public/public/images/galeria/' . basename($filename);
         } else {
             unset($data['imagen']);
         }

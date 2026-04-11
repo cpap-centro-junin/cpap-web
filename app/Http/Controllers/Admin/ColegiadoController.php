@@ -252,7 +252,7 @@ class ColegiadoController extends Controller
             // Guardar CV en public/pdf/colegiados/
             $nombreCV = uniqid('cv_') . '.pdf';
             $cv->move($cvDir, $nombreCV);
-            $validated['cv_path'] = 'public/pdf/colegiados/' . $nombreCV;
+            $validated['cv_path'] = 'pdf/colegiados/' . $nombreCV;
         }
 
         $colegiado = null;
@@ -384,7 +384,7 @@ class ColegiadoController extends Controller
             // Guardar CV en public/pdf/colegiados/
             $nombreCV = uniqid('cv_') . '.pdf';
             $cv->move($cvDir, $nombreCV);
-            $validated['cv_path'] = 'public/pdf/colegiados/' . $nombreCV;
+            $validated['cv_path'] = 'pdf/colegiados/' . $nombreCV;
         }
 
         $colegiado->update($validated);
@@ -418,14 +418,8 @@ class ColegiadoController extends Controller
 
         $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
 
-        // Si empieza con "public/", remover ese prefijo para public_path()
-        $ruta = $colegiado->cv_path;
-        if (str_starts_with($ruta, 'public/')) {
-            $ruta = substr($ruta, 7); // Remover "public/"
-        }
-
-        // Si es ruta en public/pdf/colegiados/
-        $cvPath = public_path($ruta);
+        // Si es ruta en public/ (archivos nuevos)
+        $cvPath = public_path($colegiado->cv_path);
         if (file_exists($cvPath)) {
             return response()->file($cvPath, [
                 'Content-Type'        => 'application/pdf',
