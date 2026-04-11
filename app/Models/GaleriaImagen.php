@@ -51,9 +51,6 @@ class GaleriaImagen extends Model
         if (str_starts_with($value, 'http')) return $value;
 
         // Ruta en public/
-        if (str_starts_with($value, 'public/')) {
-            $value = substr($value, 7); // Remover "public/"
-        }
         return asset($value);
     }
 

@@ -241,11 +241,7 @@ class RecursoBiblioteca extends Model
         }
 
         // Ruta en public/
-        $pdf = $this->archivo_pdf;
-        if (str_starts_with($pdf, 'public/')) {
-            $pdf = substr($pdf, 7); // Remover "public/"
-        }
-        return asset($pdf);
+        return asset($this->archivo_pdf);
     }
 
     /** URL de la imagen de portada. */
@@ -261,10 +257,6 @@ class RecursoBiblioteca extends Model
         }
 
         // Ruta en public/
-        $imagen = $this->imagen_portada;
-        if (str_starts_with($imagen, 'public/')) {
-            $imagen = substr($imagen, 7); // Remover "public/"
-        }
-        return asset($imagen);
+        return asset($this->imagen_portada);
     }
 }

@@ -56,11 +56,7 @@ class ConfiguracionInicio extends Model
         }
 
         // Ruta en public/
-        $imagen = $this->hero_imagen;
-        if (str_starts_with($imagen, 'public/')) {
-            $imagen = substr($imagen, 7); // Remover "public/"
-        }
-        return asset($imagen);
+        return asset($this->hero_imagen);
     }
 
     /* ── Métodos Singleton ───────────────────────────────── */

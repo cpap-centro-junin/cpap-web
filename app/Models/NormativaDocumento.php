@@ -40,11 +40,7 @@ class NormativaDocumento extends Model
         }
 
         // Ruta en public/
-        $pdf = $this->archivo_pdf;
-        if (str_starts_with($pdf, 'public/')) {
-            $pdf = substr($pdf, 7); // Remover "public/"
-        }
-        return asset($pdf);
+        return asset($this->archivo_pdf);
     }
 
     public static function iconosDisponibles(): array
