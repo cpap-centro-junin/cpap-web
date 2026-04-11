@@ -93,7 +93,11 @@ class DirectivoController extends Controller
         if ($request->hasFile('foto')) {
             $rawFoto = $directivo->getOriginal('foto');
             if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-                @unlink(public_path($rawFoto));
+                $rutaFoto = $rawFoto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
+                }
+                @unlink(public_path($rutaFoto));
             }
             $file = $request->file('foto');
             $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());
@@ -110,7 +114,11 @@ class DirectivoController extends Controller
     {
         $rawFoto = $directivo->getOriginal('foto');
         if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-            @unlink(public_path($rawFoto));
+            $rutaFoto = $rawFoto;
+            if (str_starts_with($rutaFoto, 'public/')) {
+                $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
+            }
+            @unlink(public_path($rutaFoto));
         }
         $directivo->delete();
 

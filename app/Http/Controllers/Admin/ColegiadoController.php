@@ -307,7 +307,11 @@ class ColegiadoController extends Controller
             
             // Eliminar foto anterior si existe
             if ($colegiado->foto && !str_starts_with($colegiado->foto, 'data:')) {
-                $fotoAntPath = public_path($colegiado->foto);
+                $rutaFoto = $colegiado->foto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
+                }
+                $fotoAntPath = public_path($rutaFoto);
                 if (file_exists($fotoAntPath)) {
                     @unlink($fotoAntPath);
                 }
@@ -361,7 +365,11 @@ class ColegiadoController extends Controller
             
             // Eliminar CV anterior si existe
             if ($colegiado->cv_path && !str_starts_with($colegiado->cv_path, 'data:')) {
-                $cvAntPath = public_path($colegiado->cv_path);
+                $rutaCV = $colegiado->cv_path;
+                if (str_starts_with($rutaCV, 'public/')) {
+                    $rutaCV = substr($rutaCV, 7); // Remover "public/"
+                }
+                $cvAntPath = public_path($rutaCV);
                 if (file_exists($cvAntPath)) {
                     @unlink($cvAntPath);
                 }

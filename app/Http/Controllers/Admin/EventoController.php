@@ -111,7 +111,11 @@ class EventoController extends Controller
             // Eliminar imagen antigua si existe
             $imagenAntigua = $evento->getOriginal('imagen_portada');
             if ($imagenAntigua && !str_starts_with($imagenAntigua, 'data:') && !str_starts_with($imagenAntigua, 'http')) {
-                $rutaAntigua = public_path($imagenAntigua);
+                $rutaRela = $imagenAntigua;
+                if (str_starts_with($rutaRela, 'public/')) {
+                    $rutaRela = substr($rutaRela, 7); // Remover "public/"
+                }
+                $rutaAntigua = public_path($rutaRela);
                 if (file_exists($rutaAntigua)) {
                     @unlink($rutaAntigua);
                 }
@@ -138,7 +142,11 @@ class EventoController extends Controller
     {
         $imagenAntigua = $evento->getOriginal('imagen_portada');
         if ($imagenAntigua && !str_starts_with($imagenAntigua, 'data:') && !str_starts_with($imagenAntigua, 'http')) {
-            $rutaAntigua = public_path($imagenAntigua);
+            $rutaRela = $imagenAntigua;
+            if (str_starts_with($rutaRela, 'public/')) {
+                $rutaRela = substr($rutaRela, 7); // Remover "public/"
+            }
+            $rutaAntigua = public_path($rutaRela);
             if (file_exists($rutaAntigua)) {
                 @unlink($rutaAntigua);
             }

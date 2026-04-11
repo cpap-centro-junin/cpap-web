@@ -73,8 +73,8 @@ class QRCodeService
         // Guardar imagen
         file_put_contents($pathCompleto, $result->getString());
 
-        // Retornar path relativo (para BD)
-        return 'images/qr/' . $nombreArchivo;
+        // Retornar path relativo con prefijo public/ (para BD)
+        return 'public/images/qr/' . $nombreArchivo;
     }
 
     /**
@@ -85,7 +85,13 @@ class QRCodeService
      */
     public function eliminarQR(string $qrPath): bool
     {
-        $pathCompleto = public_path($qrPath);
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $qrPath;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
+        $pathCompleto = public_path($ruta);
 
         if (File::exists($pathCompleto)) {
             return File::delete($pathCompleto);

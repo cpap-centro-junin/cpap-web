@@ -113,7 +113,11 @@ class NoticiaController extends Controller
             // Eliminar imagen antigua si existe
             $imagenAntigua = $noticia->getOriginal('imagen');
             if ($imagenAntigua && !str_starts_with($imagenAntigua, 'data:') && !str_starts_with($imagenAntigua, 'http')) {
-                $rutaAntigua = public_path($imagenAntigua);
+                $rutaRela = $imagenAntigua;
+                if (str_starts_with($rutaRela, 'public/')) {
+                    $rutaRela = substr($rutaRela, 7); // Remover "public/"
+                }
+                $rutaAntigua = public_path($rutaRela);
                 if (file_exists($rutaAntigua)) {
                     @unlink($rutaAntigua);
                 }
@@ -140,7 +144,11 @@ class NoticiaController extends Controller
     {
         $rawImagen = $noticia->getOriginal('imagen');
         if ($rawImagen && !str_starts_with($rawImagen, 'data:') && !str_starts_with($rawImagen, 'http')) {
-            $rutaImagen = public_path($rawImagen);
+            $rutaRela = $rawImagen;
+            if (str_starts_with($rutaRela, 'public/')) {
+                $rutaRela = substr($rutaRela, 7); // Remover "public/"
+            }
+            $rutaImagen = public_path($rutaRela);
             if (file_exists($rutaImagen)) {
                 @unlink($rutaImagen);
             }
