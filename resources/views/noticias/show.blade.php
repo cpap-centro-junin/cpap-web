@@ -6,7 +6,7 @@
 @section('seo_title', $noticia->titulo . ' | Noticias CPAP Región Centro')
 @section('seo_description', Str::limit(strip_tags($noticia->resumen ?: $noticia->contenido), 160))
 @section('seo_canonical', route('noticias.show', $noticia))
-@section('seo_image', $noticia->imagen && !Str::startsWith($noticia->imagen, 'data:') ? $noticia->imagen : asset('images/logos/cpap-logo.jpg'))
+@section('seo_image', $noticia->imagen ?: asset('images/logos/cpap-logo.jpg'))
 
 @section('content')
 

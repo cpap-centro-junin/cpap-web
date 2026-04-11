@@ -235,18 +235,13 @@ class RecursoBiblioteca extends Model
             return null;
         }
 
-        // Data URI (base64)
-        if (str_starts_with($this->archivo_pdf, 'data:')) {
-            return $this->archivo_pdf;
-        }
-
         // URL externa
         if (str_starts_with($this->archivo_pdf, 'http')) {
             return $this->archivo_pdf;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->archivo_pdf);
+        // Ruta en public/
+        return asset($this->archivo_pdf);
     }
 
     /** URL de la imagen de portada. */
@@ -256,17 +251,12 @@ class RecursoBiblioteca extends Model
             return null;
         }
 
-        // Data URI (base64)
-        if (str_starts_with($this->imagen_portada, 'data:')) {
-            return $this->imagen_portada;
-        }
-
         // URL externa
         if (str_starts_with($this->imagen_portada, 'http')) {
             return $this->imagen_portada;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->imagen_portada);
+        // Ruta en public/
+        return asset($this->imagen_portada);
     }
 }

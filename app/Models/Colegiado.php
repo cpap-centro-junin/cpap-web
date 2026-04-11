@@ -122,7 +122,7 @@ class Colegiado extends Model
             return null;
         }
 
-        // Data URI (foto base64)
+        // Data URI (foto base64) - datos legacy
         if (str_starts_with($this->foto, 'data:')) {
             return $this->foto;
         }
@@ -132,8 +132,8 @@ class Colegiado extends Model
             return $this->foto;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->foto);
+        // Ruta en public/ - convertir a URL
+        return asset($this->foto);
     }
 
     /** URL del CV (archivo PDF). */
@@ -143,7 +143,7 @@ class Colegiado extends Model
             return null;
         }
 
-        // Data URI (base64)
+        // Data URI (base64) - datos legacy
         if (str_starts_with($this->cv_path, 'data:')) {
             return $this->cv_path;
         }
@@ -153,8 +153,8 @@ class Colegiado extends Model
             return $this->cv_path;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->cv_path);
+        // Ruta en public/ - convertir a URL
+        return asset($this->cv_path);
     }
 
     // ─── Scopes ──────────────────────────────────────────────────

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PopupAnuncio;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PopupAnuncioController extends Controller
 {
@@ -54,7 +53,8 @@ class PopupAnuncioController extends Controller
         $data['activo'] = $request->boolean('activo');
 
         $file = $request->file('imagen');
-        $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        $filename = $file->move(public_path('images/popup'), uniqid('popup_') . '.' . $file->getClientOriginalExtension());
+        $data['imagen'] = 'images/popup/' . basename($filename);
 
         PopupAnuncio::create($data);
 
@@ -78,7 +78,8 @@ class PopupAnuncioController extends Controller
 
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $filename = $file->move(public_path('images/popup'), uniqid('popup_') . '.' . $file->getClientOriginalExtension());
+            $data['imagen'] = 'images/popup/' . basename($filename);
         }
 
         $anuncio->update($data);

@@ -50,18 +50,13 @@ class ConfiguracionInicio extends Model
             return null;
         }
 
-        // Data URI (base64)
-        if (str_starts_with($this->hero_imagen, 'data:')) {
-            return $this->hero_imagen;
-        }
-
         // URL externa
         if (str_starts_with($this->hero_imagen, 'http')) {
             return $this->hero_imagen;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->hero_imagen);
+        // Ruta en public/
+        return asset($this->hero_imagen);
     }
 
     /* ── Métodos Singleton ───────────────────────────────── */

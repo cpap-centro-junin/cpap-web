@@ -77,7 +77,8 @@ class GaleriaController extends Controller
         ]);
 
         $file = $request->file('imagen');
-        $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
+        $data['imagen'] = 'images/galeria/' . basename($filename);
         $data['destacado'] = $request->boolean('destacado');
         $data['activo']    = $request->boolean('activo', true);
         $data['orden']     = GaleriaImagen::max('orden') + 1;
@@ -102,12 +103,13 @@ class GaleriaController extends Controller
         $ids   = [];
 
         foreach ($request->file('imagenes') as $file) {
-            $imagenBase64 = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
+            $imagenPath = 'images/galeria/' . basename($filename);
             $nombre = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
             $img = GaleriaImagen::create([
                 'titulo'    => str_replace(['-', '_'], ' ', $nombre),
-                'imagen'    => $imagenBase64,
+                'imagen'    => $imagenPath,
                 'activo'    => true,
                 'destacado' => false,
                 'orden'     => $orden++,
@@ -203,7 +205,8 @@ class GaleriaController extends Controller
 
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
+            $data['imagen'] = 'images/galeria/' . basename($filename);
         } else {
             unset($data['imagen']);
         }

@@ -98,13 +98,21 @@ class BibliotecaController extends Controller
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
             $file = $request->file('archivo_pdf');
-            $data['archivo_pdf'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['archivo_pdf'] = 'pdf/' . $nombre;
         }
 
         // Imagen de portada
         if ($request->hasFile('imagen_portada')) {
             $file = $request->file('imagen_portada');
-            $data['imagen_portada'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('images/biblioteca');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('portada_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['imagen_portada'] = 'images/biblioteca/' . $nombre;
         }
 
         // Booleans
@@ -168,13 +176,21 @@ class BibliotecaController extends Controller
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
             $file = $request->file('archivo_pdf');
-            $data['archivo_pdf'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['archivo_pdf'] = 'pdf/' . $nombre;
         }
 
         // Imagen de portada
         if ($request->hasFile('imagen_portada')) {
             $file = $request->file('imagen_portada');
-            $data['imagen_portada'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('images/biblioteca');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('portada_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['imagen_portada'] = 'images/biblioteca/' . $nombre;
         }
 
         // Booleans
@@ -211,30 +227,11 @@ class BibliotecaController extends Controller
 
         $nombre = $biblioteca->titulo . '.pdf';
 
-        // Si es base64, decodificar y abrir en navegador
-        if (str_starts_with($biblioteca->archivo_pdf, 'data:')) {
-            $parts = explode(';base64,', $biblioteca->archivo_pdf);
-            if (count($parts) === 2) {
-                $contenido = base64_decode($parts[1]);
-                return response()->stream(function () use ($contenido) {
-                    echo $contenido;
-                }, 200, [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="' . $nombre . '"',
-                    'Cache-Control' => 'private, max-age=3600',
-                ]);
-            }
-        }
-
-        // Fallback: si es URL externa
-        if (str_starts_with($biblioteca->archivo_pdf, 'http')) {
-            return redirect($biblioteca->archivo_pdf);
-        }
-
-        // Si es ruta de storage (compatibilidad legacy)
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($biblioteca->archivo_pdf)) {
+        // Si es ruta en public/ (archivos guardados)
+        $pdfPath = public_path($biblioteca->archivo_pdf);
+        if (file_exists($pdfPath)) {
             return response()->file(
-                \Illuminate\Support\Facades\Storage::disk('public')->path($biblioteca->archivo_pdf),
+                $pdfPath,
                 [
                     'Content-Type' => 'application/pdf',
                     'Content-Disposition' => 'inline; filename="' . $nombre . '"',
@@ -242,6 +239,11 @@ class BibliotecaController extends Controller
             );
         }
 
-        abort(404, 'El PDF no está disponible.');
+        // Fallback: si es URL externa
+        if (str_starts_with($biblioteca->archivo_pdf, 'http')) {
+            return redirect($biblioteca->archivo_pdf);
+        }
+
+        abort(404, 'El archivo no se encontró.');
     }
 }

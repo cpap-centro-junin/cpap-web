@@ -45,10 +45,8 @@ class Directivo extends Model
     public function getFotoAttribute($value): ?string
     {
         if (!$value) return null;
-        if (str_starts_with($value, 'data:')) return $value;
         if (str_starts_with($value, 'http')) return $value;
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($value);
+        return asset($value);
     }
 }

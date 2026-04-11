@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Evento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class EventoController extends Controller
 {
@@ -71,7 +70,13 @@ class EventoController extends Controller
 
         if ($request->hasFile('imagen_portada')) {
             $file = $request->file('imagen_portada');
-            $data['imagen_portada'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $imagenDir = public_path('images/eventos');
+            if (!file_exists($imagenDir)) {
+                mkdir($imagenDir, 0755, true);
+            }
+            $nombreImagen = uniqid('evento_') . '.' . $file->getClientOriginalExtension();
+            $file->move($imagenDir, $nombreImagen);
+            $data['imagen_portada'] = 'images/eventos/' . $nombreImagen;
         }
 
         Evento::create($data);
@@ -103,12 +108,24 @@ class EventoController extends Controller
         $data['destacado'] = $request->boolean('destacado');
 
         if ($request->hasFile('imagen_portada')) {
-            $rawImagen = $evento->getOriginal('imagen_portada');
-            if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-                Storage::disk('public')->delete($rawImagen);
+            // Eliminar imagen antigua si existe
+            $imagenAntigua = $evento->getOriginal('imagen_portada');
+            if ($imagenAntigua && !str_starts_with($imagenAntigua, 'data:') && !str_starts_with($imagenAntigua, 'http')) {
+                $rutaAntigua = public_path($imagenAntigua);
+                if (file_exists($rutaAntigua)) {
+                    @unlink($rutaAntigua);
+                }
             }
+            
+            // Guardar nueva imagen
             $file = $request->file('imagen_portada');
-            $data['imagen_portada'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $imagenDir = public_path('images/eventos');
+            if (!file_exists($imagenDir)) {
+                mkdir($imagenDir, 0755, true);
+            }
+            $nombreImagen = uniqid('evento_') . '.' . $file->getClientOriginalExtension();
+            $file->move($imagenDir, $nombreImagen);
+            $data['imagen_portada'] = 'images/eventos/' . $nombreImagen;
         }
 
         $evento->update($data);
@@ -119,9 +136,12 @@ class EventoController extends Controller
 
     public function destroy(Evento $evento)
     {
-        $rawImagen = $evento->getOriginal('imagen_portada');
-        if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-            Storage::disk('public')->delete($rawImagen);
+        $imagenAntigua = $evento->getOriginal('imagen_portada');
+        if ($imagenAntigua && !str_starts_with($imagenAntigua, 'data:') && !str_starts_with($imagenAntigua, 'http')) {
+            $rutaAntigua = public_path($imagenAntigua);
+            if (file_exists($rutaAntigua)) {
+                @unlink($rutaAntigua);
+            }
         }
         $evento->delete();
 

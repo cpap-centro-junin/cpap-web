@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Noticia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class NoticiaController extends Controller
 {
@@ -75,7 +74,13 @@ class NoticiaController extends Controller
 
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $imagenDir = public_path('images/noticias');
+            if (!file_exists($imagenDir)) {
+                mkdir($imagenDir, 0755, true);
+            }
+            $nombreImagen = uniqid('noticia_') . '.' . $file->getClientOriginalExtension();
+            $file->move($imagenDir, $nombreImagen);
+            $data['imagen'] = 'images/noticias/' . $nombreImagen;
         }
 
         Noticia::create($data);
@@ -105,12 +110,24 @@ class NoticiaController extends Controller
         $data['autor']     = $data['autor'] ?? 'Redacción CPAP';
 
         if ($request->hasFile('imagen')) {
-            $rawImagen = $noticia->getOriginal('imagen');
-            if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-                Storage::disk('public')->delete($rawImagen);
+            // Eliminar imagen antigua si existe
+            $imagenAntigua = $noticia->getOriginal('imagen');
+            if ($imagenAntigua && !str_starts_with($imagenAntigua, 'data:') && !str_starts_with($imagenAntigua, 'http')) {
+                $rutaAntigua = public_path($imagenAntigua);
+                if (file_exists($rutaAntigua)) {
+                    @unlink($rutaAntigua);
+                }
             }
+            
+            // Guardar nueva imagen
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $imagenDir = public_path('images/noticias');
+            if (!file_exists($imagenDir)) {
+                mkdir($imagenDir, 0755, true);
+            }
+            $nombreImagen = uniqid('noticia_') . '.' . $file->getClientOriginalExtension();
+            $file->move($imagenDir, $nombreImagen);
+            $data['imagen'] = 'images/noticias/' . $nombreImagen;
         }
 
         $noticia->update($data);
@@ -122,8 +139,11 @@ class NoticiaController extends Controller
     public function destroy(Noticia $noticia)
     {
         $rawImagen = $noticia->getOriginal('imagen');
-        if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-            Storage::disk('public')->delete($rawImagen);
+        if ($rawImagen && !str_starts_with($rawImagen, 'data:') && !str_starts_with($rawImagen, 'http')) {
+            $rutaImagen = public_path($rawImagen);
+            if (file_exists($rutaImagen)) {
+                @unlink($rutaImagen);
+            }
         }
         $noticia->delete();
         return back()->with('success', 'Noticia eliminada.');

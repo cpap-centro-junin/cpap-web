@@ -34,18 +34,13 @@ class NormativaDocumento extends Model
             return null;
         }
 
-        // Data URI (base64)
-        if (str_starts_with($this->archivo_pdf, 'data:')) {
-            return $this->archivo_pdf;
-        }
-
         // URL externa
         if (str_starts_with($this->archivo_pdf, 'http')) {
             return $this->archivo_pdf;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->archivo_pdf);
+        // Ruta en public/
+        return asset($this->archivo_pdf);
     }
 
     public static function iconosDisponibles(): array

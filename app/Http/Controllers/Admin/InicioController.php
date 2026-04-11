@@ -112,7 +112,11 @@ class InicioController extends Controller
         // Procesar imagen
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('images/inicio');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('slide_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['imagen'] = 'images/inicio/' . $nombre;
         }
 
         BannerSlide::create($data);
@@ -167,7 +171,11 @@ class InicioController extends Controller
         // Procesar imagen
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('images/inicio');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('slide_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['imagen'] = 'images/inicio/' . $nombre;
         }
 
         $slide->update($data);
@@ -212,7 +220,11 @@ class InicioController extends Controller
         // Procesar imagen si se sube una nueva
         if ($request->hasFile('hero_imagen')) {
             $file = $request->file('hero_imagen');
-            $data['hero_imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $dir = public_path('images/inicio');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('hero_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['hero_imagen'] = 'images/inicio/' . $nombre;
         }
 
         $config->update($data);

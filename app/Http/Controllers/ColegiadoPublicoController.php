@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Colegiado;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
 
 class ColegiadoPublicoController extends Controller
 {
@@ -89,28 +89,18 @@ class ColegiadoPublicoController extends Controller
 
         $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
 
-        // Si es base64, decodificar y descargar
-        if (str_starts_with($colegiado->cv_path, 'data:')) {
-            $parts = explode(';base64,', $colegiado->cv_path);
-            if (count($parts) === 2) {
-                $contenido = base64_decode($parts[1]);
-                return response()->streamDownload(function () use ($contenido) {
-                    echo $contenido;
-                }, $filename, ['Content-Type' => 'application/pdf']);
-            }
+        // Si es ruta en public/ (archivos nuevos)
+        $cvPath = public_path($colegiado->cv_path);
+        if (file_exists($cvPath)) {
+            return response()->file($cvPath, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
         }
 
         // Fallback: si es URL externa
         if (str_starts_with($colegiado->cv_path, 'http')) {
             return redirect($colegiado->cv_path);
-        }
-
-        // Si es ruta de storage (por compatibilidad con datos legacy)
-        if (Storage::exists($colegiado->cv_path)) {
-            return response()->file(Storage::path($colegiado->cv_path), [
-                'Content-Type'        => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $filename . '"',
-            ]);
         }
 
         abort(404, 'CV no disponible');

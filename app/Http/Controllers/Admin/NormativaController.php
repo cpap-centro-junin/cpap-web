@@ -62,8 +62,12 @@ class NormativaController extends Controller
 
         if ($request->hasFile('archivo_pdf')) {
             $file = $request->file('archivo_pdf');
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('normativa_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
             $data['archivo_nombre'] = $file->getClientOriginalName();
-            $data['archivo_pdf'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $data['archivo_pdf'] = 'pdf/' . $nombre;
         }
 
         NormativaDocumento::create($data);
@@ -93,8 +97,12 @@ class NormativaController extends Controller
 
         if ($request->hasFile('archivo_pdf')) {
             $file = $request->file('archivo_pdf');
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('normativa_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
             $data['archivo_nombre'] = $file->getClientOriginalName();
-            $data['archivo_pdf'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $data['archivo_pdf'] = 'pdf/' . $nombre;
         }
 
         if ($request->boolean('eliminar_pdf') && !$request->hasFile('archivo_pdf')) {
@@ -127,17 +135,12 @@ class NormativaController extends Controller
 
         $nombre = $documento->archivo_nombre ?? $documento->titulo . '.pdf';
 
-        // Si es base64, decodificar y descargar
-        if (str_starts_with($documento->archivo_pdf, 'data:')) {
-            $parts = explode(';base64,', $documento->archivo_pdf);
-            if (count($parts) === 2) {
-                $contenido = base64_decode($parts[1]);
-                return response()->download(
-                    response()->streamDownload(function () use ($contenido) {
-                        echo $contenido;
-                    }, $nombre, ['Content-Type' => 'application/pdf'])
-                );
-            }
+        // Si es ruta en public/ (archivos guardados)
+        $pdfPath = public_path($documento->archivo_pdf);
+        if (file_exists($pdfPath)) {
+            return response()->download($pdfPath, $nombre, [
+                'Content-Type' => 'application/pdf'
+            ]);
         }
 
         // Fallback: si es URL externa
@@ -145,11 +148,6 @@ class NormativaController extends Controller
             return redirect($documento->archivo_pdf);
         }
 
-        // Si es ruta de storage (por compatibilidad con datos legacy)
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($documento->archivo_pdf)) {
-            return \Illuminate\Support\Facades\Storage::disk('public')->download($documento->archivo_pdf, $nombre);
-        }
-
-        abort(404, 'El documento no está disponible.');
+        abort(404, 'El archivo no se encontró.');
     }
 }
