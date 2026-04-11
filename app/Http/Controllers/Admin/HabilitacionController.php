@@ -132,7 +132,13 @@ class HabilitacionController extends Controller
     {
         $habilitacion = Habilitacion::where('codigo_verificacion', $codigo)->firstOrFail();
 
-        $pdfPath = public_path($habilitacion->documento_path);
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $habilitacion->documento_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
+        $pdfPath = public_path($ruta);
         
         if (!file_exists($pdfPath)) {
             abort(404, 'Documento no encontrado');
@@ -151,7 +157,13 @@ class HabilitacionController extends Controller
      */
     public function descargarQR(Habilitacion $habilitacion)
     {
-        $qrPathCompleto = public_path($habilitacion->qr_path);
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $habilitacion->qr_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
+        $qrPathCompleto = public_path($ruta);
 
         if (!file_exists($qrPathCompleto)) {
             abort(404, 'QR Code no encontrado');

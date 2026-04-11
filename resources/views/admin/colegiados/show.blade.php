@@ -205,7 +205,7 @@
             <div class="card-body">
                 @if($colegiado->foto)
                     <div class="profile-photo">
-                        <img src="{{ $colegiado->fotoUrl }}" alt="{{ $colegiado->nombre_completo }}">
+                        <img src="{{ $colegiado->foto_url }}" alt="{{ $colegiado->nombre_completo }}">
                         @if($colegiado->ocultar_foto)
                             <div style="margin-top:6px;">
                                 <span class="field-hidden-indicator" title="Foto oculta en perfil público">
@@ -507,7 +507,7 @@
 
                             <div class="habilitacion-qr">
                                 <strong>Código QR:</strong>
-                                <img src="{{ asset($habilitacion->qr_path) }}" alt="QR Code">
+                                <img src="{{ $habilitacion->qr_url }}" alt="QR Code">
                             </div>
 
                             <div class="habilitacion-actions">

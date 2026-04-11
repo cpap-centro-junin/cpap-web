@@ -101,7 +101,7 @@
                                 <td>
                                     <div class="user-cell">
                                         @if($colegiado->foto)
-                                            <img src="{{ $colegiado->fotoUrl }}" alt="{{ $colegiado->nombre_completo }}" class="user-avatar-small">
+                                            <img src="{{ $colegiado->foto_url }}" alt="{{ $colegiado->nombre_completo }}" class="user-avatar-small">
                                         @else
                                             <div class="user-avatar-small">
                                                 {{ strtoupper(substr($colegiado->nombres, 0, 1) . substr($colegiado->apellidos, 0, 1)) }}

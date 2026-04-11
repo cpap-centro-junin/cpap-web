@@ -132,6 +132,12 @@ class Colegiado extends Model
             return $this->foto;
         }
 
+        // Si empieza con "public/", convertir a URL
+        if (str_starts_with($this->foto, 'public/')) {
+            $ruta = substr($this->foto, 7); // Remover "public/"
+            return asset($ruta);
+        }
+
         // Ruta en public/ - convertir a URL
         return asset($this->foto);
     }
@@ -151,6 +157,12 @@ class Colegiado extends Model
         // URL externa
         if (str_starts_with($this->cv_path, 'http')) {
             return $this->cv_path;
+        }
+
+        // Si empieza con "public/", convertir a URL
+        if (str_starts_with($this->cv_path, 'public/')) {
+            $ruta = substr($this->cv_path, 7); // Remover "public/"
+            return asset($ruta);
         }
 
         // Ruta en public/ - convertir a URL

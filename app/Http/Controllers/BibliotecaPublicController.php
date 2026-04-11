@@ -121,8 +121,14 @@ class BibliotecaPublicController extends Controller
 
         $filename = \Illuminate\Support\Str::slug($recurso->titulo) . '.pdf';
 
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $recurso->archivo_pdf;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
         // Si es ruta en public/ (archivos guardados)
-        $pdfPath = public_path($recurso->archivo_pdf);
+        $pdfPath = public_path($ruta);
         if (file_exists($pdfPath)) {
             return response()->download($pdfPath, $filename, [
                 'Content-Type' => 'application/pdf'

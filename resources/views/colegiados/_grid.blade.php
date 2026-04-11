@@ -36,7 +36,7 @@
                 <div class="card-header-bg">
                     <div class="card-avatar-wrapper">
                         @if($colegiado->foto && !$colegiado->ocultar_foto)
-                            <img src="{{ $colegiado->fotoUrl }}"
+                            <img src="{{ $colegiado->foto_url }}"
                                  alt="{{ $colegiado->nombre_completo }}"
                                  class="card-avatar">
                         @else
