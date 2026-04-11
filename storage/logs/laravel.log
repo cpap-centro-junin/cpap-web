@@ -67,3 +67,95 @@
 #64 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('C://laragon//www//...')
 #65 {main}
 "} 
+[2026-04-11 14:23:34] local.ERROR: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'cpapcentro.recursos_biblioteca' doesn't exist (Connection: mysql, Host: cpapcentro.cr40yws4ssdu.us-east-2.rds.amazonaws.com, Port: 3306, Database: cpapcentro, SQL:     UPDATE recursos_biblioteca 
+    SET archivo_pdf = CONCAT('public/', archivo_pdf) 
+    WHERE archivo_pdf IS NOT NULL 
+    AND archivo_pdf != '' 
+    AND NOT archivo_pdf LIKE 'public/%'
+    AND NOT archivo_pdf LIKE 'http%'
+    AND NOT archivo_pdf LIKE 'data:%') {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'cpapcentro.recursos_biblioteca' doesn't exist (Connection: mysql, Host: cpapcentro.cr40yws4ssdu.us-east-2.rds.amazonaws.com, Port: 3306, Database: cpapcentro, SQL:     UPDATE recursos_biblioteca 
+
+    SET archivo_pdf = CONCAT('public/', archivo_pdf) 
+
+    WHERE archivo_pdf IS NOT NULL 
+
+    AND archivo_pdf != '' 
+
+    AND NOT archivo_pdf LIKE 'public/%'
+
+    AND NOT archivo_pdf LIKE 'http%'
+
+    AND NOT archivo_pdf LIKE 'data:%') at C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php:838)
+[stacktrace]
+#0 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php(794): Illuminate/Database/Connection->runQueryCallback('    UPDATE recu...', Array, Object(Closure))
+#1 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php(573): Illuminate/Database/Connection->run('    UPDATE recu...', Array, Object(Closure))
+#2 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(491): Illuminate/Database/Connection->statement('    UPDATE recu...')
+#3 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(363): Illuminate/Database/DatabaseManager->__call('statement', Array)
+#4 C:/laragon/www/cpap-web/database/migrations/2024_04_11_000001_update_file_paths_to_public_prefix.php(104): Illuminate/Support/Facades/Facade::__callStatic('statement', Array)
+#5 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(517): Illuminate/Database/Migrations/Migration@anonymous->up()
+#6 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(442): Illuminate/Database/Migrations/Migrator->runMethod(Object(Illuminate/Database/MySqlConnection), Object(Illuminate/Database/Migrations/Migration@anonymous), 'up')
+#7 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(451): Illuminate/Database/Migrations/Migrator->Illuminate/Database/Migrations/{closure}()
+#8 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(253): Illuminate/Database/Migrations/Migrator->runMigration(Object(Illuminate/Database/Migrations/Migration@anonymous), 'up')
+#9 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(41): Illuminate/Database/Migrations/Migrator->Illuminate/Database/Migrations/{closure}()
+#10 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(812): Illuminate/Console/View/Components/Task->render('2024_04_11_0000...', Object(Closure))
+#11 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(253): Illuminate/Database/Migrations/Migrator->write('Illuminate//Cons...', '2024_04_11_0000...', Object(Closure))
+#12 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate/Database/Migrations/Migrator->runUp('C://laragon//www//...', 32, false)
+#13 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate/Database/Migrations/Migrator->runPending(Array, Array)
+#14 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate/Database/Migrations/Migrator->run(Array, Array)
+#15 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(669): Illuminate/Database/Console/Migrations/MigrateCommand->Illuminate/Database/Console/Migrations/{closure}()
+#16 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(109): Illuminate/Database/Migrations/Migrator->usingConnection(NULL, Object(Closure))
+#17 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate/Database/Console/Migrations/MigrateCommand->runMigrations()
+#18 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Database/Console/Migrations/MigrateCommand->handle()
+#19 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#20 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#21 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#22 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#23 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#24 C:/laragon/www/cpap-web/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#25 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#26 C:/laragon/www/cpap-web/vendor/symfony/console/Application.php(1102): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#27 C:/laragon/www/cpap-web/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Illuminate/Database/Console/Migrations/MigrateCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#28 C:/laragon/www/cpap-web/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#29 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#30 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#31 C:/laragon/www/cpap-web/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 42S02): SQLSTATE[42S02]: Base table or view not found: 1146 Table 'cpapcentro.recursos_biblioteca' doesn't exist at C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php:578)
+[stacktrace]
+#0 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php(578): PDO->prepare('    UPDATE recu...')
+#1 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php(827): Illuminate/Database/Connection->Illuminate/Database/{closure}('    UPDATE recu...', Array)
+#2 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php(794): Illuminate/Database/Connection->runQueryCallback('    UPDATE recu...', Array, Object(Closure))
+#3 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Connection.php(573): Illuminate/Database/Connection->run('    UPDATE recu...', Array, Object(Closure))
+#4 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(491): Illuminate/Database/Connection->statement('    UPDATE recu...')
+#5 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(363): Illuminate/Database/DatabaseManager->__call('statement', Array)
+#6 C:/laragon/www/cpap-web/database/migrations/2024_04_11_000001_update_file_paths_to_public_prefix.php(104): Illuminate/Support/Facades/Facade::__callStatic('statement', Array)
+#7 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(517): Illuminate/Database/Migrations/Migration@anonymous->up()
+#8 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(442): Illuminate/Database/Migrations/Migrator->runMethod(Object(Illuminate/Database/MySqlConnection), Object(Illuminate/Database/Migrations/Migration@anonymous), 'up')
+#9 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(451): Illuminate/Database/Migrations/Migrator->Illuminate/Database/Migrations/{closure}()
+#10 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(253): Illuminate/Database/Migrations/Migrator->runMigration(Object(Illuminate/Database/Migrations/Migration@anonymous), 'up')
+#11 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(41): Illuminate/Database/Migrations/Migrator->Illuminate/Database/Migrations/{closure}()
+#12 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(812): Illuminate/Console/View/Components/Task->render('2024_04_11_0000...', Object(Closure))
+#13 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(253): Illuminate/Database/Migrations/Migrator->write('Illuminate//Cons...', '2024_04_11_0000...', Object(Closure))
+#14 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate/Database/Migrations/Migrator->runUp('C://laragon//www//...', 32, false)
+#15 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate/Database/Migrations/Migrator->runPending(Array, Array)
+#16 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate/Database/Migrations/Migrator->run(Array, Array)
+#17 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(669): Illuminate/Database/Console/Migrations/MigrateCommand->Illuminate/Database/Console/Migrations/{closure}()
+#18 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(109): Illuminate/Database/Migrations/Migrator->usingConnection(NULL, Object(Closure))
+#19 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate/Database/Console/Migrations/MigrateCommand->runMigrations()
+#20 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Database/Console/Migrations/MigrateCommand->handle()
+#21 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#22 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#23 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#24 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#25 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#26 C:/laragon/www/cpap-web/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#27 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#28 C:/laragon/www/cpap-web/vendor/symfony/console/Application.php(1102): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#29 C:/laragon/www/cpap-web/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Illuminate/Database/Console/Migrations/MigrateCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#30 C:/laragon/www/cpap-web/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#31 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#32 C:/laragon/www/cpap-web/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#33 C:/laragon/www/cpap-web/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#34 {main}
+"} 

@@ -108,7 +108,11 @@ class BannerSlide extends Model
         }
 
         // Ruta en public/
-        return asset($this->imagen);
+        $imagen = $this->imagen;
+        if (str_starts_with($imagen, 'public/')) {
+            $imagen = substr($imagen, 7); // Remover "public/"
+        }
+        return asset($imagen);
     }
 
     /**
@@ -119,6 +123,9 @@ class BannerSlide extends Model
         if (!$value) return null;
         if (str_starts_with($value, 'http')) return $value;
         
+        if (str_starts_with($value, 'public/')) {
+            $value = substr($value, 7); // Remover "public/"
+        }
         return asset($value);
     }
 
