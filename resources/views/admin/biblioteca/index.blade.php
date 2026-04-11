@@ -86,7 +86,7 @@
                 {{-- Portada --}}
                 <td>
                     @if($recurso->imagen_portada)
-                        <img src="{{ $recurso->imagen_portada }}" alt=""
+                        <img src="{{ $recurso->imagen_portada_url }}" alt=""
                              style="width:44px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
                     @else
                         <div style="width:44px;height:60px;background:var(--light-gray);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--medium-gray);font-size:18px;">

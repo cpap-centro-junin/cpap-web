@@ -101,7 +101,7 @@
                         @endif
                         @if($recurso->imagen_portada)
                         <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(201,169,97,0.1);border-radius:8px;font-size:12px;">
-                            <img src="{{ $recurso->imagenPortadaUrl }}" alt="" style="width:30px;height:40px;object-fit:cover;border-radius:4px;">
+                            <img src="{{ $recurso->imagen_portada_url }}" alt="" style="width:30px;height:40px;object-fit:cover;border-radius:4px;">
                             <span style="color:var(--dark);font-weight:500;">Portada actual</span>
                         </div>
                         @endif
