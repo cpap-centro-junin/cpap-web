@@ -227,8 +227,14 @@ class BibliotecaController extends Controller
 
         $nombre = $biblioteca->titulo . '.pdf';
 
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $biblioteca->archivo_pdf;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
         // Si es ruta en public/ (archivos guardados)
-        $pdfPath = public_path($biblioteca->archivo_pdf);
+        $pdfPath = public_path($ruta);
         if (file_exists($pdfPath)) {
             return response()->file(
                 $pdfPath,

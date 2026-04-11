@@ -171,9 +171,11 @@
                         </a>
                         @if($recurso->archivo_pdf)
                         <a href="{{ route('admin.biblioteca.descargar-pdf', $recurso) }}" target="_blank"
-                           style="width:34px;height:34px;border-radius:8px;background:rgba(139,21,56,0.08);border:1px solid rgba(139,21,56,0.15);display:inline-flex;align-items:center;justify-content:center;color:var(--primary);text-decoration:none;transition:all .2s;"
-                           title="Ver PDF">
-                            <i class="fas fa-file-pdf" style="font-size:13px;"></i>
+                           style="width:34px;height:34px;border-radius:8px;background:rgba(139,21,56,0.1);border:1px solid rgba(139,21,56,0.2);display:inline-flex;align-items:center;justify-content:center;color:var(--primary);text-decoration:none;transition:all .2s;font-size:13px;"
+                           title="Ver PDF" 
+                           onmouseover="this.style.background='rgba(139,21,56,0.15)';this.style.borderColor='rgba(139,21,56,0.3)'"
+                           onmouseout="this.style.background='rgba(139,21,56,0.1)';this.style.borderColor='rgba(139,21,56,0.2)'">
+                            <i class="fas fa-file-pdf"></i>
                         </a>
                         @endif
                         <form action="{{ route('admin.biblioteca.destroy', $recurso) }}" method="POST" class="delete-form" id="form-delete-biblioteca-{{ $recurso->id }}">

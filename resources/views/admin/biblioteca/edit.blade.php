@@ -92,11 +92,16 @@
                     {{-- Archivos actuales --}}
                     <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
                         @if($recurso->archivo_pdf)
-                        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(139,21,56,0.06);border-radius:8px;font-size:12px;">
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(139,21,56,0.08);border:1px solid rgba(139,21,56,0.15);border-radius:8px;font-size:12px;">
                             <i class="fas fa-file-pdf" style="color:var(--primary);font-size:16px;"></i>
-                            <span style="color:var(--dark);font-weight:500;">PDF actual cargado</span>
+                            <div style="flex:1;">
+                                <div style="color:var(--dark);font-weight:500;">PDF cargado</div>
+                                <div style="color:var(--medium-gray);font-size:11px;margin-top:2px;">{{ basename($recurso->archivo_pdf) }}</div>
+                            </div>
                             <a href="{{ route('admin.biblioteca.descargar-pdf', $recurso) }}" target="_blank"
-                               style="color:var(--primary);font-weight:600;text-decoration:none;">Ver</a>
+                               style="padding:6px 12px;background:var(--primary);color:white;border-radius:6px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;font-size:11px;white-space:nowrap;flex-shrink:0;transition:all .2s;">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
                         </div>
                         @endif
                         @if($recurso->imagen_portada)
