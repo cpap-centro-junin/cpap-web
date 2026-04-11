@@ -180,7 +180,7 @@ class BibliotecaController extends Controller
             if (!file_exists($dir)) mkdir($dir, 0755, true);
             $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
-            $data['archivo_pdf'] = 'pdf/' . $nombre;
+            $data['archivo_pdf'] = '/public/public/pdf/' . $nombre;
         }
 
         // Imagen de portada
@@ -190,7 +190,7 @@ class BibliotecaController extends Controller
             if (!file_exists($dir)) mkdir($dir, 0755, true);
             $nombre = uniqid('portada_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
-            $data['imagen_portada'] = 'images/biblioteca/' . $nombre;
+            $data['imagen_portada'] = '/public/public/images/biblioteca/' . $nombre;
         }
 
         // Booleans

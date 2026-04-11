@@ -76,7 +76,7 @@ class EventoController extends Controller
             }
             $nombreImagen = uniqid('evento_') . '.' . $file->getClientOriginalExtension();
             $file->move($imagenDir, $nombreImagen);
-            $data['imagen_portada'] = 'images/eventos/' . $nombreImagen;
+            $data['imagen_portada'] = '/public/images/eventos/' . $nombreImagen;
         }
 
         Evento::create($data);
@@ -125,7 +125,7 @@ class EventoController extends Controller
             }
             $nombreImagen = uniqid('evento_') . '.' . $file->getClientOriginalExtension();
             $file->move($imagenDir, $nombreImagen);
-            $data['imagen_portada'] = 'images/eventos/' . $nombreImagen;
+            $data['imagen_portada'] = '/public/images/eventos/' . $nombreImagen;
         }
 
         $evento->update($data);

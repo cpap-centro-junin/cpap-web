@@ -116,7 +116,7 @@ class InicioController extends Controller
             if (!file_exists($dir)) mkdir($dir, 0755, true);
             $nombre = uniqid('slide_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
-            $data['imagen'] = 'images/inicio/' . $nombre;
+            $data['imagen'] = '/public/images/inicio/' . $nombre;
         }
 
         BannerSlide::create($data);
@@ -224,7 +224,7 @@ class InicioController extends Controller
             if (!file_exists($dir)) mkdir($dir, 0755, true);
             $nombre = uniqid('hero_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
-            $data['hero_imagen'] = 'images/inicio/' . $nombre;
+            $data['hero_imagen'] = '/public/images/inicio/' . $nombre;
         }
 
         $config->update($data);

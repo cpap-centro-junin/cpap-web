@@ -102,7 +102,7 @@ class NormativaController extends Controller
             $nombre = uniqid('normativa_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
             $data['archivo_nombre'] = $file->getClientOriginalName();
-            $data['archivo_pdf'] = 'pdf/' . $nombre;
+            $data['archivo_pdf'] = '/public/public/pdf/' . $nombre;
         }
 
         if ($request->boolean('eliminar_pdf') && !$request->hasFile('archivo_pdf')) {

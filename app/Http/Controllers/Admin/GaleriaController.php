@@ -78,7 +78,7 @@ class GaleriaController extends Controller
 
         $file = $request->file('imagen');
         $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
-        $data['imagen'] = 'images/galeria/' . basename($filename);
+        $data['imagen'] = '/images/galeria/' . basename($filename);
         $data['destacado'] = $request->boolean('destacado');
         $data['activo']    = $request->boolean('activo', true);
         $data['orden']     = GaleriaImagen::max('orden') + 1;
@@ -104,7 +104,7 @@ class GaleriaController extends Controller
 
         foreach ($request->file('imagenes') as $file) {
             $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
-            $imagenPath = 'images/galeria/' . basename($filename);
+            $imagenPath = '/public/images/galeria/' . basename($filename);
             $nombre = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
             $img = GaleriaImagen::create([
@@ -206,7 +206,7 @@ class GaleriaController extends Controller
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
             $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
-            $data['imagen'] = 'images/galeria/' . basename($filename);
+            $data['imagen'] = '/public/images/galeria/' . basename($filename);
         } else {
             unset($data['imagen']);
         }
