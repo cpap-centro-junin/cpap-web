@@ -73,8 +73,8 @@
         </div>
 
         {{-- Imagen --}}
-        <div style="height:170px;overflow:hidden;background:var(--light-gray);cursor:pointer;" onclick="window.open('{{ $img->imagen_url }}','_blank')">
-            <img src="{{ $img->imagen_url }}" alt="{{ $img->titulo }}"
+        <div style="height:170px;overflow:hidden;background:var(--light-gray);cursor:pointer;" onclick="window.open('{{ $img->imagen }}','_blank')">
+            <img src="{{ $img->imagen }}" alt="{{ $img->titulo }}"
                  style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;"
                  onmouseover="this.style.transform='scale(1.05)'"
                  onmouseout="this.style.transform='scale(1)'">

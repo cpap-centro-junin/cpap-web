@@ -8,7 +8,6 @@ use App\Models\ConfiguracionInicio;
 use App\Models\Noticia;
 use App\Models\Evento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class InicioController extends Controller
 {
@@ -90,7 +89,7 @@ class InicioController extends Controller
             'tag'           => 'nullable|string|max:50',
             'titulo'        => 'required|string|max:200',
             'descripcion'   => 'nullable|string',
-            'imagen'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'imagen'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             'boton_texto'   => 'nullable|string|max:50',
             'boton_url'     => 'required|string|max:500',
             'orden'         => 'nullable|integer|min:0',
@@ -112,10 +111,8 @@ class InicioController extends Controller
 
         // Procesar imagen
         if ($request->hasFile('imagen')) {
-            $imagen = $request->file('imagen');
-            $nombreImagen = 'slide_' . time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-            $imagen->storeAs('banner-slides', $nombreImagen, 'public');
-            $data['imagen'] = 'banner-slides/' . $nombreImagen;
+            $file = $request->file('imagen');
+            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         BannerSlide::create($data);
@@ -148,7 +145,7 @@ class InicioController extends Controller
             'tag'           => 'nullable|string|max:50',
             'titulo'        => 'required|string|max:200',
             'descripcion'   => 'nullable|string',
-            'imagen'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'imagen'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             'boton_texto'   => 'nullable|string|max:50',
             'boton_url'     => 'required|string|max:500',
             'orden'         => 'nullable|integer|min:0',
@@ -169,15 +166,8 @@ class InicioController extends Controller
 
         // Procesar imagen
         if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior si existe
-            if ($slide->imagen && !str_starts_with($slide->imagen, 'http') && \Storage::disk('public')->exists($slide->imagen)) {
-                \Storage::disk('public')->delete($slide->imagen);
-            }
-            
-            $imagen = $request->file('imagen');
-            $nombreImagen = 'slide_' . time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
-            $imagen->storeAs('banner-slides', $nombreImagen, 'public');
-            $data['imagen'] = 'banner-slides/' . $nombreImagen;
+            $file = $request->file('imagen');
+            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         $slide->update($data);
@@ -188,11 +178,6 @@ class InicioController extends Controller
 
     public function slidesDestroy(BannerSlide $slide)
     {
-        // Eliminar imagen si existe
-        if ($slide->imagen && !str_starts_with($slide->imagen, 'http') && \Storage::disk('public')->exists($slide->imagen)) {
-            \Storage::disk('public')->delete($slide->imagen);
-        }
-        
         $slide->delete();
         return back()->with('success', 'Slide eliminado correctamente.');
     }
@@ -213,7 +198,7 @@ class InicioController extends Controller
             'hero_badge'       => 'nullable|string|max:50',
             'hero_titulo'      => 'nullable|string',
             'hero_subtitulo'   => 'nullable|string',
-            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp',
+            'hero_imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             'hero_btn1_texto'  => 'nullable|string|max:50',
             'hero_btn1_url'    => 'nullable|string|max:500',
             'hero_btn1_icono'  => 'nullable|string|max:50',
@@ -226,15 +211,8 @@ class InicioController extends Controller
 
         // Procesar imagen si se sube una nueva
         if ($request->hasFile('hero_imagen')) {
-            // Eliminar imagen anterior si existe
-            if ($config->hero_imagen && Storage::disk('public')->exists($config->hero_imagen)) {
-                Storage::disk('public')->delete($config->hero_imagen);
-            }
-            
-            $imagen = $request->file('hero_imagen');
-            $nombreImagen = 'hero_' . time() . '.' . $imagen->getClientOriginalExtension();
-            $imagen->storeAs('hero', $nombreImagen, 'public');
-            $data['hero_imagen'] = 'hero/' . $nombreImagen;
+            $file = $request->file('hero_imagen');
+            $data['hero_imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         $config->update($data);

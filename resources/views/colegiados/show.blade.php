@@ -24,7 +24,7 @@
         {{-- Avatar --}}
         <div class="perfil-avatar-wrap">
             @if($colegiado->foto && !$colegiado->ocultar_foto)
-                <img src="{{ $colegiado->foto_url }}"
+                <img src="{{ $colegiado->fotoUrl }}"
                      alt="{{ $colegiado->nombre_completo }}"
                      class="perfil-avatar">
             @else

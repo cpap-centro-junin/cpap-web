@@ -34,6 +34,11 @@ class NormativaDocumento extends Model
             return null;
         }
 
+        // Data URI (base64)
+        if (str_starts_with($this->archivo_pdf, 'data:')) {
+            return $this->archivo_pdf;
+        }
+
         // URL externa
         if (str_starts_with($this->archivo_pdf, 'http')) {
             return $this->archivo_pdf;

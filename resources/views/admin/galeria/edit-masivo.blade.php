@@ -66,8 +66,8 @@
         <div class="admin-card" style="padding:0;overflow:hidden;" id="card-{{ $img->id }}">
             <div style="display:flex;gap:0;flex-wrap:wrap;">
                 {{-- Imagen Preview --}}
-                <div style="width:200px;min-height:180px;flex-shrink:0;background:var(--light-gray);position:relative;overflow:hidden;cursor:pointer;" onclick="window.open('{{ $img->imagen_url }}','_blank')">
-                    <img src="{{ $img->imagen_url }}" alt="{{ $img->titulo }}"
+                <div style="width:200px;min-height:180px;flex-shrink:0;background:var(--light-gray);position:relative;overflow:hidden;cursor:pointer;" onclick="window.open('{{ $img->imagen }}','_blank')">
+                    <img src="{{ $img->imagen }}" alt="{{ $img->titulo }}"
                          style="width:100%;height:100%;object-fit:cover;display:block;">
                     <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.65);color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">
                         #{{ $i + 1 }}

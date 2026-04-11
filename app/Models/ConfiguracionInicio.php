@@ -50,6 +50,11 @@ class ConfiguracionInicio extends Model
             return null;
         }
 
+        // Data URI (base64)
+        if (str_starts_with($this->hero_imagen, 'data:')) {
+            return $this->hero_imagen;
+        }
+
         // URL externa
         if (str_starts_with($this->hero_imagen, 'http')) {
             return $this->hero_imagen;

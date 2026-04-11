@@ -102,7 +102,7 @@
                     <a href="{{ route('nosotros.normativa.descargar', $doc) }}" class="normativa-btn normativa-btn-download">
                         <i class="fas fa-download"></i> Descargar
                     </a>
-                    <a href="{{ $doc->pdf_url }}" target="_blank" class="normativa-btn normativa-btn-view">
+                    <a href="{{ $doc->pdfUrl }}" target="_blank" class="normativa-btn normativa-btn-view">
                         <i class="fas fa-eye"></i> Ver
                     </a>
                     @else

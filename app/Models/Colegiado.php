@@ -143,6 +143,11 @@ class Colegiado extends Model
             return null;
         }
 
+        // Data URI (base64)
+        if (str_starts_with($this->cv_path, 'data:')) {
+            return $this->cv_path;
+        }
+
         // URL externa
         if (str_starts_with($this->cv_path, 'http')) {
             return $this->cv_path;

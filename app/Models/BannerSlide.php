@@ -117,6 +117,19 @@ class BannerSlide extends Model
     }
 
     /**
+     * Mutador para manejar imagen (base64, URL externa o storage)
+     */
+    public function getImagenAttribute($value): ?string
+    {
+        if (!$value) return null;
+        if (str_starts_with($value, 'data:')) return $value;
+        if (str_starts_with($value, 'http')) return $value;
+        
+        // Ruta de storage
+        return \Illuminate\Support\Facades\Storage::url($value);
+    }
+
+    /**
      * Obtener la URL del botón (desde la noticia/evento o custom)
      */
     public function getBotonUrlFinalAttribute(): string

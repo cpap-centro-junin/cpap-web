@@ -22,7 +22,7 @@
     <div class="edit-context-banner">
         <div class="edit-context-banner__avatar">
             @if($colegiado->foto)
-                <img src="{{ $colegiado->foto_url }}" alt="{{ $colegiado->nombre_completo }}">
+                <img src="{{ $colegiado->fotoUrl }}" alt="{{ $colegiado->nombre_completo }}">
             @else
                 <div class="edit-context-banner__initials">
                     {{ strtoupper(substr($colegiado->nombres, 0, 1) . substr($colegiado->apellidos, 0, 1)) }}
@@ -140,7 +140,7 @@
                         <label for="foto">Foto de Perfil</label>
                         @if($colegiado->foto)
                             <div class="current-file-preview">
-                                <img src="{{ $colegiado->foto_url }}" alt="Foto actual">
+                                <img src="{{ $colegiado->fotoUrl }}" alt="Foto actual">
                                 <span class="text-muted">Foto actual</span>
                             </div>
                         @endif

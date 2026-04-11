@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RecursoBiblioteca;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class BibliotecaController extends Controller
 {
@@ -85,7 +84,7 @@ class BibliotecaController extends Controller
             'idioma'              => 'nullable|string|max:80',
             'enlace_externo'      => 'nullable|url|max:500',
             'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',     // 200 MB
-            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // 5 MB
+            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480', // 20 MB
             'copyright_titular'   => 'nullable|string|max:255',
             'copyright_anio'      => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'licencia_tipo'       => 'required|in:copyright,creative_commons_by,cc_by_sa,cc_by_nc,cc_by_nc_sa,cc_by_nd,cc_by_nc_nd,dominio_publico,licencia_cpap',
@@ -98,14 +97,14 @@ class BibliotecaController extends Controller
 
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
-            $data['archivo_pdf'] = $request->file('archivo_pdf')
-                ->store('biblioteca/pdf', 'public');
+            $file = $request->file('archivo_pdf');
+            $data['archivo_pdf'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         // Imagen de portada
         if ($request->hasFile('imagen_portada')) {
-            $data['imagen_portada'] = $request->file('imagen_portada')
-                ->store('biblioteca/portadas', 'public');
+            $file = $request->file('imagen_portada');
+            $data['imagen_portada'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         // Booleans
@@ -154,8 +153,8 @@ class BibliotecaController extends Controller
             'paginas'             => 'nullable|integer|min:1',
             'idioma'              => 'nullable|string|max:80',
             'enlace_externo'      => 'nullable|url|max:500',
-            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',      // 200 MB,      // 200 MB
-            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',      // 200 MB
+            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             'copyright_titular'   => 'nullable|string|max:255',
             'copyright_anio'      => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'licencia_tipo'       => 'required|in:copyright,creative_commons_by,cc_by_sa,cc_by_nc,cc_by_nc_sa,cc_by_nd,cc_by_nc_nd,dominio_publico,licencia_cpap',
@@ -168,21 +167,14 @@ class BibliotecaController extends Controller
 
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
-            // Eliminar anterior
-            if ($biblioteca->archivo_pdf) {
-                Storage::disk('public')->delete($biblioteca->archivo_pdf);
-            }
-            $data['archivo_pdf'] = $request->file('archivo_pdf')
-                ->store('biblioteca/pdf', 'public');
+            $file = $request->file('archivo_pdf');
+            $data['archivo_pdf'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         // Imagen de portada
         if ($request->hasFile('imagen_portada')) {
-            if ($biblioteca->imagen_portada) {
-                Storage::disk('public')->delete($biblioteca->imagen_portada);
-            }
-            $data['imagen_portada'] = $request->file('imagen_portada')
-                ->store('biblioteca/portadas', 'public');
+            $file = $request->file('imagen_portada');
+            $data['imagen_portada'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
         }
 
         // Booleans
@@ -202,17 +194,54 @@ class BibliotecaController extends Controller
      * ----------------------------------------------------- */
     public function destroy(RecursoBiblioteca $biblioteca)
     {
-        // Eliminar archivos
-        if ($biblioteca->archivo_pdf) {
-            Storage::disk('public')->delete($biblioteca->archivo_pdf);
-        }
-        if ($biblioteca->imagen_portada) {
-            Storage::disk('public')->delete($biblioteca->imagen_portada);
-        }
-
         $biblioteca->delete();
 
         return redirect()->route('admin.biblioteca.index')
                          ->with('success', 'Recurso eliminado correctamente.');
+    }
+
+    /* -------------------------------------------------------
+     * DESCARGAR PDF (Admin)
+     * ----------------------------------------------------- */
+    public function descargarPdf(RecursoBiblioteca $biblioteca)
+    {
+        if (!$biblioteca->archivo_pdf) {
+            abort(404, 'El PDF no está disponible.');
+        }
+
+        $nombre = $biblioteca->titulo . '.pdf';
+
+        // Si es base64, decodificar y abrir en navegador
+        if (str_starts_with($biblioteca->archivo_pdf, 'data:')) {
+            $parts = explode(';base64,', $biblioteca->archivo_pdf);
+            if (count($parts) === 2) {
+                $contenido = base64_decode($parts[1]);
+                return response()->stream(function () use ($contenido) {
+                    echo $contenido;
+                }, 200, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $nombre . '"',
+                    'Cache-Control' => 'private, max-age=3600',
+                ]);
+            }
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($biblioteca->archivo_pdf, 'http')) {
+            return redirect($biblioteca->archivo_pdf);
+        }
+
+        // Si es ruta de storage (compatibilidad legacy)
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($biblioteca->archivo_pdf)) {
+            return response()->file(
+                \Illuminate\Support\Facades\Storage::disk('public')->path($biblioteca->archivo_pdf),
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $nombre . '"',
+                ]
+            );
+        }
+
+        abort(404, 'El PDF no está disponible.');
     }
 }

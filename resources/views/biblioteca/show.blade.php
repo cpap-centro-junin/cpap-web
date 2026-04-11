@@ -41,7 +41,7 @@
                 <div class="recurso-portada-col">
                     <div class="recurso-portada-wrapper">
                         @if($recurso->imagen_portada)
-                            <img src="{{ $recurso->imagen_portada_url }}" alt="{{ $recurso->titulo }}" class="recurso-portada-img">
+                            <img src="{{ $recurso->imagenPortadaUrl }}" alt="{{ $recurso->titulo }}" class="recurso-portada-img">
                         @else
                             <div class="recurso-portada-placeholder">
                                 <i class="fas {{ $recurso->tipo_icon }}"></i>
@@ -207,7 +207,7 @@
             <div class="resource-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 + 100 }}">
                 <div class="resource-thumbnail">
                     @if($rel->imagen_portada)
-                        <img src="{{ $rel->imagen_portada_url }}" alt="{{ $rel->titulo }}">
+                        <img src="{{ $rel->imagenPortadaUrl }}" alt="{{ $rel->titulo }}">
                     @else
                         <i class="fas {{ $rel->tipo_icon }}"></i>
                     @endif

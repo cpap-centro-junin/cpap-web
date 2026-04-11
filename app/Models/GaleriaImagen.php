@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class GaleriaImagen extends Model
 {
@@ -46,23 +45,14 @@ class GaleriaImagen extends Model
 
     /* ── Accessors ─────────────────────────── */
 
-    public function getImagenUrlAttribute(): string
+    public function getImagenAttribute($value): ?string
     {
-        if (!$this->imagen) {
-            return '';
-        }
+        if (!$value) return null;
+        if (str_starts_with($value, 'data:')) return $value;
+        if (str_starts_with($value, 'http')) return $value;
 
-        // Data URI
-        if (str_starts_with($this->imagen, 'data:')) {
-            return $this->imagen;
-        }
-
-        // URL externa
-        if (str_starts_with($this->imagen, 'http')) {
-            return $this->imagen;
-        }
-
-        return Storage::url($this->imagen);
+        // Ruta de storage (convierte a URL pública)
+        return \Illuminate\Support\Facades\Storage::url($value);
     }
 
     /* ── Helpers estáticos ─────────────────── */

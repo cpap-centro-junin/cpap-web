@@ -253,3 +253,6 @@ Route::resource('biblioteca', \App\Http\Controllers\Admin\BibliotecaController::
     'update'  => 'admin.biblioteca.update',
     'destroy' => 'admin.biblioteca.destroy',
 ]);
+
+Route::get('biblioteca/{biblioteca}/descargar-pdf', [\App\Http\Controllers\Admin\BibliotecaController::class, 'descargarPdf'])
+      ->name('admin.biblioteca.descargar-pdf');

@@ -79,7 +79,7 @@
                             </div>
                             <div style="font-size:11px;color:#16a34a;">Archivo actual</div>
                         </div>
-                        <a href="{{ $normativa->pdf_url }}" target="_blank"
+                        <a href="{{ $normativa->pdfUrl }}" target="_blank"
                            style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;">
                             <i class="fas fa-eye"></i> Ver
                         </a>

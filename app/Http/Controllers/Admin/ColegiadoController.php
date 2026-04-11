@@ -33,19 +33,19 @@ class ColegiadoController extends Controller
             'email'              => "nullable|email|max:100|unique:colegiados,email,{$excludeId}",
             'telefono'           => 'nullable|string|max:15',
             'fecha_nacimiento'   => 'nullable|date',
-            'foto'               => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto'               => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
             'especialidad'       => 'nullable|string|max:150',
             'orientacion'        => 'nullable|string|max:150',
             'universidad'        => 'nullable|string|max:200',
             'anio_graduacion'    => 'nullable|integer|min:1950|max:' . date('Y'),
             'descripcion'        => 'nullable|string',
-            'cv'                 => 'nullable|file|mimes:pdf|max:5120',
+            'cv'                 => 'nullable|file|mimes:pdf|max:204800',
             'estado'             => 'required|in:activo,inactivo',
             'fecha_colegiatura'  => 'required|date',
         ];
 
         if ($forCreate) {
-            $rules['documento'] = 'required|file|mimes:pdf|max:10240';
+            $rules['documento'] = 'required|file|mimes:pdf|max:204800';
         }
 
         return $rules;
@@ -182,21 +182,22 @@ class ColegiadoController extends Controller
         $validated = $request->validate($this->validationRules(0, true));
         $validated = array_merge($validated, $this->resolveVisibilityFields($request));
 
-        // Procesar foto y CV antes de la transacción (son operaciones de disco simples)
+        // Procesar foto y CV antes de la transacción (son operaciones simples)
         if ($request->hasFile('foto')) {
             $foto       = $request->file('foto');
+            
+            // Redimensionar en temporánea si excede 800×800
+            $tempPath = $foto->getRealPath();
             $ext        = strtolower($foto->getClientOriginalExtension());
-            $nombreFoto = $validated['dni'] . '.' . $ext;
-
-            Storage::disk('public')->putFileAs('colegiados', $foto, $nombreFoto);
-            $ruta = Storage::disk('public')->path('colegiados/' . $nombreFoto);
-
-            // Redimensionar si excede 800×800 (GD)
+            
             $src = match($ext) {
-                'jpg', 'jpeg' => @imagecreatefromjpeg($ruta),
-                'png'         => @imagecreatefrompng($ruta),
+                'jpg', 'jpeg' => @imagecreatefromjpeg($tempPath),
+                'png'         => @imagecreatefrompng($tempPath),
                 default       => null,
             };
+            
+            $contenidoFoto = file_get_contents($tempPath);
+            
             if ($src) {
                 $w = imagesx($src); $h = imagesy($src);
                 if ($w > 800 || $h > 800) {
@@ -205,20 +206,24 @@ class ColegiadoController extends Controller
                     $dst = imagecreatetruecolor($nw, $nh);
                     if ($ext === 'png') { imagealphablending($dst, false); imagesavealpha($dst, true); }
                     imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
-                    $ext === 'png' ? imagepng($dst, $ruta) : imagejpeg($dst, $ruta, 85);
+                    
+                    // Guardar en temporal
+                    $tempResized = tempnam(sys_get_temp_dir(), 'foto');
+                    $ext === 'png' ? imagepng($dst, $tempResized) : imagejpeg($dst, $tempResized, 85);
+                    $contenidoFoto = file_get_contents($tempResized);
+                    unlink($tempResized);
+                    
                     imagedestroy($dst);
                 }
                 imagedestroy($src);
             }
-
-            $validated['foto'] = 'colegiados/' . $nombreFoto;
+            
+            $validated['foto'] = 'data:' . $foto->getMimeType() . ';base64,' . base64_encode($contenidoFoto);
         }
 
         if ($request->hasFile('cv')) {
             $cv       = $request->file('cv');
-            $nombreCV = $validated['dni'] . '_cv.pdf';
-            $cv->storeAs('colegiados', $nombreCV, 'public');
-            $validated['cv_path'] = 'colegiados/' . $nombreCV;
+            $validated['cv_path'] = 'data:' . $cv->getMimeType() . ';base64,' . base64_encode(file_get_contents($cv->getRealPath()));
         }
 
         $colegiado = null;
@@ -229,14 +234,6 @@ class ColegiadoController extends Controller
                 $this->crearHabilitacion($colegiado, $request->file('documento'));
             });
         } catch (\Exception $e) {
-            // Limpiar archivos subidos si la transacción falló
-            if (isset($validated['foto']) && Storage::disk('public')->exists($validated['foto'])) {
-                Storage::disk('public')->delete($validated['foto']);
-            }
-            if (isset($validated['cv_path']) && Storage::exists($validated['cv_path'])) {
-                Storage::delete($validated['cv_path']);
-            }
-
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['documento' => 'Error al procesar el documento de habilitación: ' . $e->getMessage()]);
@@ -275,22 +272,20 @@ class ColegiadoController extends Controller
         $validated = array_merge($validated, $this->resolveVisibilityFields($request));
 
         if ($request->hasFile('foto')) {
-            if ($colegiado->foto && Storage::disk('public')->exists($colegiado->foto)) {
-                Storage::disk('public')->delete($colegiado->foto);
-            }
             $foto       = $request->file('foto');
             $ext        = strtolower($foto->getClientOriginalExtension());
-            $nombreFoto = $validated['dni'] . '.' . $ext;
-
-            Storage::disk('public')->putFileAs('colegiados', $foto, $nombreFoto);
-            $ruta = Storage::disk('public')->path('colegiados/' . $nombreFoto);
-
-            // Redimensionar si excede 800×800 (GD)
+            
+            // Redimensionar en temporánea si excede 800×800
+            $tempPath = $foto->getRealPath();
+            
             $src = match($ext) {
-                'jpg', 'jpeg' => @imagecreatefromjpeg($ruta),
-                'png'         => @imagecreatefrompng($ruta),
+                'jpg', 'jpeg' => @imagecreatefromjpeg($tempPath),
+                'png'         => @imagecreatefrompng($tempPath),
                 default       => null,
             };
+            
+            $contenidoFoto = file_get_contents($tempPath);
+            
             if ($src) {
                 $w = imagesx($src); $h = imagesy($src);
                 if ($w > 800 || $h > 800) {
@@ -299,23 +294,24 @@ class ColegiadoController extends Controller
                     $dst = imagecreatetruecolor($nw, $nh);
                     if ($ext === 'png') { imagealphablending($dst, false); imagesavealpha($dst, true); }
                     imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
-                    $ext === 'png' ? imagepng($dst, $ruta) : imagejpeg($dst, $ruta, 85);
+                    
+                    // Guardar en temporal
+                    $tempResized = tempnam(sys_get_temp_dir(), 'foto');
+                    $ext === 'png' ? imagepng($dst, $tempResized) : imagejpeg($dst, $tempResized, 85);
+                    $contenidoFoto = file_get_contents($tempResized);
+                    unlink($tempResized);
+                    
                     imagedestroy($dst);
                 }
                 imagedestroy($src);
             }
-
-            $validated['foto'] = 'colegiados/' . $nombreFoto;
+            
+            $validated['foto'] = 'data:' . $foto->getMimeType() . ';base64,' . base64_encode($contenidoFoto);
         }
 
         if ($request->hasFile('cv')) {
-            if ($colegiado->cv_path && Storage::disk('public')->exists($colegiado->cv_path)) {
-                Storage::disk('public')->delete($colegiado->cv_path);
-            }
             $cv       = $request->file('cv');
-            $nombreCV = $validated['dni'] . '_cv.pdf';
-            $cv->storeAs('colegiados', $nombreCV, 'public');
-            $validated['cv_path'] = 'colegiados/' . $nombreCV;
+            $validated['cv_path'] = 'data:' . $cv->getMimeType() . ';base64,' . base64_encode(file_get_contents($cv->getRealPath()));
         }
 
         $colegiado->update($validated);
@@ -332,13 +328,6 @@ class ColegiadoController extends Controller
      */
     public function destroy(Colegiado $colegiado)
     {
-        if ($colegiado->foto && Storage::disk('public')->exists($colegiado->foto)) {
-            Storage::disk('public')->delete($colegiado->foto);
-        }
-        if ($colegiado->cv_path && Storage::exists($colegiado->cv_path)) {
-            Storage::delete($colegiado->cv_path);
-        }
-
         $colegiado->delete();
 
         return redirect()->route('admin.colegiados.index')
@@ -350,14 +339,37 @@ class ColegiadoController extends Controller
      */
     public function descargarCV(Colegiado $colegiado)
     {
-        if (!$colegiado->cv_path || !Storage::exists($colegiado->cv_path)) {
+        if (!$colegiado->cv_path) {
             abort(404, 'CV no disponible');
         }
 
-        return response()->file(Storage::disk('public')->path($colegiado->cv_path), [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="CV_' . $colegiado->codigo_cpap . '.pdf"',
-        ]);
+        $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
+
+        // Si es base64, decodificar y descargar
+        if (str_starts_with($colegiado->cv_path, 'data:')) {
+            $parts = explode(';base64,', $colegiado->cv_path);
+            if (count($parts) === 2) {
+                $contenido = base64_decode($parts[1]);
+                return response()->streamDownload(function () use ($contenido) {
+                    echo $contenido;
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($colegiado->cv_path, 'http')) {
+            return redirect($colegiado->cv_path);
+        }
+
+        // Si es ruta de storage (por compatibilidad con datos legacy)
+        if (Storage::exists($colegiado->cv_path)) {
+            return response()->file(Storage::disk('public')->path($colegiado->cv_path), [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        }
+
+        abort(404, 'CV no disponible');
     }
 
     /**

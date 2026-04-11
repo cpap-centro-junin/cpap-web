@@ -24,7 +24,7 @@
     <div class="colegiado-banner">
         <div class="colegiado-banner__avatar">
             @if($colegiado->foto)
-                <img src="{{ $colegiado->foto_url }}" alt="{{ $colegiado->nombre_completo }}">
+                <img src="{{ $colegiado->fotoUrl }}" alt="{{ $colegiado->nombre_completo }}">
             @else
                 <div class="colegiado-banner__avatar-placeholder">
                     {{ strtoupper(substr($colegiado->nombres, 0, 1) . substr($colegiado->apellidos, 0, 1)) }}

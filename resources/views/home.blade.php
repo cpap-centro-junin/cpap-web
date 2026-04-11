@@ -11,7 +11,7 @@
 <!-- Hero Section -->
 <section class="hero hero--home" id="inicio" 
          @if($config->hero_imagen)
-         style="background-image: url('{{ $config->hero_imagen_url }}');"
+         style="background-image: url('{{ $config->heroImagenUrl }}');"
          @endif>
     <div class="hero-overlay"></div>
     <div class="container">
@@ -420,7 +420,7 @@
         <div class="galeria-preview-grid" data-aos="fade-up" data-aos-delay="100">
             @foreach($galeriaDestacadas as $img)
             <div class="galeria-preview-item" data-aos="zoom-in" data-aos-delay="{{ $loop->index * 80 }}">
-                <img src="{{ $img->imagen_url }}" alt="{{ $img->titulo }}" loading="lazy">
+                <img src="{{ $img->imagen }}" alt="{{ $img->titulo }}" loading="lazy">
                 <div class="galeria-preview-overlay">
                     @if($img->categoria)
                     <span class="galeria-preview-categoria">{{ $img->categoria }}</span>

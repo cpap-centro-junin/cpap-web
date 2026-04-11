@@ -60,7 +60,7 @@
             @foreach($imagenes as $img)
             <div class="galeria-item" data-category="{{ Str::slug($img->categoria ?? 'otros') }}" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 6) * 50 }}">
                 <div class="galeria-item-inner" onclick="openLightbox({{ $loop->index }})">
-                    <img src="{{ $img->imagen_url }}" alt="{{ $img->titulo }}" loading="lazy">
+                    <img src="{{ $img->imagen }}" alt="{{ $img->titulo }}" loading="lazy">
                     <div class="galeria-item-overlay">
                         <div class="galeria-item-share">
                             <button class="share-btn share-fb" onclick="event.stopPropagation();shareImage('facebook',{{ $loop->index }})" title="Compartir en Facebook">

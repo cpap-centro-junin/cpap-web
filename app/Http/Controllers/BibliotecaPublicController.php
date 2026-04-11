@@ -121,6 +121,27 @@ class BibliotecaPublicController extends Controller
 
         $filename = \Illuminate\Support\Str::slug($recurso->titulo) . '.pdf';
 
-        return Storage::disk('public')->download($recurso->archivo_pdf, $filename);
+        // Si es base64, decodificar y descargar
+        if (str_starts_with($recurso->archivo_pdf, 'data:')) {
+            $parts = explode(';base64,', $recurso->archivo_pdf);
+            if (count($parts) === 2) {
+                $contenido = base64_decode($parts[1]);
+                return response()->streamDownload(function () use ($contenido) {
+                    echo $contenido;
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($recurso->archivo_pdf, 'http')) {
+            return redirect($recurso->archivo_pdf);
+        }
+
+        // Si es ruta de storage (por compatibilidad con datos legacy)
+        if (Storage::disk('public')->exists($recurso->archivo_pdf)) {
+            return Storage::disk('public')->download($recurso->archivo_pdf, $filename);
+        }
+
+        abort(404, 'El recurso no está disponible.');
     }
 }

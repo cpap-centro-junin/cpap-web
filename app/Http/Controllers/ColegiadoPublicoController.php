@@ -83,13 +83,36 @@ class ColegiadoPublicoController extends Controller
             abort(404);
         }
 
-        if (!$colegiado->cv_path || !Storage::exists($colegiado->cv_path)) {
+        if (!$colegiado->cv_path) {
             abort(404, 'CV no disponible');
         }
 
-        return response()->file(Storage::path($colegiado->cv_path), [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="CV_' . $colegiado->codigo_cpap . '.pdf"',
-        ]);
+        $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
+
+        // Si es base64, decodificar y descargar
+        if (str_starts_with($colegiado->cv_path, 'data:')) {
+            $parts = explode(';base64,', $colegiado->cv_path);
+            if (count($parts) === 2) {
+                $contenido = base64_decode($parts[1]);
+                return response()->streamDownload(function () use ($contenido) {
+                    echo $contenido;
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($colegiado->cv_path, 'http')) {
+            return redirect($colegiado->cv_path);
+        }
+
+        // Si es ruta de storage (por compatibilidad con datos legacy)
+        if (Storage::exists($colegiado->cv_path)) {
+            return response()->file(Storage::path($colegiado->cv_path), [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        }
+
+        abort(404, 'CV no disponible');
     }
 }
