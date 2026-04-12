@@ -104,7 +104,7 @@ Route::post('/bolsa-trabajo/solicitar', function (\Illuminate\Http\Request $requ
         'ubicacion'          => 'required|string|max:255',
         'tipo'               => 'required|in:fulltime,parttime,freelance,consultoria',
         'area'               => 'required|in:investigacion,docencia,consultoria,gestion',
-        'descripcion'        => 'required|string|min:20',
+        'descripcion'        => 'required|string',
         'salario'            => 'nullable|string|max:255',
     ]);
 

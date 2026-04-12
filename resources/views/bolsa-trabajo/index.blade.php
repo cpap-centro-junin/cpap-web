@@ -178,8 +178,8 @@
                 <div class="bolsa-modal-icon">
                     <i class="fas fa-paper-plane"></i>
                 </div>
-                <h2>Publica tu Oferta Laboral</h2>
-                <p>Completa el formulario y nuestro equipo revisará tu solicitud antes de publicarla en el portal.</p>
+                <h2 style="color:#fff;">Publica tu Oferta Laboral</h2>
+                <p style="color:#fff;">Completa el formulario y nuestro equipo revisará tu solicitud antes de publicarla en el portal.</p>
             </div>
             <div class="bolsa-modal-header-deco"></div>
         </div>

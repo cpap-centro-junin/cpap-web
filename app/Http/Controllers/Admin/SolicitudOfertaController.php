@@ -83,4 +83,36 @@ class SolicitudOfertaController extends Controller
             ->route('admin.solicitudes.index')
             ->with('success', 'Solicitud rechazada y eliminada.');
     }
+
+    /**
+     * Acciones en masa para solicitudes
+     */
+    public function bulkToggle(Request $request)
+    {
+        $validated = $request->validate([
+            'ids'    => 'required|array',
+            'ids.*'  => 'integer|exists:bolsa_trabajos,id',
+            'action' => 'required|in:eliminar',
+        ]);
+
+        $ids = $validated['ids'];
+        $action = $validated['action'];
+
+        $count = 0;
+
+        switch ($action) {
+            case 'eliminar':
+                $count = BolsaTrabajo::whereIn('id', $ids)->delete();
+                $message = $count . ($count === 1 ? ' solicitud eliminada.' : ' solicitudes eliminadas.');
+                break;
+
+            default:
+                return response()->json(['success' => false, 'message' => 'Acción no válida'], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+        ]);
+    }
 }

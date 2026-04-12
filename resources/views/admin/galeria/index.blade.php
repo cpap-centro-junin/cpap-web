@@ -53,11 +53,28 @@
 </div>
 @endif
 
+{{-- SELECT ALL --}}
+@if($imagenes->count())
+<div style="margin-bottom:16px;padding:12px;background:rgba(139,21,56,0.04);border:1px solid rgba(139,21,56,0.1);border-radius:var(--radius-sm);display:inline-block;">
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;color:var(--dark);margin:0;">
+        <input type="checkbox" id="selectAllCheckbox" 
+               style="width:20px;height:20px;cursor:pointer;">
+        <span>Seleccionar todos</span>
+    </label>
+</div>
+@endif
+
 {{-- GRID DE IMÁGENES --}}
 @if($imagenes->count())
 <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:16px;margin-bottom:24px;">
     @foreach($imagenes as $img)
-    <div class="admin-card" style="padding:0;overflow:hidden;position:relative;">
+    <div class="admin-card galeria-card" data-imagen-id="{{ $img->id }}" style="padding:0;overflow:hidden;position:relative;">
+        {{-- Checkbox selección --}}
+        <div style="position:absolute;top:4px;right:4px;z-index:3;">
+            <input type="checkbox" class="imagen-checkbox" value="{{ $img->id }}" 
+                   style="width:20px;height:20px;cursor:pointer;">
+        </div>
+
         {{-- Badges --}}
         <div style="position:absolute;top:8px;left:8px;z-index:2;display:flex;gap:4px;flex-wrap:wrap;">
             @if($img->destacado)
@@ -97,7 +114,7 @@
             @endif
 
             {{-- Acciones --}}
-            <div style="display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;">
+            <div class="imagen-acciones" style="display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;opacity:1;transition:opacity 0.2s;pointer-events:auto;">
                 <form action="{{ route('admin.galeria.toggle-destacado', $img) }}" method="POST" style="display:inline;">
                     @csrf @method('PATCH')
                     <button type="submit" title="{{ $img->destacado ? 'Quitar destacado' : 'Destacar' }}"
@@ -130,6 +147,56 @@
         </div>
     </div>
     @endforeach
+</div>
+
+{{-- Panel de Acciones en Masa --}}
+<div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <i class="fas fa-check-circle" style="color:var(--primary);font-size:18px;"></i>
+            <span id="selectionCountText" style="font-weight:600;color:var(--dark);font-size:14px;">
+                0 elementos seleccionados
+            </span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button onclick="bulkAction('destacar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(212,175,55,0.1);color:#b8960c;border:1px solid rgba(212,175,55,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                    onmouseover="this.style.background='rgba(212,175,55,0.15)';this.style.borderColor='rgba(212,175,55,0.5)'"
+                    onmouseout="this.style.background='rgba(212,175,55,0.1)';this.style.borderColor='rgba(212,175,55,0.3)'">
+                <i class="fas fa-star"></i>
+                Destacar
+            </button>
+            <button onclick="bulkAction('no-destacar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(158,158,158,0.1);color:#9e9e9e;border:1px solid rgba(158,158,158,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                    onmouseover="this.style.background='rgba(158,158,158,0.15)';this.style.borderColor='rgba(158,158,158,0.5)'"
+                    onmouseout="this.style.background='rgba(158,158,158,0.1)';this.style.borderColor='rgba(158,158,158,0.3)'">
+                <i class="fas fa-star-regular"></i>
+                Quitar destacado
+            </button>
+            <button onclick="bulkAction('mostrar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(76,175,80,0.1);color:#4CAF50;border:1px solid rgba(76,175,80,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                    onmouseover="this.style.background='rgba(76,175,80,0.15)';this.style.borderColor='rgba(76,175,80,0.5)'"
+                    onmouseout="this.style.background='rgba(76,175,80,0.1)';this.style.borderColor='rgba(76,175,80,0.3)'">
+                <i class="fas fa-eye"></i>
+                Mostrar
+            </button>
+            <button onclick="bulkAction('ocultar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,152,0,0.1);color:#FF9800;border:1px solid rgba(255,152,0,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                    onmouseover="this.style.background='rgba(255,152,0,0.15)';this.style.borderColor='rgba(255,152,0,0.5)'"
+                    onmouseout="this.style.background='rgba(255,152,0,0.1)';this.style.borderColor='rgba(255,152,0,0.3)'">
+                <i class="fas fa-eye-slash"></i>
+                Ocultar
+            </button>
+            <button onclick="bulkAction('eliminar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(211,47,47,0.1);color:#d32f2f;border:1px solid rgba(211,47,47,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                    onmouseover="this.style.background='rgba(211,47,47,0.15)';this.style.borderColor='rgba(211,47,47,0.5)'"
+                    onmouseout="this.style.background='rgba(211,47,47,0.1)';this.style.borderColor='rgba(211,47,47,0.3)'">
+                <i class="fas fa-trash"></i>
+                Eliminar
+            </button>
+            <button onclick="clearSelection()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--light-gray);color:var(--medium-gray);border:1px solid rgba(0,0,0,0.1);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                    onmouseover="this.style.background='#e0e0e0'"
+                    onmouseout="this.style.background='var(--light-gray)'">
+                <i class="fas fa-times"></i>
+                Deseleccionar
+            </button>
+        </div>
+    </div>
 </div>
 @else
 <div class="admin-card" style="text-align:center;padding:60px 24px;">
@@ -202,7 +269,201 @@
 @endsection
 
 @push('scripts')
+<style>
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.imagen-acciones.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+</style>
 <script>
+let selectedImagenes = new Set();
+const bulkActionsPanel = document.getElementById('bulkActionsPanel');
+const imagenCheckboxes = document.querySelectorAll('.imagen-checkbox');
+const accionesColumns = document.querySelectorAll('.imagen-acciones');
+const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+// Event listener para "Seleccionar todos"
+if (selectAllCheckbox) {
+    selectAllCheckbox.addEventListener('change', function() {
+        imagenCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+            if (this.checked) {
+                selectedImagenes.add(checkbox.value);
+            } else {
+                selectedImagenes.delete(checkbox.value);
+            }
+        });
+        updateBulkUI();
+    });
+}
+
+// Event listeners para checkboxes individuales
+imagenCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            selectedImagenes.add(this.value);
+        } else {
+            selectedImagenes.delete(this.value);
+        }
+        // Actualizar estado del checkbox "Seleccionar todos"
+        const totalCheckboxes = imagenCheckboxes.length;
+        const checkedCheckboxes = document.querySelectorAll('.imagen-checkbox:checked').length;
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = totalCheckboxes > 0 && checkedCheckboxes === totalCheckboxes;
+        }
+        updateBulkUI();
+    });
+});
+
+function updateBulkUI() {
+    const count = selectedImagenes.size;
+    const countText = document.getElementById('selectionCountText');
+    
+    if (count > 0) {
+        bulkActionsPanel.style.display = 'block';
+        countText.textContent = count === 1 ? '1 elemento seleccionado' : `${count} elementos seleccionados`;
+        
+        // Deshabilitar botones individuales
+        accionesColumns.forEach(col => col.classList.add('disabled'));
+    } else {
+        bulkActionsPanel.style.display = 'none';
+        
+        // Habilitar botones individuales
+        accionesColumns.forEach(col => col.classList.remove('disabled'));
+    }
+}
+
+function bulkAction(action) {
+    const count = selectedImagenes.size;
+    if (count === 0) return;
+    
+    let title = '';
+    let message = '';
+    let icon = 'question';
+    let confirmButtonText = 'Proceder';
+    let confirmButtonColor = '#3b82f6';
+    let apiAction = action; // Por defecto usa la misma acción
+    
+    switch(action) {
+        case 'destacar':
+            title = 'Destacar imágenes';
+            message = `Se destacarán <strong>${count} imagen(es)</strong>. Aparecerán resaltadas en el sitio.`;
+            icon = 'success';
+            confirmButtonColor = '#b8960c';
+            confirmButtonText = '<i class="fas fa-star"></i> Sí, destacar';
+            break;
+        case 'no-destacar':
+            title = 'Remover destaque';
+            message = `Se removirá el destaque de <strong>${count} imagen(es)</strong>.`;
+            icon = 'info';
+            confirmButtonColor = '#9e9e9e';
+            confirmButtonText = '<i class="fas fa-star-regular"></i> Sí, remover destaque';
+            break;
+        case 'mostrar':
+            title = 'Mostrar imágenes';
+            message = `Se mostrarán <strong>${count} imagen(es)</strong>. Estarán visibles en el sitio web.`;
+            icon = 'info';
+            confirmButtonColor = '#4CAF50';
+            confirmButtonText = '<i class="fas fa-eye"></i> Sí, mostrar';
+            apiAction = 'activar';
+            break;
+        case 'ocultar':
+            title = 'Ocultar imágenes';
+            message = `Se ocultarán <strong>${count} imagen(es)</strong>. No serán visibles en el sitio web.`;
+            icon = 'warning';
+            confirmButtonColor = '#FF9800';
+            confirmButtonText = '<i class="fas fa-eye-slash"></i> Sí, ocultar';
+            apiAction = 'desactivar';
+            break;
+        case 'eliminar':
+            title = 'Eliminar imágenes';
+            message = `Se eliminarán permanentemente <strong>${count} imagen(es)</strong> con sus archivos. Esta acción no se puede deshacer.`;
+            icon = 'warning';
+            confirmButtonColor = '#d32f2f';
+            confirmButtonText = '<i class="fas fa-trash"></i> Sí, eliminar';
+            break;
+    }
+    
+    Swal.fire({
+        title: title,
+        html: message,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: confirmButtonColor,
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            executeBulkAction(apiAction);
+        }
+    });
+}
+
+function executeBulkAction(action) {
+    const ids = Array.from(selectedImagenes);
+    
+    fetch('{{ route("admin.galeria.bulk-toggle") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            ids: ids,
+            action: action
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: data.message,
+                confirmButtonColor: '#4CAF50'
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || 'Algo salió mal. Intenta nuevamente.'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema procesando tu solicitud.'
+        });
+    });
+}
+
+function clearSelection() {
+    selectedImagenes.clear();
+    imagenCheckboxes.forEach(checkbox => checkbox.checked = false);
+    if (selectAllCheckbox) {
+        selectAllCheckbox.checked = false;
+    }
+    updateBulkUI();
+}
+
 function confirmDelete(titulo, formId) {
     Swal.fire({
         title: '¿Eliminar esta imagen?',

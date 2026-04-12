@@ -223,6 +223,9 @@ Route::patch('/solicitudes-oferta/{solicitud}/aprobar', [SolicitudOfertaControll
 Route::delete('/solicitudes-oferta/{solicitud}/rechazar', [SolicitudOfertaController::class, 'rechazar'])
     ->name('admin.solicitudes.rechazar');
 
+Route::post('/solicitudes-oferta/bulk-toggle', [SolicitudOfertaController::class, 'bulkToggle'])
+    ->name('admin.solicitudes.bulk-toggle');
+
 // ============================================
 // GALERÍA INSTITUCIONAL
 // ============================================
@@ -252,6 +255,9 @@ Route::patch('/galeria/{galeria}/toggle-destacado', [GaleriaController::class, '
 
 Route::patch('/galeria/{galeria}/toggle-activo', [GaleriaController::class, 'toggleActivo'])
     ->name('admin.galeria.toggle-activo');
+
+Route::post('/galeria/bulk-toggle', [GaleriaController::class, 'bulkToggle'])
+    ->name('admin.galeria.bulk-toggle');
 
 // ============================================
 // BIBLIOTECA VIRTUAL

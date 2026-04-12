@@ -260,4 +260,72 @@ class GaleriaController extends Controller
         return redirect()->route('admin.galeria.index')
                          ->with('success', 'Imagen eliminada de la galería.');
     }
+
+    /**
+     * Ejecutar acciones en lote sobre múltiples imágenes.
+     */
+    public function bulkToggle(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        $action = $request->input('action');
+
+        if (empty($ids) || !$action) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetros inválidos.'
+            ], 400);
+        }
+
+        try {
+            $imagenes = GaleriaImagen::whereIn('id', $ids)->get();
+
+            switch ($action) {
+                case 'destacar':
+                    GaleriaImagen::whereIn('id', $ids)->update(['destacado' => true]);
+                    $message = count($ids) . ' imagen(es) marcada(s) como destacada(s).';
+                    break;
+
+                case 'no-destacar':
+                    GaleriaImagen::whereIn('id', $ids)->update(['destacado' => false]);
+                    $message = count($ids) . ' imagen(es) desmarcada(s) como destacada(s).';
+                    break;
+
+                case 'activar':
+                    GaleriaImagen::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = count($ids) . ' imagen(es) activada(s).';
+                    break;
+
+                case 'desactivar':
+                    GaleriaImagen::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = count($ids) . ' imagen(es) desactivada(s).';
+                    break;
+
+                case 'eliminar':
+                    foreach ($imagenes as $imagen) {
+                        if ($imagen->imagen && Storage::disk('public')->exists($imagen->imagen)) {
+                            Storage::disk('public')->delete($imagen->imagen);
+                        }
+                        $imagen->delete();
+                    }
+                    $message = count($ids) . ' imagen(es) eliminada(s).';
+                    break;
+
+                default:
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Acción no válida.'
+                    ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al procesar la acción: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
