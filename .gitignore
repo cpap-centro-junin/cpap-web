@@ -1,3 +1,54 @@
-#quiero ignorar el .env
-# Ignorar el archivo .env
+# Laravel
+/node_modules
+/vendor
 .env
+.env.backup
+.env.*.php
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+composer.lock
+
+# Storage & Cache
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+/storage/app/public/
+bootstrap/cache/
+
+# Public uploads (dinámico)
+/public/storage/
+/public/images/biblioteca/
+/public/images/colegiados/
+/public/images/directivos/
+/public/images/inicio/
+/public/images/noticias/
+/public/images/popup/
+/public/pdf/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.env.local
+.env.*.local
+
+# Testing
+.phpunit.cache/
+coverage/
+
+# Build artifacts
+/build/
+/dist/
+
+# Vite
+node_modules/
+.vite/
