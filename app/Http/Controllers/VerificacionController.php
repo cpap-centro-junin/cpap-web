@@ -65,13 +65,11 @@ class VerificacionController extends Controller
             ->where('activo', true)
             ->firstOrFail();
 
-        // Si empieza con "public/", remover ese prefijo para public_path()
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
         $ruta = $habilitacion->documento_path;
         if (str_starts_with($ruta, 'public/')) {
-            $ruta = substr($ruta, 7); // Remover "public/"
+            $ruta = substr($ruta, 7);
         }
-
-        // Verificar que el documento existe
         $pdfPath = public_path($ruta);
         if (!file_exists($pdfPath)) {
             abort(404, 'Documento no encontrado');

@@ -135,10 +135,11 @@ class NormativaController extends Controller
 
         $nombre = $documento->archivo_nombre ?? $documento->titulo . '.pdf';
 
-        // Si es ruta en public/ (archivos guardados sin public/ prefix)
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
         $ruta = $documento->archivo_pdf;
-
-        // Si es ruta en public/ (archivos guardados)
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
         $pdfPath = public_path($ruta);
         if (file_exists($pdfPath)) {
             return response()->download($pdfPath, $nombre, [
