@@ -1,33 +1,29 @@
-@extends('layouts.admin')
+<?php $__env->startSection('title', 'Consejo Directivo'); ?>
+<?php $__env->startSection('page-title', 'Consejo Directivo'); ?>
 
-@section('title', 'Consejo Directivo')
-@section('page-title', 'Consejo Directivo')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
     <div>
         <h1 style="font-size:22px;font-weight:700;color:var(--dark);margin:0 0 4px;">Consejo Directivo</h1>
-        <p style="color:var(--medium-gray);font-size:14px;margin:0;">{{ $directivos->count() }} miembro{{ $directivos->count() !== 1 ? 's' : '' }} registrado{{ $directivos->count() !== 1 ? 's' : '' }}</p>
+        <p style="color:var(--medium-gray);font-size:14px;margin:0;"><?php echo e($directivos->count()); ?> miembro<?php echo e($directivos->count() !== 1 ? 's' : ''); ?> registrado<?php echo e($directivos->count() !== 1 ? 's' : ''); ?></p>
     </div>
-    <a href="{{ route('admin.directivos.create') }}" class="primary-btn">
+    <a href="<?php echo e(route('admin.directivos.create')); ?>" class="primary-btn">
         <i class="fas fa-plus"></i> Agregar Directivo
     </a>
 </div>
 
-@if(session('success'))
+<?php if(session('success')): ?>
 <div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
-    <i class="fas fa-check-circle"></i> {{ session('success') }}
-</div>
-@endif
+    <i class="fas fa-check-circle"></i> <?php echo e(session('success')); ?>
 
-{{-- FILTROS --}}
-<x-admin-filters
-    :searchPlaceholder="'Buscar por nombre o cargo...'"
-    :searchField="'q'"
-    :route="route('admin.directivos.index')"
-    :clearRoute="route('admin.directivos.index')"
-    :filters="[
+</div>
+<?php endif; ?>
+
+
+<?php if (isset($component)) { $__componentOriginal692661d59ef467547c37fd97752f8741 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal692661d59ef467547c37fd97752f8741 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-filters','data' => ['searchPlaceholder' => 'Buscar por nombre o cargo...','searchField' => 'q','route' => route('admin.directivos.index'),'clearRoute' => route('admin.directivos.index'),'filters' => [
         [
             'field' => 'estado',
             'label' => 'Estado',
@@ -36,11 +32,36 @@
                 'inactivo' => 'Inactivos',
             ]
         ],
-    ]"
-/>
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-filters'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['searchPlaceholder' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Buscar por nombre o cargo...'),'searchField' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('q'),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.directivos.index')),'clearRoute' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.directivos.index')),'filters' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        [
+            'field' => 'estado',
+            'label' => 'Estado',
+            'options' => [
+                'activo' => 'Activos',
+                'inactivo' => 'Inactivos',
+            ]
+        ],
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $attributes = $__attributesOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__attributesOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $component = $__componentOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__componentOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
 
-{{-- Aviso datos ejemplo --}}
-@if($directivos->count() === 0)
+
+<?php if($directivos->count() === 0): ?>
 <div style="background:var(--warning-light);color:var(--warning);border:1px solid rgba(230,81,0,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px;font-size:14px;">
     <i class="fas fa-info-circle" style="margin-top:2px;flex-shrink:0;"></i>
     <div>
@@ -49,7 +70,7 @@
         El sitio público en <em>Nosotros → Consejo Directivo</em> se actualizará automáticamente.
     </div>
 </div>
-@endif
+<?php endif; ?>
 
 <div class="admin-table">
     <div class="admin-table-wrapper">
@@ -70,56 +91,60 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($directivos as $index => $directivo)
-                <tr class="directivo-row" data-directivo-id="{{ $directivo->id }}">
+                <?php $__empty_1 = true; $__currentLoopData = $directivos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $directivo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <tr class="directivo-row" data-directivo-id="<?php echo e($directivo->id); ?>">
                     <td style="text-align:center;">
-                        <input type="checkbox" class="directivo-checkbox" value="{{ $directivo->id }}">
+                        <input type="checkbox" class="directivo-checkbox" value="<?php echo e($directivo->id); ?>">
                     </td>
                     <td style="text-align:center;color:var(--medium-gray);font-weight:600;font-size:13px;">
-                        {{ $index + 1 }}
+                        <?php echo e($index + 1); ?>
+
                     </td>
                     <td>
-                        @if($directivo->foto)
-                            <img src="{{ $directivo->foto }}" alt="{{ $directivo->nombre }}"
+                        <?php if($directivo->foto): ?>
+                            <img src="<?php echo e($directivo->foto); ?>" alt="<?php echo e($directivo->nombre); ?>"
                                  style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
-                        @else
+                        <?php else: ?>
                             <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:50%;display:flex;align-items:center;justify-content:center;">
                                 <i class="fas fa-user-tie" style="color:white;font-size:18px;"></i>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </td>
-                    <td style="font-weight:600;color:var(--dark);font-size:14px;">{{ $directivo->nombre }}</td>
+                    <td style="font-weight:600;color:var(--dark);font-size:14px;"><?php echo e($directivo->nombre); ?></td>
                     <td>
                         <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(139,21,56,0.08);color:var(--primary);padding:4px 12px;border-radius:50px;font-size:12px;font-weight:600;">
-                            <i class="fas {{ $directivo->icon }}" style="font-size:11px;"></i>
-                            {{ $directivo->cargo }}
+                            <i class="fas <?php echo e($directivo->icon); ?>" style="font-size:11px;"></i>
+                            <?php echo e($directivo->cargo); ?>
+
                         </span>
                     </td>
-                    <td style="color:var(--medium-gray);font-size:13px;">{{ $directivo->periodo }}</td>
+                    <td style="color:var(--medium-gray);font-size:13px;"><?php echo e($directivo->periodo); ?></td>
                     <td style="text-align:center;">
                         <span style="display:inline-block;width:28px;height:28px;background:var(--light-gray);border-radius:6px;text-align:center;line-height:28px;font-size:13px;font-weight:700;color:var(--dark);">
-                            {{ $directivo->orden }}
+                            <?php echo e($directivo->orden); ?>
+
                         </span>
                     </td>
                     <td>
-                        <span class="badge {{ $directivo->activo ? 'published' : 'hidden' }}">
+                        <span class="badge <?php echo e($directivo->activo ? 'published' : 'hidden'); ?>">
                             <i class="fas fa-circle" style="font-size:7px;"></i>
-                            {{ $directivo->activo ? 'Activo' : 'Inactivo' }}
+                            <?php echo e($directivo->activo ? 'Activo' : 'Inactivo'); ?>
+
                         </span>
                     </td>
                     <td class="acciones-column">
                         <div style="display:flex;gap:6px;justify-content:center;opacity:1;transition:opacity 0.2s;">
-                            <a href="{{ route('admin.directivos.edit', $directivo) }}"
+                            <a href="<?php echo e(route('admin.directivos.edit', $directivo)); ?>"
                                style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <form action="{{ route('admin.directivos.destroy', $directivo) }}" method="POST" 
+                            <form action="<?php echo e(route('admin.directivos.destroy', $directivo)); ?>" method="POST" 
                                   style="display:inline;" 
                                   class="delete-form" 
-                                  id="form-delete-directivo-{{ $directivo->id }}">
-                                @csrf @method('DELETE')
+                                  id="form-delete-directivo-<?php echo e($directivo->id); ?>">
+                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                 <button type="button"
-                                        onclick="confirmDelete('{{ addslashes($directivo->nombre) }}', 'form-delete-directivo-{{ $directivo->id }}')"
+                                        onclick="confirmDelete('<?php echo e(addslashes($directivo->nombre)); ?>', 'form-delete-directivo-<?php echo e($directivo->id); ?>')"
                                         style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -127,25 +152,25 @@
                         </div>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="9">
                         <div class="empty-state">
                             <i class="fas fa-users-cog"></i>
                             <p>No hay directivos registrados.<br>Agrega los miembros del Consejo Directivo.</p>
-                            <a href="{{ route('admin.directivos.create') }}" class="primary-btn" style="display:inline-flex;">
+                            <a href="<?php echo e(route('admin.directivos.create')); ?>" class="primary-btn" style="display:inline-flex;">
                                 <i class="fas fa-plus"></i> Agregar Directivo
                             </a>
                         </div>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
 
-{{-- Panel de Acciones en Masa --}}
+
 <div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -183,10 +208,11 @@
     </div>
 </div>
 
-@if($directivos->count() > 0)
-{{-- Paginación --}}
-{{ $directivos->links('pagination.admin') }}
-@endif
+<?php if($directivos->count() > 0): ?>
+
+<?php echo e($directivos->links('pagination.admin')); ?>
+
+<?php endif; ?>
 
 <div style="margin-top:16px;padding:14px 18px;background:var(--info-light);border-radius:var(--radius-sm);font-size:13px;color:var(--info);display:flex;align-items:center;gap:10px;">
     <i class="fas fa-lightbulb"></i>
@@ -194,9 +220,9 @@
 </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <style>
     @keyframes slideDown {
         from {
@@ -338,11 +364,11 @@ function bulkAction(action) {
 function executeBulkAction(action) {
     const ids = Array.from(selectedDirectivos);
     
-    fetch('{{ route("admin.directivos.bulk-toggle") }}', {
+    fetch('<?php echo e(route("admin.directivos.bulk-toggle")); ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content || '<?php echo e(csrf_token()); ?>'
         },
         body: JSON.stringify({
             ids: ids,
@@ -407,4 +433,6 @@ function confirmDelete(nombre, formId) {
     });
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\cpap-web\resources\views/admin/directivos/index.blade.php ENDPATH**/ ?>

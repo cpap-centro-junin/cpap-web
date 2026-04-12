@@ -1,51 +1,50 @@
-@php use Illuminate\Support\Str; @endphp
+<?php use Illuminate\Support\Str; ?>
 
-@extends('layouts.admin')
 
-@section('title', 'Bolsa de Trabajo')
-@section('page-title', 'Bolsa de Trabajo')
 
-@section('content')
+<?php $__env->startSection('title', 'Bolsa de Trabajo'); ?>
+<?php $__env->startSection('page-title', 'Bolsa de Trabajo'); ?>
 
-{{-- HEADER --}}
+<?php $__env->startSection('content'); ?>
+
+
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
     <div>
         <h1 style="font-size:22px;font-weight:700;color:var(--dark);margin:0 0 4px;">Bolsa de Trabajo</h1>
-        <p style="color:var(--medium-gray);font-size:14px;margin:0;">{{ $ofertas->total() }} oferta{{ $ofertas->total() !== 1 ? 's' : '' }} en total</p>
+        <p style="color:var(--medium-gray);font-size:14px;margin:0;"><?php echo e($ofertas->total()); ?> oferta<?php echo e($ofertas->total() !== 1 ? 's' : ''); ?> en total</p>
     </div>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        @php $pendingSolicitudes = \App\Models\BolsaTrabajo::noRevisadas()->count(); @endphp
-        <a href="{{ route('admin.solicitudes.index') }}" 
-           style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:{{ $pendingSolicitudes > 0 ? 'rgba(237,108,2,0.1)' : 'rgba(0,0,0,0.04)' }};color:{{ $pendingSolicitudes > 0 ? '#ed6c02' : 'var(--medium-gray)' }};border:1px solid {{ $pendingSolicitudes > 0 ? 'rgba(237,108,2,0.2)' : 'rgba(0,0,0,0.08)' }};border-radius:10px;text-decoration:none;font-size:14px;font-weight:600;transition:all 0.2s;">
+        <?php $pendingSolicitudes = \App\Models\BolsaTrabajo::noRevisadas()->count(); ?>
+        <a href="<?php echo e(route('admin.solicitudes.index')); ?>" 
+           style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:<?php echo e($pendingSolicitudes > 0 ? 'rgba(237,108,2,0.1)' : 'rgba(0,0,0,0.04)'); ?>;color:<?php echo e($pendingSolicitudes > 0 ? '#ed6c02' : 'var(--medium-gray)'); ?>;border:1px solid <?php echo e($pendingSolicitudes > 0 ? 'rgba(237,108,2,0.2)' : 'rgba(0,0,0,0.08)'); ?>;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600;transition:all 0.2s;">
             <i class="fas fa-clipboard-list"></i>
             <span>
-                @if($pendingSolicitudes > 0)
-                    {{ $pendingSolicitudes }} Solicitud{{ $pendingSolicitudes !== 1 ? 'es' : '' }} Pendiente{{ $pendingSolicitudes !== 1 ? 's' : '' }}
-                @else
+                <?php if($pendingSolicitudes > 0): ?>
+                    <?php echo e($pendingSolicitudes); ?> Solicitud<?php echo e($pendingSolicitudes !== 1 ? 'es' : ''); ?> Pendiente<?php echo e($pendingSolicitudes !== 1 ? 's' : ''); ?>
+
+                <?php else: ?>
                     Ver Solicitudes
-                @endif
+                <?php endif; ?>
             </span>
         </a>
-        <a href="{{ route('admin.bolsa.create') }}" class="primary-btn">
+        <a href="<?php echo e(route('admin.bolsa.create')); ?>" class="primary-btn">
             <i class="fas fa-plus"></i> Nueva Oferta
         </a>
     </div>
 </div>
 
-{{-- FLASH --}}
-@if(session('success'))
-<div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
-    <i class="fas fa-check-circle"></i> {{ session('success') }}
-</div>
-@endif
 
-{{-- FILTROS --}}
-<x-admin-filters
-    :searchPlaceholder="'Buscar por título, empresa o descripción...'"
-    :searchField="'q'"
-    :route="route('admin.bolsa.index')"
-    :clearRoute="route('admin.bolsa.index')"
-    :filters="[
+<?php if(session('success')): ?>
+<div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
+    <i class="fas fa-check-circle"></i> <?php echo e(session('success')); ?>
+
+</div>
+<?php endif; ?>
+
+
+<?php if (isset($component)) { $__componentOriginal692661d59ef467547c37fd97752f8741 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal692661d59ef467547c37fd97752f8741 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-filters','data' => ['searchPlaceholder' => 'Buscar por título, empresa o descripción...','searchField' => 'q','route' => route('admin.bolsa.index'),'clearRoute' => route('admin.bolsa.index'),'filters' => [
         [
             'field' => 'tipo',
             'label' => 'Tipo de contrato',
@@ -74,10 +73,55 @@
                 'inactivo' => 'Inactivas',
             ]
         ],
-    ]"
-/>
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-filters'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['searchPlaceholder' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Buscar por título, empresa o descripción...'),'searchField' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('q'),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.bolsa.index')),'clearRoute' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.bolsa.index')),'filters' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        [
+            'field' => 'tipo',
+            'label' => 'Tipo de contrato',
+            'options' => [
+                'fulltime' => 'Tiempo completo',
+                'parttime' => 'Medio tiempo',
+                'freelance' => 'Freelance',
+                'consultoria' => 'Consultoría',
+            ]
+        ],
+        [
+            'field' => 'area',
+            'label' => 'Área',
+            'options' => [
+                'investigacion' => 'Investigación',
+                'docencia' => 'Docencia',
+                'consultoria' => 'Consultoría',
+                'gestion' => 'Gestión',
+            ]
+        ],
+        [
+            'field' => 'estado',
+            'label' => 'Estado',
+            'options' => [
+                'activo' => 'Activas',
+                'inactivo' => 'Inactivas',
+            ]
+        ],
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $attributes = $__attributesOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__attributesOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $component = $__componentOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__componentOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
 
-{{-- TABLA --}}
+
 <div class="admin-table">
     <div class="admin-table-wrapper">
         <table>
@@ -99,58 +143,65 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($ofertas as $index => $oferta)
-            <tr class="oferta-row" data-oferta-id="{{ $oferta->id }}">
+            <?php $__empty_1 = true; $__currentLoopData = $ofertas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $oferta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <tr class="oferta-row" data-oferta-id="<?php echo e($oferta->id); ?>">
                 <td style="text-align:center;">
-                    <input type="checkbox" class="oferta-checkbox" value="{{ $oferta->id }}">
+                    <input type="checkbox" class="oferta-checkbox" value="<?php echo e($oferta->id); ?>">
                 </td>
                 <td style="text-align:center;color:var(--medium-gray);font-weight:600;font-size:13px;">
-                    {{ $index + 1 }}
+                    <?php echo e($index + 1); ?>
+
                 </td>
                 <td>
                     <div style="font-weight:600;color:var(--dark);font-size:14px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px;">
-                        {{ $oferta->titulo }}
+                        <?php echo e($oferta->titulo); ?>
+
                     </div>
-                    @if($oferta->fecha_vencimiento && $oferta->fecha_vencimiento->isPast())
+                    <?php if($oferta->fecha_vencimiento && $oferta->fecha_vencimiento->isPast()): ?>
                     <span style="display:inline-flex;align-items:center;gap:3px;margin-top:4px;background:rgba(198,40,40,0.1);color:var(--danger);padding:2px 8px;border-radius:50px;font-size:11px;font-weight:600;">
                         <i class="fas fa-clock" style="font-size:9px;"></i> Vencida
                     </span>
-                    @endif
+                    <?php endif; ?>
                 </td>
                 <td>
                     <div style="color:var(--medium-gray);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;">
-                        <i class="fas fa-building" style="margin-right:4px;font-size:11px;"></i>{{ $oferta->empresa }}
+                        <i class="fas fa-building" style="margin-right:4px;font-size:11px;"></i><?php echo e($oferta->empresa); ?>
+
                     </div>
                 </td>
                 <td style="color:var(--medium-gray);font-size:13px;">
-                    <i class="fas fa-map-marker-alt" style="margin-right:4px;font-size:11px;"></i>{{ $oferta->ubicacion }}
+                    <i class="fas fa-map-marker-alt" style="margin-right:4px;font-size:11px;"></i><?php echo e($oferta->ubicacion); ?>
+
                 </td>
                 <td>
                     <span style="background:rgba(139,21,56,0.08);color:var(--primary);padding:4px 10px;border-radius:50px;font-size:12px;font-weight:600;">
-                        {{ $oferta->tipo_label }}
+                        <?php echo e($oferta->tipo_label); ?>
+
                     </span>
                 </td>
                 <td>
                     <span style="background:rgba(21,101,192,0.08);color:#1565c0;padding:4px 10px;border-radius:50px;font-size:12px;font-weight:600;">
-                        {{ $oferta->area_label }}
+                        <?php echo e($oferta->area_label); ?>
+
                     </span>
                 </td>
-                <td style="color:var(--medium-gray);font-size:13px;">{{ $oferta->salario ?? '—' }}</td>
-                <td style="color:var(--medium-gray);font-size:13px;">{{ $oferta->fecha_publicacion->format('d/m/Y') }}</td>
+                <td style="color:var(--medium-gray);font-size:13px;"><?php echo e($oferta->salario ?? '—'); ?></td>
+                <td style="color:var(--medium-gray);font-size:13px;"><?php echo e($oferta->fecha_publicacion->format('d/m/Y')); ?></td>
                 <td>
-                    <span class="badge {{ $oferta->activo ? 'published' : 'hidden' }}">
+                    <span class="badge <?php echo e($oferta->activo ? 'published' : 'hidden'); ?>">
                         <i class="fas fa-circle" style="font-size:7px;"></i>
-                        {{ $oferta->activo ? 'Activa' : 'Inactiva' }}
+                        <?php echo e($oferta->activo ? 'Activa' : 'Inactiva'); ?>
+
                     </span>
                 </td>
                 <td class="acciones-column" style="text-align:center;">
                     <div style="display:flex;gap:6px;justify-content:center;align-items:center;opacity:1;transition:opacity 0.2s;">
-                        <a href="{{ route('admin.bolsa.edit', $oferta) }}"
+                        <a href="<?php echo e(route('admin.bolsa.edit', $oferta)); ?>"
                            style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <form action="{{ route('admin.bolsa.destroy', $oferta) }}" method="POST" style="display:inline;" class="delete-form">
-                            @csrf @method('DELETE')
+                        <form action="<?php echo e(route('admin.bolsa.destroy', $oferta)); ?>" method="POST" style="display:inline;" class="delete-form">
+                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                             <button type="submit"
                                     style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                 <i class="fas fa-trash-alt"></i>
@@ -159,24 +210,24 @@
                     </div>
                 </td>
             </tr>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <tr>
                 <td colspan="11">
                     <div class="empty-state">
                         <i class="fas fa-briefcase"></i>
                         <p>No hay ofertas de trabajo registradas.<br>Crea tu primera oferta para comenzar.</p>
-                        <a href="{{ route('admin.bolsa.create') }}" class="primary-btn" style="display:inline-flex;">
+                        <a href="<?php echo e(route('admin.bolsa.create')); ?>" class="primary-btn" style="display:inline-flex;">
                             <i class="fas fa-plus"></i> Nueva Oferta
                         </a>
                     </div>
                 </td>
             </tr>
-            @endforelse
+            <?php endif; ?>
         </tbody>
     </table>
     </div>
 
-    {{-- Panel de Acciones en Masa --}}
+    
     <div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -215,11 +266,12 @@
     </div>
 </div>
 
-{{ $ofertas->links('pagination.admin') }}
+<?php echo e($ofertas->links('pagination.admin')); ?>
 
-@endsection
 
-@push('scripts')
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
 <style>
 @keyframes slideDown {
     from {
@@ -347,13 +399,13 @@ function bulkAction(action) {
 
 function executeBulkAction(action) {
     const ids = Array.from(selectedOfertas);
-    const route = '{{ route("admin.bolsa.bulk-toggle") }}';
+    const route = '<?php echo e(route("admin.bolsa.bulk-toggle")); ?>';
     
     fetch(route, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '<?php echo e(csrf_token()); ?>'
         },
         body: JSON.stringify({ ids, action })
     })
@@ -405,4 +457,6 @@ function confirmDelete(titulo, formId) {
 }
 </script>
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\cpap-web\resources\views/admin/bolsa/index.blade.php ENDPATH**/ ?>

@@ -57,8 +57,7 @@
 @if($imagenes->count())
 <div style="margin-bottom:16px;padding:12px;background:rgba(139,21,56,0.04);border:1px solid rgba(139,21,56,0.1);border-radius:var(--radius-sm);display:inline-block;">
     <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;color:var(--dark);margin:0;">
-        <input type="checkbox" id="selectAllCheckbox" 
-               style="width:20px;height:20px;cursor:pointer;">
+        <input type="checkbox" id="selectAllCheckbox">
         <span>Seleccionar todos</span>
     </label>
 </div>
@@ -71,8 +70,7 @@
     <div class="admin-card galeria-card" data-imagen-id="{{ $img->id }}" style="padding:0;overflow:hidden;position:relative;">
         {{-- Checkbox selección --}}
         <div style="position:absolute;top:4px;right:4px;z-index:3;">
-            <input type="checkbox" class="imagen-checkbox" value="{{ $img->id }}" 
-                   style="width:20px;height:20px;cursor:pointer;">
+            <input type="checkbox" class="imagen-checkbox" value="{{ $img->id }}">
         </div>
 
         {{-- Badges --}}

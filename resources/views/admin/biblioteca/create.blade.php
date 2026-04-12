@@ -222,24 +222,21 @@
                     <div style="margin-bottom:14px;">
                         <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;">
                             <input type="hidden" name="destacado" value="0">
-                            <input type="checkbox" name="destacado" value="1" {{ old('destacado') ? 'checked' : '' }}
-                                   style="width:18px;height:18px;accent-color:var(--secondary);">
+                            <input type="checkbox" name="destacado" value="1" {{ old('destacado') ? 'checked' : '' }}>
                             <span><i class="fas fa-star" style="color:var(--secondary);margin-right:4px;"></i> Recurso destacado</span>
                         </label>
                     </div>
                     <div style="margin-bottom:14px;">
                         <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;">
                             <input type="hidden" name="descarga_permitida" value="0">
-                            <input type="checkbox" name="descarga_permitida" value="1" {{ old('descarga_permitida') ? 'checked' : '' }}
-                                   style="width:18px;height:18px;accent-color:var(--primary);">
+                            <input type="checkbox" name="descarga_permitida" value="1" {{ old('descarga_permitida') ? 'checked' : '' }}>>
                             <span><i class="fas fa-download" style="color:var(--primary);margin-right:4px;"></i> Permitir descarga</span>
                         </label>
                     </div>
                     <div>
                         <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;">
                             <input type="hidden" name="solo_colegiados" value="0">
-                            <input type="checkbox" name="solo_colegiados" value="1" {{ old('solo_colegiados') ? 'checked' : '' }}
-                                   style="width:18px;height:18px;accent-color:var(--primary);">
+                            <input type="checkbox" name="solo_colegiados" value="1" {{ old('solo_colegiados') ? 'checked' : '' }}>>
                             <span><i class="fas fa-lock" style="color:var(--primary);margin-right:4px;"></i> Solo colegiados</span>
                         </label>
                         <p style="color:var(--medium-gray);font-size:11px;margin:6px 0 0;padding-left:26px;">Restringe el acceso solo a colegiados habilitados</p>

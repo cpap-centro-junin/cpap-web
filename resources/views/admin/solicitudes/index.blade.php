@@ -18,7 +18,7 @@
 
     <div class="msg-list-header">
         <div class="msg-list-header-left" style="display:flex;align-items:center;gap:16px;">
-            <input type="checkbox" id="selectAll" style="width:18px;height:18px;cursor:pointer;">
+            <input type="checkbox" id="selectAll">
             <div style="display:flex;align-items:center;gap:10px;">
                 <div class="msg-list-icon"><i class="fas fa-clipboard-list"></i></div>
                 <div>
@@ -47,7 +47,7 @@
         <div class="msg-row {{ !$sol->revisado ? 'msg-row--new' : '' }}" data-sol-id="{{ $sol->id }}">
 
             <div style="display:flex;align-items:center;padding-right:12px;">
-                <input type="checkbox" class="sol-checkbox" value="{{ $sol->id }}" style="width:18px;height:18px;cursor:pointer;">
+                <input type="checkbox" class="sol-checkbox" value="{{ $sol->id }}">
             </div>
 
             <div class="msg-avatar">

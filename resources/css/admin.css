@@ -21,3 +21,4 @@
 
 /* ---- MÓDULOS DEL PANEL ADMIN ---- */
 @import './admin/index.css';
+@import './admin/checkboxes.css';

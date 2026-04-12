@@ -149,8 +149,7 @@
                     <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;background:var(--light-gray);border-radius:var(--radius-sm);">
                         <input type="hidden" name="activo" value="0">
                         <input type="checkbox" name="activo" value="1"
-                               {{ old('activo', '1') == '1' ? 'checked' : '' }}
-                               style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0;">
+                               {{ old('activo', '1') == '1' ? 'checked' : '' }}>
                         <div>
                             <div style="font-size:13px;font-weight:600;color:var(--dark);">Visible en el sitio</div>
                             <div style="font-size:11px;color:var(--medium-gray);">Aparece en Consejo Directivo</div>

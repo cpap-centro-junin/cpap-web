@@ -1,37 +1,35 @@
-@php use Illuminate\Support\Str; @endphp
+<?php use Illuminate\Support\Str; ?>
 
-@extends('layouts.admin')
 
-@section('title', 'Biblioteca Virtual')
-@section('page-title', 'Biblioteca Virtual')
 
-@section('content')
+<?php $__env->startSection('title', 'Biblioteca Virtual'); ?>
+<?php $__env->startSection('page-title', 'Biblioteca Virtual'); ?>
 
-{{-- HEADER --}}
+<?php $__env->startSection('content'); ?>
+
+
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
     <div>
         <h1 style="font-size:22px;font-weight:700;color:var(--dark);margin:0 0 4px;">Biblioteca Virtual</h1>
-        <p style="color:var(--medium-gray);font-size:14px;margin:0;">{{ $recursos->total() }} recurso{{ $recursos->total() !== 1 ? 's' : '' }} en total</p>
+        <p style="color:var(--medium-gray);font-size:14px;margin:0;"><?php echo e($recursos->total()); ?> recurso<?php echo e($recursos->total() !== 1 ? 's' : ''); ?> en total</p>
     </div>
-    <a href="{{ route('admin.biblioteca.create') }}" class="primary-btn">
+    <a href="<?php echo e(route('admin.biblioteca.create')); ?>" class="primary-btn">
         <i class="fas fa-plus"></i> Nuevo Recurso
     </a>
 </div>
 
-{{-- FLASH --}}
-@if(session('success'))
-<div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
-    <i class="fas fa-check-circle"></i> {{ session('success') }}
-</div>
-@endif
 
-{{-- FILTROS --}}
-<x-admin-filters
-    :searchPlaceholder="'Buscar por título, autor, editorial...'"
-    :searchField="'q'"
-    :route="route('admin.biblioteca.index')"
-    :clearRoute="route('admin.biblioteca.index')"
-    :filters="[
+<?php if(session('success')): ?>
+<div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
+    <i class="fas fa-check-circle"></i> <?php echo e(session('success')); ?>
+
+</div>
+<?php endif; ?>
+
+
+<?php if (isset($component)) { $__componentOriginal692661d59ef467547c37fd97752f8741 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal692661d59ef467547c37fd97752f8741 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-filters','data' => ['searchPlaceholder' => 'Buscar por título, autor, editorial...','searchField' => 'q','route' => route('admin.biblioteca.index'),'clearRoute' => route('admin.biblioteca.index'),'filters' => [
         [
             'field' => 'tipo',
             'label' => 'Tipo',
@@ -60,10 +58,55 @@
                 'oculto' => 'Ocultos',
             ]
         ],
-    ]"
-/>
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-filters'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['searchPlaceholder' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Buscar por título, autor, editorial...'),'searchField' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('q'),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.biblioteca.index')),'clearRoute' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.biblioteca.index')),'filters' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        [
+            'field' => 'tipo',
+            'label' => 'Tipo',
+            'options' => [
+                'libro' => 'Libros',
+                'articulo' => 'Artículos',
+                'tesis' => 'Tesis',
+                'documento' => 'Documentos',
+                'revista' => 'Revistas',
+                'multimedia' => 'Multimedia',
+            ]
+        ],
+        [
+            'field' => 'formato',
+            'label' => 'Formato',
+            'options' => [
+                'fisico' => 'Físico',
+                'digital' => 'Digital',
+            ]
+        ],
+        [
+            'field' => 'estado',
+            'label' => 'Estado',
+            'options' => [
+                'publicado' => 'Publicados',
+                'oculto' => 'Ocultos',
+            ]
+        ],
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $attributes = $__attributesOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__attributesOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $component = $__componentOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__componentOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
 
-{{-- TABLA --}}
+
 <div class="admin-table">
     <div class="admin-table-wrapper">
         <table>
@@ -83,94 +126,98 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($recursos as $index => $recurso)
-                <tr class="recurso-row" data-recurso-id="{{ $recurso->id }}">
+                <?php $__empty_1 = true; $__currentLoopData = $recursos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $recurso): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <tr class="recurso-row" data-recurso-id="<?php echo e($recurso->id); ?>">
                     <td style="text-align:center;">
-                        <input type="checkbox" class="recurso-checkbox" value="{{ $recurso->id }}">
+                        <input type="checkbox" class="recurso-checkbox" value="<?php echo e($recurso->id); ?>">
                     </td>
                     <td style="text-align:center;color:var(--medium-gray);font-weight:600;font-size:13px;">
-                        {{ $index + 1 }}
+                        <?php echo e($index + 1); ?>
+
                     </td>
-                    {{-- Portada --}}
+                    
                     <td>
-                        @if($recurso->imagen_portada)
-                            <img src="{{ $recurso->imagen_portada_url }}" alt=""
+                        <?php if($recurso->imagen_portada): ?>
+                            <img src="<?php echo e($recurso->imagen_portada_url); ?>" alt=""
                                  style="width:44px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
-                        @else
+                        <?php else: ?>
                             <div style="width:44px;height:60px;background:var(--light-gray);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--medium-gray);font-size:18px;">
-                                <i class="fas {{ $recurso->tipo_icon }}"></i>
+                                <i class="fas <?php echo e($recurso->tipo_icon); ?>"></i>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </td>
 
-                    {{-- Título / Autor --}}
+                    
                     <td>
                         <div style="font-weight:600;color:var(--dark);font-size:14px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:300px;">
-                            {{ $recurso->titulo }}
+                            <?php echo e($recurso->titulo); ?>
+
                         </div>
                         <div style="color:var(--medium-gray);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:300px;">
-                            <i class="fas fa-user" style="margin-right:3px;"></i>{{ $recurso->autor }}
+                            <i class="fas fa-user" style="margin-right:3px;"></i><?php echo e($recurso->autor); ?>
+
                         </div>
                     </td>
 
-                    {{-- Tipo --}}
+                    
                     <td>
                         <span class="badge" style="background:rgba(139,21,56,0.1);color:var(--primary);font-size:12px;">
-                            <i class="fas {{ $recurso->tipo_icon }}" style="margin-right:4px;"></i>{{ $recurso->tipo_label }}
+                            <i class="fas <?php echo e($recurso->tipo_icon); ?>" style="margin-right:4px;"></i><?php echo e($recurso->tipo_label); ?>
+
                         </span>
                     </td>
 
-                    {{-- Formato --}}
+                    
                     <td>
-                        @if($recurso->formato === 'fisico')
+                        <?php if($recurso->formato === 'fisico'): ?>
                             <span class="badge" style="background:rgba(201,169,97,0.15);color:#96792e;font-size:12px;">
                                 <i class="fas fa-book" style="margin-right:4px;"></i>Físico
                             </span>
-                        @else
+                        <?php else: ?>
                             <span class="badge" style="background:rgba(46,125,50,0.12);color:#2e7d32;font-size:12px;">
                                 <i class="fas fa-laptop" style="margin-right:4px;"></i>Virtual
                             </span>
-                        @endif
+                        <?php endif; ?>
                     </td>
 
-                    {{-- Área --}}
+                    
                     <td>
-                        <span style="color:var(--dark);font-size:13px;">{{ $recurso->area_label }}</span>
+                        <span style="color:var(--dark);font-size:13px;"><?php echo e($recurso->area_label); ?></span>
                     </td>
 
-                    {{-- Estado --}}
+                    
                     <td>
-                        @if($recurso->activo)
+                        <?php if($recurso->activo): ?>
                             <span class="badge published">Publicado</span>
-                        @else
+                        <?php else: ?>
                             <span class="badge hidden">Oculto</span>
-                        @endif
-                        @if($recurso->destacado)
+                        <?php endif; ?>
+                        <?php if($recurso->destacado): ?>
                             <span class="badge" style="background:rgba(212,175,55,0.15);color:#b8941d;font-size:10px;" title="Destacado">
                                 <i class="fas fa-star"></i>
                             </span>
-                        @endif
+                        <?php endif; ?>
                     </td>
 
-                    {{-- Acciones --}}
+                    
                     <td class="acciones-column" style="text-align:center;">
                         <div style="display:flex;gap:6px;justify-content:center;align-items:center;opacity:1;transition:opacity 0.2s;">
-                            <a href="{{ route('admin.biblioteca.edit', $recurso) }}"
+                            <a href="<?php echo e(route('admin.biblioteca.edit', $recurso)); ?>"
                                style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;text-decoration:none;"
                                title="Editar">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            @if($recurso->archivo_pdf)
-                            <a href="{{ $recurso->archivo_pdf_url }}" target="_blank"
+                            <?php if($recurso->archivo_pdf): ?>
+                            <a href="<?php echo e($recurso->archivo_pdf_url); ?>" target="_blank"
                                style="display:inline-flex;align-items:center;padding:6px 10px;background:rgba(139,21,56,0.08);color:var(--primary);border-radius:var(--radius-sm);font-size:12px;text-decoration:none;"
                                title="Ver PDF">
                                 <i class="fas fa-file-pdf"></i>
                             </a>
-                            @endif
-                            <form action="{{ route('admin.biblioteca.destroy', $recurso) }}" method="POST" style="display:inline;" class="delete-form" id="form-delete-biblioteca-{{ $recurso->id }}">
-                                @csrf @method('DELETE')
+                            <?php endif; ?>
+                            <form action="<?php echo e(route('admin.biblioteca.destroy', $recurso)); ?>" method="POST" style="display:inline;" class="delete-form" id="form-delete-biblioteca-<?php echo e($recurso->id); ?>">
+                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                 <button type="button"
-                                        onclick="confirmDelete('{{ addslashes($recurso->titulo) }}', 'form-delete-biblioteca-{{ $recurso->id }}')"
+                                        onclick="confirmDelete('<?php echo e(addslashes($recurso->titulo)); ?>', 'form-delete-biblioteca-<?php echo e($recurso->id); ?>')"
                                         style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -178,26 +225,26 @@
                         </div>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="9">
                         <div class="empty-state">
                             <i class="fas fa-book"></i>
                             <h3>No hay recursos</h3>
                             <p>Agrega el primer recurso a la biblioteca virtual.</p>
-                            <a href="{{ route('admin.biblioteca.create') }}" class="primary-btn">
+                            <a href="<?php echo e(route('admin.biblioteca.create')); ?>" class="primary-btn">
                                 <i class="fas fa-plus"></i> Nuevo Recurso
                             </a>
                         </div>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
 
-{{-- Panel de Acciones en Masa --}}
+
 <div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -259,12 +306,13 @@
     </div>
 </div>
 
-{{-- PAGINACIÓN --}}
-{{ $recursos->links('pagination.admin') }}
 
-@endsection
+<?php echo e($recursos->links('pagination.admin')); ?>
 
-@push('scripts')
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
 <style>
 @keyframes slideDown {
     from {
@@ -420,11 +468,11 @@ function bulkAction(action) {
 function executeBulkAction(action) {
     const ids = Array.from(selectedRecursos);
     
-    fetch('{{ route("admin.biblioteca.bulk-toggle") }}', {
+    fetch('<?php echo e(route("admin.biblioteca.bulk-toggle")); ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '<?php echo e(csrf_token()); ?>'
         },
         body: JSON.stringify({
             ids: ids,
@@ -486,4 +534,6 @@ function confirmDelete(titulo, formId) {
     });
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\cpap-web\resources\views/admin/biblioteca/index.blade.php ENDPATH**/ ?>

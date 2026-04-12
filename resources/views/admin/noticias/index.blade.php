@@ -70,7 +70,7 @@
             <thead>
                 <tr>
                     <th style="width:45px;text-align:center;">
-                        <input type="checkbox" id="selectAll" style="width:18px;height:18px;cursor:pointer;">
+                        <input type="checkbox" id="selectAll">
                     </th>
                     <th style="width:40px;text-align:center;">#</th>
                     <th style="width:60px;">Portada</th>
@@ -86,7 +86,7 @@
                 @forelse($noticias as $index => $noticia)
                 <tr class="noticia-row" data-noticia-id="{{ $noticia->id }}">
                     <td style="text-align:center;">
-                        <input type="checkbox" class="noticia-checkbox" value="{{ $noticia->id }}" style="width:18px;height:18px;cursor:pointer;">
+                        <input type="checkbox" class="noticia-checkbox" value="{{ $noticia->id }}">
                     </td>
                     <td style="text-align:center;color:var(--medium-gray);font-weight:600;font-size:13px;">
                         {{ $index + 1 }}

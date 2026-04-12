@@ -92,8 +92,7 @@
                     </div>
                     <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;background:var(--light-gray);border-radius:var(--radius-sm);">
                         <input type="hidden" name="destacado" value="0">
-                        <input type="checkbox" name="destacado" value="1" {{ old('destacado')?'checked':'' }}
-                               style="width:16px;height:16px;accent-color:var(--primary);flex-shrink:0;">
+                        <input type="checkbox" name="destacado" value="1" {{ old('destacado')?'checked':'' }}>
                         <div>
                             <div style="font-size:13px;font-weight:600;color:var(--dark);"><i class="fas fa-star" style="color:var(--accent);"></i> Destacar noticia</div>
                             <div style="font-size:11px;color:var(--medium-gray);">Aparece en sección destacados</div>

@@ -1,45 +1,44 @@
-@php use Illuminate\Support\Str; @endphp
+<?php use Illuminate\Support\Str; ?>
 
-@extends('layouts.admin')
 
-@section('title', 'Eventos')
-@section('page-title', 'Gestión de Eventos')
 
-@section('content')
+<?php $__env->startSection('title', 'Noticias'); ?>
+<?php $__env->startSection('page-title', 'Gestión de Noticias'); ?>
 
-{{-- HEADER --}}
+<?php $__env->startSection('content'); ?>
+
+
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
     <div>
-        <h1 style="font-size:22px;font-weight:700;color:var(--dark);margin:0 0 4px;">Eventos</h1>
-        <p style="color:var(--medium-gray);font-size:14px;margin:0;">{{ $eventos->total() }} evento{{ $eventos->total() !== 1 ? 's' : '' }} en total</p>
+        <h1 style="font-size:22px;font-weight:700;color:var(--dark);margin:0 0 4px;">Noticias</h1>
+        <p style="color:var(--medium-gray);font-size:14px;margin:0;"><?php echo e($noticias->total()); ?> noticia<?php echo e($noticias->total() !== 1 ? 's' : ''); ?> en total</p>
     </div>
-    <a href="{{ route('admin.eventos.create') }}" class="primary-btn">
-        <i class="fas fa-plus"></i> Nuevo Evento
+    <a href="<?php echo e(route('admin.noticias.create')); ?>" class="primary-btn">
+        <i class="fas fa-plus"></i> Nueva Noticia
     </a>
 </div>
 
-{{-- FLASH --}}
-@if(session('success'))
-<div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
-    <i class="fas fa-check-circle"></i> {{ session('success') }}
-</div>
-@endif
 
-{{-- FILTROS --}}
-<x-admin-filters
-    :searchPlaceholder="'Buscar por título, descripción o lugar...'"
-    :searchField="'q'"
-    :route="route('admin.eventos.index')"
-    :clearRoute="route('admin.eventos.index')"
-    :filters="[
+<?php if(session('success')): ?>
+<div style="background:var(--success-light);color:var(--success);border:1px solid rgba(46,125,50,0.2);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;">
+    <i class="fas fa-check-circle"></i> <?php echo e(session('success')); ?>
+
+</div>
+<?php endif; ?>
+
+
+<?php if (isset($component)) { $__componentOriginal692661d59ef467547c37fd97752f8741 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal692661d59ef467547c37fd97752f8741 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-filters','data' => ['searchPlaceholder' => 'Buscar por título, autor o contenido...','searchField' => 'q','route' => route('admin.noticias.index'),'clearRoute' => route('admin.noticias.index'),'filters' => [
         [
             'field' => 'categoria',
             'label' => 'Categoría',
             'options' => [
-                'conferencia' => 'Conferencia',
-                'taller' => 'Taller',
-                'seminario' => 'Seminario',
-                'reunion' => 'Reunión',
+                'tecnologia' => 'Tecnología',
+                'investigacion' => 'Investigación',
+                'cultura' => 'Cultura',
+                'educacion' => 'Educación',
+                'eventos' => 'Eventos',
                 'otro' => 'Otro',
             ]
         ],
@@ -47,14 +46,67 @@
             'field' => 'estado',
             'label' => 'Estado',
             'options' => [
-                'activo' => 'Activo',
-                'inactivo' => 'Inactivo',
+                'activo' => 'Publicado',
+                'inactivo' => 'Oculto',
             ]
         ],
-    ]"
-/>
+        [
+            'field' => 'destacado',
+            'label' => 'Destacado',
+            'options' => [
+                'si' => 'Destacados',
+                'no' => 'No destacados',
+            ]
+        ],
+    ]]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-filters'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['searchPlaceholder' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Buscar por título, autor o contenido...'),'searchField' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('q'),'route' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.noticias.index')),'clearRoute' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.noticias.index')),'filters' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute([
+        [
+            'field' => 'categoria',
+            'label' => 'Categoría',
+            'options' => [
+                'tecnologia' => 'Tecnología',
+                'investigacion' => 'Investigación',
+                'cultura' => 'Cultura',
+                'educacion' => 'Educación',
+                'eventos' => 'Eventos',
+                'otro' => 'Otro',
+            ]
+        ],
+        [
+            'field' => 'estado',
+            'label' => 'Estado',
+            'options' => [
+                'activo' => 'Publicado',
+                'inactivo' => 'Oculto',
+            ]
+        ],
+        [
+            'field' => 'destacado',
+            'label' => 'Destacado',
+            'options' => [
+                'si' => 'Destacados',
+                'no' => 'No destacados',
+            ]
+        ],
+    ])]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $attributes = $__attributesOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__attributesOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal692661d59ef467547c37fd97752f8741)): ?>
+<?php $component = $__componentOriginal692661d59ef467547c37fd97752f8741; ?>
+<?php unset($__componentOriginal692661d59ef467547c37fd97752f8741); ?>
+<?php endif; ?>
 
-{{-- TABLA --}}
+
 <div class="admin-table">
     <div class="admin-table-wrapper">
         <table>
@@ -67,81 +119,76 @@
                     <th style="width:60px;">Portada</th>
                     <th>Título</th>
                     <th>Categoría</th>
-                    <th>Fecha</th>
+                    <th>Autor</th>
                     <th>Estado</th>
+                    <th>Publicado</th>
                     <th style="text-align:center;width:160px;" class="acciones-column">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($eventos as $index => $evento)
-                <tr class="evento-row" data-evento-id="{{ $evento->id }}">
+                <?php $__empty_1 = true; $__currentLoopData = $noticias; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $noticia): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <tr class="noticia-row" data-noticia-id="<?php echo e($noticia->id); ?>">
                     <td style="text-align:center;">
-                        <input type="checkbox" class="evento-checkbox" value="{{ $evento->id }}">
+                        <input type="checkbox" class="noticia-checkbox" value="<?php echo e($noticia->id); ?>">
                     </td>
                     <td style="text-align:center;color:var(--medium-gray);font-weight:600;font-size:13px;">
-                        {{ $index + 1 }}
+                        <?php echo e($index + 1); ?>
+
                     </td>
                     <td>
-                        @if($evento->imagen_portada)
-                            <img src="{{ $evento->imagen_portada }}" alt=""
+                        <?php if($noticia->imagen): ?>
+                            <img src="<?php echo e($noticia->imagen); ?>" alt=""
                                  style="width:52px;height:40px;object-fit:cover;border-radius:6px;display:block;">
-                        @else
+                        <?php else: ?>
                             <div style="width:52px;height:40px;background:var(--light-gray);border-radius:6px;display:flex;align-items:center;justify-content:center;">
-                                <i class="fas fa-calendar-alt" style="color:var(--border);font-size:14px;"></i>
+                                <i class="fas fa-newspaper" style="color:var(--border);font-size:14px;"></i>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </td>
                     <td>
                         <div style="font-weight:600;color:var(--dark);font-size:14px;margin-bottom:3px;">
-                            {{ Str::limit($evento->titulo, 60) }}
+                            <?php echo e(Str::limit($noticia->titulo, 60)); ?>
+
                         </div>
-                        @if($evento->lugar)
-                        <div style="color:var(--medium-gray);font-size:12px;display:flex;align-items:center;gap:4px;">
-                            <i class="fas fa-map-marker-alt" style="color:var(--primary);font-size:10px;"></i>
-                            {{ Str::limit($evento->lugar, 50) }}
-                        </div>
-                        @endif
-                        @if($evento->destacado)
+                        <?php if($noticia->resumen): ?>
+                        <div style="color:var(--medium-gray);font-size:12px;"><?php echo e(Str::limit($noticia->resumen, 80)); ?></div>
+                        <?php endif; ?>
+                        <?php if($noticia->destacado): ?>
                         <span style="display:inline-flex;align-items:center;gap:3px;margin-top:4px;background:rgba(212,175,55,0.12);color:#b8960c;padding:2px 8px;border-radius:50px;font-size:11px;font-weight:600;">
                             <i class="fas fa-star" style="font-size:9px;"></i> Destacado
                         </span>
-                        @endif
+                        <?php endif; ?>
                     </td>
                     <td>
                         <span style="background:rgba(139,21,56,0.08);color:var(--primary);padding:4px 10px;border-radius:50px;font-size:12px;font-weight:600;">
-                            {{ $evento->categoria }}
+                            <?php echo e($noticia->categoria); ?>
+
                         </span>
                     </td>
+                    <td style="color:var(--medium-gray);font-size:13px;"><?php echo e($noticia->autor); ?></td>
                     <td>
-                        <div style="font-size:13px;font-weight:600;color:var(--dark);">{{ $evento->fecha_inicio->format('d/m/Y') }}</div>
-                        @if($evento->hora_inicio)
-                        <div style="font-size:12px;color:var(--medium-gray);">
-                            <i class="fas fa-clock" style="color:var(--primary);font-size:10px;"></i>
-                            {{ \Carbon\Carbon::parse($evento->hora_inicio)->format('H:i') }} hrs
-                        </div>
-                        @endif
-                    </td>
-                    <td>
-                        <span class="badge {{ $evento->activo ? 'published' : 'hidden' }}">
+                        <span class="badge <?php echo e($noticia->activo ? 'published' : 'hidden'); ?>">
                             <i class="fas fa-circle" style="font-size:7px;"></i>
-                            {{ $evento->activo ? 'Publicado' : 'Oculto' }}
+                            <?php echo e($noticia->activo ? 'Publicado' : 'Oculto'); ?>
+
                         </span>
                     </td>
+                    <td style="color:var(--medium-gray);font-size:13px;"><?php echo e($noticia->created_at->format('d/m/Y')); ?></td>
                     <td class="acciones-column" style="text-align:center;">
                         <div style="display:flex;gap:6px;justify-content:center;align-items:center;opacity:1;transition:opacity 0.2s;">
-                            <a href="{{ route('eventos.show', $evento) }}" target="_blank"
+                            <a href="<?php echo e(route('noticias.show', $noticia)); ?>" target="_blank"
                                style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;text-decoration:none;"
                                title="Ver en sitio">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.eventos.edit', $evento) }}"
+                            <a href="<?php echo e(route('admin.noticias.edit', $noticia)); ?>"
                                style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <form action="{{ route('admin.eventos.destroy', $evento) }}" method="POST" style="display:inline;" class="delete-form" id="form-delete-evento-{{ $evento->id }}">
-                                @csrf @method('DELETE')
+                            <form action="<?php echo e(route('admin.noticias.destroy', $noticia)); ?>" method="POST" style="display:inline;" class="delete-form" id="form-delete-noticia-<?php echo e($noticia->id); ?>">
+                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                 <button type="button"
-                                        onclick="confirmDelete('{{ addslashes($evento->titulo) }}', 'form-delete-evento-{{ $evento->id }}')"
+                                        onclick="confirmDelete('<?php echo e(addslashes($noticia->titulo)); ?>', 'form-delete-noticia-<?php echo e($noticia->id); ?>')"
                                         style="display:inline-flex;align-items:center;padding:6px 10px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;border:none;cursor:pointer;">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -149,25 +196,25 @@
                         </div>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                         <div class="empty-state">
-                            <i class="fas fa-calendar-times"></i>
-                            <p>No hay eventos registrados.<br>Crea tu primer evento para comenzar.</p>
-                            <a href="{{ route('admin.eventos.create') }}" class="primary-btn" style="display:inline-flex;">
-                                <i class="fas fa-plus"></i> Crear Evento
+                            <i class="fas fa-newspaper"></i>
+                            <p>No hay noticias registradas.<br>Crea tu primera noticia para comenzar.</p>
+                            <a href="<?php echo e(route('admin.noticias.create')); ?>" class="primary-btn" style="display:inline-flex;">
+                                <i class="fas fa-plus"></i> Crear Noticia
                             </a>
                         </div>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
 
-{{-- Panel de Acciones en Masa --}}
+
 <div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -217,11 +264,15 @@
     </div>
 </div>
 
-{{ $eventos->links('pagination.admin') }}
+<?php if($noticias->count() > 0): ?>
+<?php echo e($noticias->links('pagination.admin')); ?>
 
-@endsection
+<?php endif; ?>
 
-@push('scripts')
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
 <style>
 @keyframes slideDown {
     from {
@@ -240,36 +291,36 @@
 }
 </style>
 <script>
-let selectedEventos = new Set();
+let selectedNoticias = new Set();
 const selectAllCheckbox = document.getElementById('selectAll');
 const bulkActionsPanel = document.getElementById('bulkActionsPanel');
-const eventoCheckboxes = document.querySelectorAll('.evento-checkbox');
+const noticiaCheckboxes = document.querySelectorAll('.noticia-checkbox');
 const accionesColumns = document.querySelectorAll('.acciones-column');
 
 // Event listeners
 selectAllCheckbox?.addEventListener('change', function() {
-    eventoCheckboxes.forEach(checkbox => {
+    noticiaCheckboxes.forEach(checkbox => {
         checkbox.checked = this.checked;
         if (this.checked) {
-            selectedEventos.add(checkbox.value);
+            selectedNoticias.add(checkbox.value);
         } else {
-            selectedEventos.delete(checkbox.value);
+            selectedNoticias.delete(checkbox.value);
         }
     });
     updateBulkUI();
 });
 
-eventoCheckboxes.forEach(checkbox => {
+noticiaCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         if (this.checked) {
-            selectedEventos.add(this.value);
+            selectedNoticias.add(this.value);
         } else {
-            selectedEventos.delete(this.value);
+            selectedNoticias.delete(this.value);
         }
         
         // Update select all checkbox state
-        const allChecked = Array.from(eventoCheckboxes).every(cb => cb.checked);
-        const someChecked = Array.from(eventoCheckboxes).some(cb => cb.checked);
+        const allChecked = Array.from(noticiaCheckboxes).every(cb => cb.checked);
+        const someChecked = Array.from(noticiaCheckboxes).some(cb => cb.checked);
         selectAllCheckbox.checked = allChecked;
         selectAllCheckbox.indeterminate = someChecked && !allChecked;
         
@@ -278,7 +329,7 @@ eventoCheckboxes.forEach(checkbox => {
 });
 
 function updateBulkUI() {
-    const count = selectedEventos.size;
+    const count = selectedNoticias.size;
     const countText = document.getElementById('selectionCountText');
     
     if (count > 0) {
@@ -296,7 +347,7 @@ function updateBulkUI() {
 }
 
 function bulkAction(action) {
-    const count = selectedEventos.size;
+    const count = selectedNoticias.size;
     if (count === 0) return;
     
     let title = '';
@@ -307,36 +358,36 @@ function bulkAction(action) {
     
     switch(action) {
         case 'activar':
-            title = 'Publicar eventos';
-            message = `Se publicarán <strong>${count} evento(s)</strong>. Estarán visibles en el sitio web.`;
+            title = 'Publicar noticias';
+            message = `Se publicarán <strong>${count} noticia(s)</strong>. Estarán visibles en el sitio web.`;
             icon = 'info';
             confirmButtonColor = '#4CAF50';
             confirmButtonText = '<i class="fas fa-check"></i> Sí, publicar';
             break;
         case 'desactivar':
             title = 'Guardar como borrador';
-            message = `Se guardarán como borrador <strong>${count} evento(s)</strong>. No serán visibles en el sitio web.`;
+            message = `Se guardarán como borrador <strong>${count} noticia(s)</strong>. No serán visibles en el sitio web.`;
             icon = 'info';
             confirmButtonColor = '#FF9800';
             confirmButtonText = '<i class="fas fa-ban"></i> Sí, guardar como borrador';
             break;
         case 'destacar':
-            title = 'Destacar eventos';
-            message = `Se destacarán <strong>${count} evento(s)</strong>. Aparecerán resaltados en el sitio.`;
+            title = 'Destacar noticias';
+            message = `Se destacarán <strong>${count} noticia(s)</strong>. Aparecerán resaltadas en el sitio.`;
             icon = 'success';
             confirmButtonColor = '#b8960c';
             confirmButtonText = '<i class="fas fa-star"></i> Sí, destacar';
             break;
         case 'no-destacar':
             title = 'Remover destaque';
-            message = `Se removirá el destaque de <strong>${count} evento(s)</strong>.`;
+            message = `Se removirá el destaque de <strong>${count} noticia(s)</strong>.`;
             icon = 'info';
             confirmButtonColor = '#9e9e9e';
             confirmButtonText = '<i class="fas fa-star-regular"></i> Sí, remover destaque';
             break;
         case 'eliminar':
-            title = 'Eliminar eventos';
-            message = `Se eliminarán permanentemente <strong>${count} evento(s)</strong>. Esta acción no se puede deshacer.`;
+            title = 'Eliminar noticias';
+            message = `Se eliminarán permanentemente <strong>${count} noticia(s)</strong>. Esta acción no se puede deshacer.`;
             icon = 'warning';
             confirmButtonColor = '#d32f2f';
             confirmButtonText = '<i class="fas fa-trash"></i> Sí, eliminar';
@@ -361,13 +412,13 @@ function bulkAction(action) {
 }
 
 function executeBulkAction(action) {
-    const ids = Array.from(selectedEventos);
+    const ids = Array.from(selectedNoticias);
     
-    fetch('{{ route("admin.eventos.bulk-toggle") }}', {
+    fetch('<?php echo e(route("admin.noticias.bulk-toggle")); ?>', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '<?php echo e(csrf_token()); ?>'
         },
         body: JSON.stringify({
             ids: ids,
@@ -404,8 +455,8 @@ function executeBulkAction(action) {
 }
 
 function clearSelection() {
-    selectedEventos.clear();
-    eventoCheckboxes.forEach(checkbox => checkbox.checked = false);
+    selectedNoticias.clear();
+    noticiaCheckboxes.forEach(checkbox => checkbox.checked = false);
     selectAllCheckbox.checked = false;
     selectAllCheckbox.indeterminate = false;
     updateBulkUI();
@@ -413,7 +464,7 @@ function clearSelection() {
 
 function confirmDelete(titulo, formId) {
     Swal.fire({
-        title: '¿Eliminar este evento?',
+        title: '¿Eliminar esta noticia?',
         html: `Se eliminará permanentemente <strong>"${titulo}"</strong>. Esta acción no se puede deshacer.`,
         icon: 'warning',
         showCancelButton: true,
@@ -429,4 +480,6 @@ function confirmDelete(titulo, formId) {
     });
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\cpap-web\resources\views/admin/noticias/index.blade.php ENDPATH**/ ?>

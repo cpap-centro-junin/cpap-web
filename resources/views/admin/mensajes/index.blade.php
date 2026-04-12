@@ -9,7 +9,7 @@
 
     <div class="msg-list-header">
         <div class="msg-list-header-left" style="display:flex;align-items:center;gap:16px;">
-            <input type="checkbox" id="selectAll" style="width:18px;height:18px;cursor:pointer;">
+            <input type="checkbox" id="selectAll">
             <div style="display:flex;align-items:center;gap:10px;">
                 <div class="msg-list-icon"><i class="fas fa-inbox"></i></div>
                 <div>

@@ -55,7 +55,7 @@
             <thead>
                 <tr>
                     <th style="width:45px;text-align:center;">
-                        <input type="checkbox" id="selectAll" style="width:18px;height:18px;cursor:pointer;">
+                        <input type="checkbox" id="selectAll">
                     </th>
                     <th style="width:40px;text-align:center;">#</th>
                     <th style="width:120px;">Vista Previa</th>
@@ -69,7 +69,7 @@
                 @forelse($anuncios as $index => $anuncio)
                 <tr class="anuncio-row" data-anuncio-id="{{ $anuncio->id }}">
                     <td style="text-align:center;">
-                        <input type="checkbox" class="anuncio-checkbox" value="{{ $anuncio->id }}" style="width:18px;height:18px;cursor:pointer;">
+                        <input type="checkbox" class="anuncio-checkbox" value="{{ $anuncio->id }}">
                     </td>
                     <td style="text-align:center;color:var(--medium-gray);font-weight:600;font-size:13px;">
                         {{ $index + 1 }}
