@@ -184,6 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     dropdowns.forEach(dropdown => {
         const link = dropdown.querySelector('.nav-link');
+        const menu = dropdown.querySelector('.dropdown-menu');
+        let hoverTimeout;
         
         // Evento click en el nav-link (previne click en icono también)
         link.addEventListener('click', function(e) {
@@ -194,8 +196,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // ============================================
+        // DESKTOP: Hover con delay para permitir transición al menu
+        // ============================================
+        if (window.innerWidth > 768) {
+            // Mouseenter en el dropdown padre
+            dropdown.addEventListener('mouseenter', function() {
+                clearTimeout(hoverTimeout);
+                // Aquí no hacemos nada, el CSS hover ya abre el menu
+            });
+            
+            // Mouseleave del dropdown padre (pero permite ir al menu)
+            dropdown.addEventListener('mouseleave', function() {
+                hoverTimeout = setTimeout(() => {
+                    // El CSS hover cierra automáticamente
+                }, 100);
+            });
+            
+            // Si el menu existe, evitar que se cierre cuando el cursor está sobre él
+            if (menu) {
+                menu.addEventListener('mouseenter', function() {
+                    clearTimeout(hoverTimeout);
+                });
+                
+                menu.addEventListener('mouseleave', function() {
+                    hoverTimeout = setTimeout(() => {
+                        // Cerrar después del delay
+                    }, 100);
+                });
+            }
+        }
+        
         // Agregar click al dropdown-menu para evitar bugs de propagación
-        const menu = dropdown.querySelector('.dropdown-menu');
         if (menu) {
             menu.addEventListener('click', function(e) {
                 // Si hace click en un link dentro del menú, cerrar después de navegar

@@ -141,6 +141,18 @@
     position: relative;
 }
 
+/* Crear zona de "hover buffer" invisible que une el botón con el menú */
+.dropdown::after {
+    content: '';
+    position: absolute;
+    top: calc(100% - 5px);
+    left: 0;
+    right: 0;
+    height: 25px;
+    pointer-events: auto;
+    z-index: 9999;
+}
+
 .dropdown-icon {
     font-size: 0.7rem;
     transition: transform 0.3s ease;
@@ -169,7 +181,8 @@
     border: 1px solid rgba(139, 21, 56, 0.1);
 }
 
-.dropdown:hover .dropdown-menu {
+.dropdown:hover .dropdown-menu,
+.dropdown:has(.dropdown-menu:hover) .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
