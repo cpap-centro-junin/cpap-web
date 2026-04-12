@@ -39,12 +39,7 @@ class NormativaDocumento extends Model
             return $this->archivo_pdf;
         }
 
-        // Si empieza con "public/", remover ese prefijo para asset()
-        if (str_starts_with($this->archivo_pdf, 'public/')) {
-            $ruta = substr($this->archivo_pdf, 7); // Remover "public/"
-            return asset($ruta);
-        }
-        
+        // Retornar la ruta tal como está en BD (con public/)
         return asset($this->archivo_pdf);
     }
 

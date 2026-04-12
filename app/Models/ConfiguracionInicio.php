@@ -55,13 +55,7 @@ class ConfiguracionInicio extends Model
             return $this->hero_imagen;
         }
 
-        // Si empieza con "public/", remover ese prefijo para asset()
-        if (str_starts_with($this->hero_imagen, 'public/')) {
-            $ruta = substr($this->hero_imagen, 7); // Remover "public/"
-            return asset($ruta);
-        }
-
-        // Ruta en public/
+        // Retornar la ruta tal como está en BD (con public/)
         return asset($this->hero_imagen);
     }
 

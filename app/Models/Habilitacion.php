@@ -82,13 +82,7 @@ class Habilitacion extends Model
             return $this->documento_path;
         }
 
-        // Si empieza con "public/", convertir a URL
-        if (str_starts_with($this->documento_path, 'public/')) {
-            $ruta = substr($this->documento_path, 7); // Remover "public/"
-            return asset($ruta);
-        }
-
-        // Ruta sin public/
+        // Retornar la ruta tal como está en BD (con public/)
         return asset($this->documento_path);
     }
 
@@ -106,13 +100,7 @@ class Habilitacion extends Model
             return $this->qr_path;
         }
 
-        // Si empieza con "public/", convertir a URL
-        if (str_starts_with($this->qr_path, 'public/')) {
-            $ruta = substr($this->qr_path, 7); // Remover "public/"
-            return asset($ruta);
-        }
-
-        // Ruta sin public/
+        // Retornar la ruta tal como está en BD (con public/)
         return asset($this->qr_path);
     }
 
