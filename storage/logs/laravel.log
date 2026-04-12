@@ -159,3 +159,7 @@
 #33 C:/laragon/www/cpap-web/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
 #34 {main}
 "} 
+[2026-04-11 23:08:17] local.INFO: Enviando email del formulario de contacto  
+[2026-04-11 23:08:17] local.INFO: De: test@ejemplo.com  
+[2026-04-11 23:08:17] local.INFO: Para: contacto@cpapregioncentro.com  
+[2026-04-11 23:08:17] local.INFO: Asunto: Test del sistema  

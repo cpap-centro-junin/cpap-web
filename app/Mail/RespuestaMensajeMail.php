@@ -24,6 +24,7 @@ class RespuestaMensajeMail extends Mailable
     public function build()
     {
         $mail = $this->subject('Respuesta - CPAP Región Centro')
+                     ->from(config('mail.from.address'), config('mail.from.name'))
                      ->view('emails.respuesta-mensaje');
 
         if ($this->archivo_respuesta) {

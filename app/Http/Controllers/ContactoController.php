@@ -82,7 +82,7 @@ class ContactoController extends Controller
         ]);
 
         // Enviar correo real
-        Mail::to('juancarloschmm@gmail.com')
+        Mail::to('contacto@cpapregioncentro.com')
             ->send(new ContactMessageMail($message));
 
         return response()->json([
