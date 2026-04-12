@@ -277,3 +277,6 @@ Route::resource('biblioteca', \App\Http\Controllers\Admin\BibliotecaController::
 ]);
 Route::post('/biblioteca/bulk-toggle', [\App\Http\Controllers\Admin\BibliotecaController::class, 'bulkToggle'])
     ->name('admin.biblioteca.bulk-toggle');
+
+Route::get('/biblioteca/{biblioteca}/descargar-pdf', [\App\Http\Controllers\Admin\BibliotecaController::class, 'descargarPdf'])
+    ->name('admin.biblioteca.descargar-pdf');
