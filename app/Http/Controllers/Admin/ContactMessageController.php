@@ -54,19 +54,31 @@ class ContactMessageController extends Controller
     public function responder(Request $request, ContactMessage $message)
     {
         $request->validate([
-            'respuesta' => 'required',
-            'archivo' => 'nullable|file|max:2048'
+            'respuesta' => 'required|string',
+            'archivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
         ]);
 
         $filePath = null;
 
         if ($request->hasFile('archivo')) {
-            $file = $request->file('archivo');
-            $dir = public_path('respuestas');
-            if (!file_exists($dir)) mkdir($dir, 0755, true);
-            $nombre = uniqid('respuesta_') . '.' . $file->getClientOriginalExtension();
-            $file->move($dir, $nombre);
-            $filePath = 'public/respuestas/' . $nombre;
+            try {
+                $file = $request->file('archivo');
+                $dir = public_path('respuestas');
+                
+                // Crear directorio si no existe
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                
+                $nombre = uniqid('respuesta_') . '.' . $file->getClientOriginalExtension();
+                $file->move($dir, $nombre);
+                $filePath = 'public/respuestas/' . $nombre;
+                
+                \Log::info('Archivo guardado correctamente: ' . $filePath);
+            } catch (\Exception $e) {
+                \Log::error('Error al guardar archivo adjunto: ' . $e->getMessage());
+                return back()->withErrors('Error al guardar el archivo adjunto');
+            }
         }
 
         $message->update([
@@ -74,8 +86,19 @@ class ContactMessageController extends Controller
             'archivo_respuesta' => $filePath
         ]);
 
-        Mail::to($message->email)
-            ->send(new RespuestaMensajeMail($message));
+        try {
+            \Mail::to($message->email)
+                ->send(new RespuestaMensajeMail(
+                    nombre: $message->nombre,
+                    respuesta: $message->respuesta,
+                    archivo_respuesta: $message->archivo_respuesta
+                ));
+            
+            \Log::info('Email enviado a: ' . $message->email . ' con archivo: ' . ($filePath ?? 'sin archivo'));
+        } catch (\Exception $e) {
+            \Log::error('Error al enviar email: ' . $e->getMessage());
+            return back()->with('warning', 'Respuesta guardada pero error al enviar email: ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Respuesta enviada correctamente.');
     }
