@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\NormativaDocumento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class NormativaController extends Controller
 {
@@ -54,7 +53,7 @@ class NormativaController extends Controller
             'titulo'      => 'required|string|max:200',
             'descripcion' => 'nullable|string|max:500',
             'icono'       => 'required|string|max:50',
-            'archivo_pdf' => 'nullable|file|mimes:pdf|max:10240',
+            'archivo_pdf' => 'nullable|file|mimes:pdf|max:204800',
             'orden'       => 'nullable|integer|min:0',
         ]);
 
@@ -63,8 +62,12 @@ class NormativaController extends Controller
 
         if ($request->hasFile('archivo_pdf')) {
             $file = $request->file('archivo_pdf');
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('normativa_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
             $data['archivo_nombre'] = $file->getClientOriginalName();
-            $data['archivo_pdf'] = $file->store('normativa', 'public');
+            $data['archivo_pdf'] = 'public/pdf/' . $nombre;
         }
 
         NormativaDocumento::create($data);
@@ -85,7 +88,7 @@ class NormativaController extends Controller
             'titulo'      => 'required|string|max:200',
             'descripcion' => 'nullable|string|max:500',
             'icono'       => 'required|string|max:50',
-            'archivo_pdf' => 'nullable|file|mimes:pdf|max:10240',
+            'archivo_pdf' => 'nullable|file|mimes:pdf|max:204800',
             'orden'       => 'nullable|integer|min:0',
         ]);
 
@@ -93,18 +96,16 @@ class NormativaController extends Controller
         $data['orden']  = $data['orden'] ?? $normativa->orden;
 
         if ($request->hasFile('archivo_pdf')) {
-            if ($normativa->archivo_pdf) {
-                Storage::disk('public')->delete($normativa->archivo_pdf);
-            }
             $file = $request->file('archivo_pdf');
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('normativa_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
             $data['archivo_nombre'] = $file->getClientOriginalName();
-            $data['archivo_pdf'] = $file->store('normativa', 'public');
+            $data['archivo_pdf'] = 'public/pdf/' . $nombre;
         }
 
         if ($request->boolean('eliminar_pdf') && !$request->hasFile('archivo_pdf')) {
-            if ($normativa->archivo_pdf) {
-                Storage::disk('public')->delete($normativa->archivo_pdf);
-            }
             $data['archivo_pdf'] = null;
             $data['archivo_nombre'] = null;
         }
@@ -117,10 +118,6 @@ class NormativaController extends Controller
 
     public function destroy(NormativaDocumento $normativa)
     {
-        if ($normativa->archivo_pdf) {
-            Storage::disk('public')->delete($normativa->archivo_pdf);
-        }
-
         $normativa->delete();
 
         return redirect()->route('admin.normativa.index')
@@ -167,12 +164,29 @@ class NormativaController extends Controller
      */
     public function descargar(NormativaDocumento $documento)
     {
-        if (!$documento->archivo_pdf || !Storage::disk('public')->exists($documento->archivo_pdf)) {
+        if (!$documento->archivo_pdf) {
             abort(404, 'El documento no está disponible.');
         }
 
         $nombre = $documento->archivo_nombre ?? $documento->titulo . '.pdf';
 
-        return Storage::disk('public')->download($documento->archivo_pdf, $nombre);
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $documento->archivo_pdf;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+        $pdfPath = public_path($ruta);
+        if (file_exists($pdfPath)) {
+            return response()->download($pdfPath, $nombre, [
+                'Content-Type' => 'application/pdf'
+            ]);
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($documento->archivo_pdf, 'http')) {
+            return redirect($documento->archivo_pdf);
+        }
+
+        abort(404, 'El archivo no se encontró.');
     }
 }

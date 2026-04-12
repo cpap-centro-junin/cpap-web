@@ -54,14 +54,37 @@ class ContactMessageController extends Controller
     public function responder(Request $request, ContactMessage $message)
     {
         $request->validate([
-            'respuesta' => 'required',
-            'archivo' => 'nullable|file|max:2048'
+            'respuesta' => 'required|string',
+            'archivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
         ]);
+
+        // Verificar que el mensaje tiene email válido
+        if (!$message->email || !filter_var($message->email, FILTER_VALIDATE_EMAIL)) {
+            \Log::error('ContactMessage sin email válido. ID: ' . $message->id . ', Email: ' . ($message->email ?? 'null'));
+            return back()->withErrors('Error: El mensaje no tiene un correo electrónico válido guardado.');
+        }
 
         $filePath = null;
 
         if ($request->hasFile('archivo')) {
-            $filePath = $request->file('archivo')->store('respuestas', 'public');
+            try {
+                $file = $request->file('archivo');
+                $dir = public_path('respuestas');
+                
+                // Crear directorio si no existe
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                
+                $nombre = uniqid('respuesta_') . '.' . $file->getClientOriginalExtension();
+                $file->move($dir, $nombre);
+                $filePath = 'public/respuestas/' . $nombre;
+                
+                \Log::info('Archivo guardado correctamente: ' . $filePath);
+            } catch (\Exception $e) {
+                \Log::error('Error al guardar archivo adjunto: ' . $e->getMessage());
+                return back()->withErrors('Error al guardar el archivo adjunto');
+            }
         }
 
         $message->update([
@@ -69,10 +92,28 @@ class ContactMessageController extends Controller
             'archivo_respuesta' => $filePath
         ]);
 
-        Mail::to($message->email)
-            ->send(new RespuestaMensajeMail($message));
+        try {
+            $destinoEmail = $message->email;
+            \Log::info('=== ENVIANDO EMAIL DE RESPUESTA ===');
+            \Log::info('Destinatario: ' . $destinoEmail);
+            \Log::info('Nombre del contacto: ' . $message->nombre);
+            \Log::info('Archivo adjunto: ' . ($filePath ?? 'ninguno'));
+            
+            \Mail::to($destinoEmail)
+                ->send(new RespuestaMensajeMail(
+                    nombre: $message->nombre,
+                    respuesta: $message->respuesta,
+                    archivo_respuesta: $message->archivo_respuesta
+                ));
+            
+            \Log::info('✓ Email enviado correctamente a: ' . $destinoEmail);
+        } catch (\Exception $e) {
+            \Log::error('✗ Error al enviar email: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->with('warning', 'Respuesta guardada pero error al enviar email: ' . $e->getMessage());
+        }
 
-        return back()->with('success', 'Respuesta enviada correctamente.');
+        return back()->with('success', 'Respuesta enviada correctamente a ' . $message->email. '.');
     }
     public function destroy(ContactMessage $message)
     {

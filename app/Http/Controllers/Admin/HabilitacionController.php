@@ -9,7 +9,6 @@ use App\Services\QRCodeService;
 use App\Services\PDFService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class HabilitacionController extends Controller
 {
@@ -46,7 +45,7 @@ class HabilitacionController extends Controller
         ]);
 
         $qrPath = null;
-        $rutaTempRelativa = null;
+        $pdfTempPath = null;
         $pdfModificadoTempPath = null;
 
         try {
@@ -54,27 +53,33 @@ class HabilitacionController extends Controller
             $codigoVerificacion = $this->qrService->generarCodigoUnicoGarantizado();
             $qrPath = $this->qrService->generarQR($codigoVerificacion, $colegiado->nombre_completo);
 
-            // 2. Guardar PDF temporalmente
+            // 2. Guardar PDF temporalmente en temp del sistema
             $documento = $request->file('documento');
-            $rutaTempRelativa = 'habilitaciones/temp/' . $codigoVerificacion . '_original.pdf';
-            Storage::put($rutaTempRelativa, file_get_contents($documento));
+            $pdfTempPath = tempnam(sys_get_temp_dir(), 'hab_');
+            file_put_contents($pdfTempPath, file_get_contents($documento));
 
             // 3. Embeber QR y código dentro del PDF
             $urlVerificacion = url("/v/{$codigoVerificacion}");
             $pdfModificadoTempPath = $this->pdfService->embederQREnPDFTemporal(
-                Storage::path($rutaTempRelativa),
+                $pdfTempPath,
                 $qrPath,
                 $codigoVerificacion,
                 $urlVerificacion
             );
 
-            // 4. Guardar PDF definitivo
+            // 4. Guardar PDF definitivo en public/pdf/
             $nombreFinal = $codigoVerificacion . '.pdf';
-            $documentoPath = 'habilitaciones/' . $nombreFinal;
-            Storage::put($documentoPath, file_get_contents($pdfModificadoTempPath));
+            $pdfDir = public_path('pdf');
+            if (!file_exists($pdfDir)) {
+                mkdir($pdfDir, 0755, true);
+            }
+            $pdfPath = $pdfDir . '/' . $nombreFinal;
+            file_put_contents($pdfPath, file_get_contents($pdfModificadoTempPath));
 
             // 5. Limpiar temporales
-            Storage::delete($rutaTempRelativa);
+            if (file_exists($pdfTempPath)) {
+                @unlink($pdfTempPath);
+            }
             if (file_exists($pdfModificadoTempPath)) {
                 @unlink($pdfModificadoTempPath);
             }
@@ -82,7 +87,8 @@ class HabilitacionController extends Controller
             // 6. Eliminar habilitación anterior si existe (reemplazo)
             $this->eliminarHabilitacionAnterior($colegiado);
 
-            // 7. Crear nueva habilitación en BD
+            // 7. Crear nueva habilitación en BD (guardar ruta relativa)
+            $documentoPath = 'public/pdf/' . $nombreFinal;
             $habilitacion = Habilitacion::create([
                 'colegiado_id'       => $colegiado->id,
                 'codigo_verificacion' => $codigoVerificacion,
@@ -105,8 +111,8 @@ class HabilitacionController extends Controller
             if ($qrPath) {
                 $this->qrService->eliminarQR($qrPath);
             }
-            if ($rutaTempRelativa) {
-                Storage::delete($rutaTempRelativa);
+            if ($pdfTempPath && file_exists($pdfTempPath)) {
+                @unlink($pdfTempPath);
             }
             if ($pdfModificadoTempPath && file_exists($pdfModificadoTempPath)) {
                 @unlink($pdfModificadoTempPath);
@@ -126,13 +132,21 @@ class HabilitacionController extends Controller
     {
         $habilitacion = Habilitacion::where('codigo_verificacion', $codigo)->firstOrFail();
 
-        if (!Storage::exists($habilitacion->documento_path)) {
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $habilitacion->documento_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
+        $pdfPath = public_path($ruta);
+        
+        if (!file_exists($pdfPath)) {
             abort(404, 'Documento no encontrado');
         }
 
         $nombre = 'Habilitacion_' . $habilitacion->colegiado->codigo_cpap . '.pdf';
 
-        return response()->file(Storage::disk('public')->path($habilitacion->documento_path), [
+        return response()->file($pdfPath, [
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $nombre . '"',
         ]);
@@ -143,7 +157,13 @@ class HabilitacionController extends Controller
      */
     public function descargarQR(Habilitacion $habilitacion)
     {
-        $qrPathCompleto = public_path($habilitacion->qr_path);
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $habilitacion->qr_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
+        $qrPathCompleto = public_path($ruta);
 
         if (!file_exists($qrPathCompleto)) {
             abort(404, 'QR Code no encontrado');
@@ -194,9 +214,10 @@ class HabilitacionController extends Controller
     {
         $colegiado = $habilitacion->colegiado;
 
-        // Eliminar PDF del storage
-        if (Storage::exists($habilitacion->documento_path)) {
-            Storage::delete($habilitacion->documento_path);
+        // Eliminar PDF del public/pdf/
+        $pdfPath = public_path($habilitacion->documento_path);
+        if (file_exists($pdfPath)) {
+            @unlink($pdfPath);
         }
 
         // Eliminar QR de public
@@ -226,8 +247,9 @@ class HabilitacionController extends Controller
         }
 
         // Eliminar PDF
-        if (Storage::exists($anterior->documento_path)) {
-            Storage::delete($anterior->documento_path);
+        $pdfPath = public_path($anterior->documento_path);
+        if (file_exists($pdfPath)) {
+            @unlink($pdfPath);
         }
 
         // Eliminar QR

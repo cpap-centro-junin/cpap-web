@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GaleriaImagen;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class GaleriaController extends Controller
 {
@@ -70,14 +69,16 @@ class GaleriaController extends Controller
         $data = $request->validate([
             'titulo'      => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:1000',
-            'imagen'      => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'imagen'      => 'required|image|mimes:jpg,jpeg,png,webp|max:20480',
             'categoria'   => 'nullable|string|max:100',
             'fecha'       => 'nullable|date',
             'destacado'   => 'nullable|boolean',
             'activo'      => 'nullable|boolean',
         ]);
 
-        $data['imagen']    = $request->file('imagen')->store('galeria', 'public');
+        $file = $request->file('imagen');
+        $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
+        $data['imagen'] = 'public/images/galeria/' . basename($filename);
         $data['destacado'] = $request->boolean('destacado');
         $data['activo']    = $request->boolean('activo', true);
         $data['orden']     = GaleriaImagen::max('orden') + 1;
@@ -95,19 +96,20 @@ class GaleriaController extends Controller
     {
         $request->validate([
             'imagenes'   => 'required|array|min:1|max:20',
-            'imagenes.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            'imagenes.*' => 'image|mimes:jpg,jpeg,png,webp|max:20480',
         ]);
 
         $orden = GaleriaImagen::max('orden') + 1;
         $ids   = [];
 
         foreach ($request->file('imagenes') as $file) {
-            $path   = $file->store('galeria', 'public');
+            $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
+                $imagenPath = 'public/images/galeria/' . basename($filename);
             $nombre = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
             $img = GaleriaImagen::create([
                 'titulo'    => str_replace(['-', '_'], ' ', $nombre),
-                'imagen'    => $path,
+                'imagen'    => $imagenPath,
                 'activo'    => true,
                 'destacado' => false,
                 'orden'     => $orden++,
@@ -194,7 +196,7 @@ class GaleriaController extends Controller
         $data = $request->validate([
             'titulo'      => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:1000',
-            'imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             'categoria'   => 'nullable|string|max:100',
             'fecha'       => 'nullable|date',
             'destacado'   => 'nullable|boolean',
@@ -202,11 +204,9 @@ class GaleriaController extends Controller
         ]);
 
         if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior
-            if ($galeria->imagen && Storage::disk('public')->exists($galeria->imagen)) {
-                Storage::disk('public')->delete($galeria->imagen);
-            }
-            $data['imagen'] = $request->file('imagen')->store('galeria', 'public');
+            $file = $request->file('imagen');
+            $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
+            $data['imagen'] = 'public/images/galeria/' . basename($filename);
         } else {
             unset($data['imagen']);
         }
@@ -251,10 +251,6 @@ class GaleriaController extends Controller
      */
     public function destroy(GaleriaImagen $galeria)
     {
-        if ($galeria->imagen && Storage::disk('public')->exists($galeria->imagen)) {
-            Storage::disk('public')->delete($galeria->imagen);
-        }
-
         $galeria->delete();
 
         return redirect()->route('admin.galeria.index')

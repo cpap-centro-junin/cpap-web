@@ -57,9 +57,14 @@
             {!! nl2br(e($message->respuesta)) !!}
         </div>
         @if($message->archivo_respuesta)
-        <a href="{{ $message->archivo_respuesta_url }}" target="_blank" class="msg-file-link">
-            <i class="fas fa-paperclip"></i> Ver archivo adjunto
-        </a>
+        <div class="msg-file-actions">
+            <a href="{{ $message->archivoRespuestaUrl }}" target="_blank" class="msg-file-link">
+                <i class="fas fa-eye"></i> Ver archivo adjunto
+            </a>
+            <a href="{{ route('admin.mensajes.descargar-respuesta', $message) }}" class="msg-file-link msg-file-link--download">
+                <i class="fas fa-download"></i> Descargar
+            </a>
+        </div>
         @endif
     </div>
     @else

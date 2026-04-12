@@ -10,7 +10,6 @@ use App\Services\PDFService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class ColegiadoController extends Controller
 {
@@ -33,19 +32,19 @@ class ColegiadoController extends Controller
             'email'              => "nullable|email|max:100|unique:colegiados,email,{$excludeId}",
             'telefono'           => 'nullable|string|max:15',
             'fecha_nacimiento'   => 'nullable|date',
-            'foto'               => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto'               => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
             'especialidad'       => 'nullable|string|max:150',
             'orientacion'        => 'nullable|string|max:150',
             'universidad'        => 'nullable|string|max:200',
             'anio_graduacion'    => 'nullable|integer|min:1950|max:' . date('Y'),
             'descripcion'        => 'nullable|string',
-            'cv'                 => 'nullable|file|mimes:pdf|max:5120',
+            'cv'                 => 'nullable|file|mimes:pdf|max:204800',
             'estado'             => 'required|in:activo,inactivo',
             'fecha_colegiatura'  => 'required|date',
         ];
 
         if ($forCreate) {
-            $rules['documento'] = 'required|file|mimes:pdf|max:10240';
+            $rules['documento'] = 'required|file|mimes:pdf|max:204800';
         }
 
         return $rules;
@@ -78,32 +77,43 @@ class ColegiadoController extends Controller
      */
     private function crearHabilitacion(Colegiado $colegiado, $archivo): void
     {
-        $qrPath               = null;
-        $rutaTempRelativa     = null;
+        $qrPath = null;
+        $pdfTempPath = null;
         $pdfModificadoTempPath = null;
 
         $codigoVerificacion = $this->qrService->generarCodigoUnicoGarantizado();
-        $qrPath             = $this->qrService->generarQR($codigoVerificacion, $colegiado->nombre_completo);
+        $qrPath = $this->qrService->generarQR($codigoVerificacion, $colegiado->nombre_completo);
 
-        $rutaTempRelativa = 'habilitaciones/temp/' . $codigoVerificacion . '_original.pdf';
-        Storage::disk('public')->put($rutaTempRelativa, file_get_contents($archivo));
+        // Guardar PDF temporalmente
+        $pdfTempPath = tempnam(sys_get_temp_dir(), 'hab_');
+        file_put_contents($pdfTempPath, file_get_contents($archivo));
 
-        $urlVerificacion       = url("/v/{$codigoVerificacion}");
+        $urlVerificacion = url("/v/{$codigoVerificacion}");
         $pdfModificadoTempPath = $this->pdfService->embederQREnPDFTemporal(
-            Storage::disk('public')->path($rutaTempRelativa),
+            $pdfTempPath,
             $qrPath,
             $codigoVerificacion,
             $urlVerificacion
         );
 
-        $documentoPath = 'habilitaciones/' . $codigoVerificacion . '.pdf';
-        Storage::disk('public')->put($documentoPath, file_get_contents($pdfModificadoTempPath));
+        // Guardar PDF definitivo en public/pdf/
+        $nombreFinal = $codigoVerificacion . '.pdf';
+        $pdfDir = public_path('pdf');
+        if (!file_exists($pdfDir)) {
+            mkdir($pdfDir, 0755, true);
+        }
+        $pdfPath = $pdfDir . '/' . $nombreFinal;
+        file_put_contents($pdfPath, file_get_contents($pdfModificadoTempPath));
 
-        Storage::disk('public')->delete($rutaTempRelativa);
+        // Limpiar temporales
+        if (file_exists($pdfTempPath)) {
+            @unlink($pdfTempPath);
+        }
         if (file_exists($pdfModificadoTempPath)) {
             @unlink($pdfModificadoTempPath);
         }
 
+        $documentoPath = 'public/pdf/' . $nombreFinal;
         Habilitacion::create([
             'colegiado_id'        => $colegiado->id,
             'codigo_verificacion' => $codigoVerificacion,
@@ -182,21 +192,27 @@ class ColegiadoController extends Controller
         $validated = $request->validate($this->validationRules(0, true));
         $validated = array_merge($validated, $this->resolveVisibilityFields($request));
 
-        // Procesar foto y CV antes de la transacción (son operaciones de disco simples)
+        // Procesar foto
         if ($request->hasFile('foto')) {
-            $foto       = $request->file('foto');
-            $ext        = strtolower($foto->getClientOriginalExtension());
-            $nombreFoto = $validated['dni'] . '.' . $ext;
-
-            Storage::disk('public')->putFileAs('colegiados', $foto, $nombreFoto);
-            $ruta = Storage::disk('public')->path('colegiados/' . $nombreFoto);
-
-            // Redimensionar si excede 800×800 (GD)
+            $foto = $request->file('foto');
+            $ext = strtolower($foto->getClientOriginalExtension());
+            
+            // Crear directorio si no existe
+            $fotoDir = public_path('images/colegiados');
+            if (!file_exists($fotoDir)) {
+                mkdir($fotoDir, 0755, true);
+            }
+            
+            // Redimensionar si excede 800×800
+            $tempPath = $foto->getRealPath();
             $src = match($ext) {
-                'jpg', 'jpeg' => @imagecreatefromjpeg($ruta),
-                'png'         => @imagecreatefrompng($ruta),
+                'jpg', 'jpeg' => @imagecreatefromjpeg($tempPath),
+                'png'         => @imagecreatefrompng($tempPath),
                 default       => null,
             };
+            
+            $contenidoFoto = file_get_contents($tempPath);
+            
             if ($src) {
                 $w = imagesx($src); $h = imagesy($src);
                 if ($w > 800 || $h > 800) {
@@ -205,20 +221,38 @@ class ColegiadoController extends Controller
                     $dst = imagecreatetruecolor($nw, $nh);
                     if ($ext === 'png') { imagealphablending($dst, false); imagesavealpha($dst, true); }
                     imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
-                    $ext === 'png' ? imagepng($dst, $ruta) : imagejpeg($dst, $ruta, 85);
+                    
+                    // Guardar en temporal
+                    $tempResized = tempnam(sys_get_temp_dir(), 'foto');
+                    $ext === 'png' ? imagepng($dst, $tempResized) : imagejpeg($dst, $tempResized, 85);
+                    $contenidoFoto = file_get_contents($tempResized);
+                    unlink($tempResized);
+                    
                     imagedestroy($dst);
                 }
                 imagedestroy($src);
             }
-
-            $validated['foto'] = 'colegiados/' . $nombreFoto;
+            
+            // Guardar foto en public/images/colegiados/
+            $nombreFoto = uniqid('foto_') . '.' . $ext;
+            file_put_contents($fotoDir . '/' . $nombreFoto, $contenidoFoto);
+            $validated['foto'] = 'public/images/colegiados/' . $nombreFoto;
         }
 
+        // Procesar CV
         if ($request->hasFile('cv')) {
-            $cv       = $request->file('cv');
-            $nombreCV = $validated['dni'] . '_cv.pdf';
-            $cv->storeAs('colegiados', $nombreCV, 'public');
-            $validated['cv_path'] = 'colegiados/' . $nombreCV;
+            $cv = $request->file('cv');
+            
+            // Crear directorio si no existe
+            $cvDir = public_path('pdf/colegiados');
+            if (!file_exists($cvDir)) {
+                mkdir($cvDir, 0755, true);
+            }
+            
+            // Guardar CV en public/pdf/colegiados/
+            $nombreCV = uniqid('cv_') . '.pdf';
+            $cv->move($cvDir, $nombreCV);
+            $validated['cv_path'] = 'pdf/colegiados/' . $nombreCV;
         }
 
         $colegiado = null;
@@ -229,14 +263,6 @@ class ColegiadoController extends Controller
                 $this->crearHabilitacion($colegiado, $request->file('documento'));
             });
         } catch (\Exception $e) {
-            // Limpiar archivos subidos si la transacción falló
-            if (isset($validated['foto']) && Storage::disk('public')->exists($validated['foto'])) {
-                Storage::disk('public')->delete($validated['foto']);
-            }
-            if (isset($validated['cv_path']) && Storage::exists($validated['cv_path'])) {
-                Storage::delete($validated['cv_path']);
-            }
-
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['documento' => 'Error al procesar el documento de habilitación: ' . $e->getMessage()]);
@@ -274,23 +300,39 @@ class ColegiadoController extends Controller
         $validated = $request->validate($this->validationRules($colegiado->id));
         $validated = array_merge($validated, $this->resolveVisibilityFields($request));
 
+        // Procesar foto
         if ($request->hasFile('foto')) {
-            if ($colegiado->foto && Storage::disk('public')->exists($colegiado->foto)) {
-                Storage::disk('public')->delete($colegiado->foto);
+            $foto = $request->file('foto');
+            $ext = strtolower($foto->getClientOriginalExtension());
+            
+            // Eliminar foto anterior si existe
+            if ($colegiado->foto && !str_starts_with($colegiado->foto, 'data:')) {
+                $rutaFoto = $colegiado->foto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
+                }
+                $fotoAntPath = public_path($rutaFoto);
+                if (file_exists($fotoAntPath)) {
+                    @unlink($fotoAntPath);
+                }
             }
-            $foto       = $request->file('foto');
-            $ext        = strtolower($foto->getClientOriginalExtension());
-            $nombreFoto = $validated['dni'] . '.' . $ext;
-
-            Storage::disk('public')->putFileAs('colegiados', $foto, $nombreFoto);
-            $ruta = Storage::disk('public')->path('colegiados/' . $nombreFoto);
-
-            // Redimensionar si excede 800×800 (GD)
+            
+            // Crear directorio si no existe
+            $fotoDir = public_path('images/colegiados');
+            if (!file_exists($fotoDir)) {
+                mkdir($fotoDir, 0755, true);
+            }
+            
+            // Redimensionar si excede 800×800
+            $tempPath = $foto->getRealPath();
             $src = match($ext) {
-                'jpg', 'jpeg' => @imagecreatefromjpeg($ruta),
-                'png'         => @imagecreatefrompng($ruta),
+                'jpg', 'jpeg' => @imagecreatefromjpeg($tempPath),
+                'png'         => @imagecreatefrompng($tempPath),
                 default       => null,
             };
+            
+            $contenidoFoto = file_get_contents($tempPath);
+            
             if ($src) {
                 $w = imagesx($src); $h = imagesy($src);
                 if ($w > 800 || $h > 800) {
@@ -299,23 +341,50 @@ class ColegiadoController extends Controller
                     $dst = imagecreatetruecolor($nw, $nh);
                     if ($ext === 'png') { imagealphablending($dst, false); imagesavealpha($dst, true); }
                     imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
-                    $ext === 'png' ? imagepng($dst, $ruta) : imagejpeg($dst, $ruta, 85);
+                    
+                    // Guardar en temporal
+                    $tempResized = tempnam(sys_get_temp_dir(), 'foto');
+                    $ext === 'png' ? imagepng($dst, $tempResized) : imagejpeg($dst, $tempResized, 85);
+                    $contenidoFoto = file_get_contents($tempResized);
+                    unlink($tempResized);
+                    
                     imagedestroy($dst);
                 }
                 imagedestroy($src);
             }
-
-            $validated['foto'] = 'colegiados/' . $nombreFoto;
+            
+            // Guardar foto en public/images/colegiados/
+            $nombreFoto = uniqid('foto_') . '.' . $ext;
+            file_put_contents($fotoDir . '/' . $nombreFoto, $contenidoFoto);
+            $validated['foto'] = 'public/images/colegiados/' . $nombreFoto;
         }
 
+        // Procesar CV
         if ($request->hasFile('cv')) {
-            if ($colegiado->cv_path && Storage::disk('public')->exists($colegiado->cv_path)) {
-                Storage::disk('public')->delete($colegiado->cv_path);
+            $cv = $request->file('cv');
+            
+            // Eliminar CV anterior si existe
+            if ($colegiado->cv_path && !str_starts_with($colegiado->cv_path, 'data:')) {
+                $rutaCV = $colegiado->cv_path;
+                if (str_starts_with($rutaCV, 'public/')) {
+                    $rutaCV = substr($rutaCV, 7); // Remover "public/"
+                }
+                $cvAntPath = public_path($rutaCV);
+                if (file_exists($cvAntPath)) {
+                    @unlink($cvAntPath);
+                }
             }
-            $cv       = $request->file('cv');
-            $nombreCV = $validated['dni'] . '_cv.pdf';
-            $cv->storeAs('colegiados', $nombreCV, 'public');
-            $validated['cv_path'] = 'colegiados/' . $nombreCV;
+            
+            // Crear directorio si no existe
+            $cvDir = public_path('pdf/colegiados');
+            if (!file_exists($cvDir)) {
+                mkdir($cvDir, 0755, true);
+            }
+            
+            // Guardar CV en public/pdf/colegiados/
+            $nombreCV = uniqid('cv_') . '.pdf';
+            $cv->move($cvDir, $nombreCV);
+            $validated['cv_path'] = 'pdf/colegiados/' . $nombreCV;
         }
 
         $colegiado->update($validated);
@@ -332,13 +401,6 @@ class ColegiadoController extends Controller
      */
     public function destroy(Colegiado $colegiado)
     {
-        if ($colegiado->foto && Storage::disk('public')->exists($colegiado->foto)) {
-            Storage::disk('public')->delete($colegiado->foto);
-        }
-        if ($colegiado->cv_path && Storage::exists($colegiado->cv_path)) {
-            Storage::delete($colegiado->cv_path);
-        }
-
         $colegiado->delete();
 
         return redirect()->route('admin.colegiados.index')
@@ -350,14 +412,31 @@ class ColegiadoController extends Controller
      */
     public function descargarCV(Colegiado $colegiado)
     {
-        if (!$colegiado->cv_path || !Storage::exists($colegiado->cv_path)) {
+        if (!$colegiado->cv_path) {
             abort(404, 'CV no disponible');
         }
 
-        return response()->file(Storage::disk('public')->path($colegiado->cv_path), [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="CV_' . $colegiado->codigo_cpap . '.pdf"',
-        ]);
+        $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
+
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $colegiado->cv_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+        $cvPath = public_path($ruta);
+        if (file_exists($cvPath)) {
+            return response()->file($cvPath, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        }
+
+        // Si es URL externa
+        if (str_starts_with($colegiado->cv_path, 'http')) {
+            return redirect($colegiado->cv_path);
+        }
+
+        abort(404, 'CV no disponible');
     }
 
     /**

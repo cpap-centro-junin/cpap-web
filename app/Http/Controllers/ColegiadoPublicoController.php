@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Colegiado;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
 
 class ColegiadoPublicoController extends Controller
 {
@@ -83,13 +83,31 @@ class ColegiadoPublicoController extends Controller
             abort(404);
         }
 
-        if (!$colegiado->cv_path || !Storage::exists($colegiado->cv_path)) {
+        if (!$colegiado->cv_path) {
             abort(404, 'CV no disponible');
         }
 
-        return response()->file(Storage::path($colegiado->cv_path), [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="CV_' . $colegiado->codigo_cpap . '.pdf"',
-        ]);
+        $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
+
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $colegiado->cv_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+        // Si es ruta en public/ (archivos nuevos)
+        $cvPath = public_path($ruta);
+        if (file_exists($cvPath)) {
+            return response()->file($cvPath, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($colegiado->cv_path, 'http')) {
+            return redirect($colegiado->cv_path);
+        }
+
+        abort(404, 'CV no disponible');
     }
 }

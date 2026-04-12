@@ -55,8 +55,8 @@ class ConfiguracionInicio extends Model
             return $this->hero_imagen;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->hero_imagen);
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($this->hero_imagen);
     }
 
     /* ── Métodos Singleton ───────────────────────────────── */

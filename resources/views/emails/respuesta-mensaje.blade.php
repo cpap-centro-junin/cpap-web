@@ -35,12 +35,12 @@
 Respuesta a tu mensaje
 </h3>
 
-<p>Estimado/a <strong>{{ $messageData->nombre }}</strong>,</p>
+<p>Estimado/a <strong>{{ $nombre }}</strong>,</p>
 
 <p>Hemos recibido tu mensaje y te respondemos a continuación:</p>
 
 <div style="margin-top:20px; padding:15px; background:#f9f9f9; border-left:4px solid #7b1e3a; border-radius:8px;">
-    {{ $messageData->respuesta }}
+    {{ $respuesta }}
 </div>
 
 <p style="margin-top:25px;">

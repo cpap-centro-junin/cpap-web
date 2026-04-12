@@ -69,6 +69,42 @@ class Habilitacion extends Model
     }
 
     /**
+     * Accessor: URL del documento de habilitación
+     */
+    public function getDocumentoUrlAttribute(): ?string
+    {
+        if (!$this->documento_path) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->documento_path, 'http')) {
+            return $this->documento_path;
+        }
+
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($this->documento_path);
+    }
+
+    /**
+     * Accessor: URL del código QR
+     */
+    public function getQrUrlAttribute(): ?string
+    {
+        if (!$this->qr_path) {
+            return null;
+        }
+
+        // URL externa
+        if (str_starts_with($this->qr_path, 'http')) {
+            return $this->qr_path;
+        }
+
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($this->qr_path);
+    }
+
+    /**
      * Accessor: URL de verificación pública
      */
     public function getUrlVerificacionAttribute(): string

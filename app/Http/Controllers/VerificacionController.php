@@ -65,14 +65,19 @@ class VerificacionController extends Controller
             ->where('activo', true)
             ->firstOrFail();
 
-        // Verificar que el documento existe
-        if (!\Storage::exists($habilitacion->documento_path)) {
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $habilitacion->documento_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+        $pdfPath = public_path($ruta);
+        if (!file_exists($pdfPath)) {
             abort(404, 'Documento no encontrado');
         }
 
         $nombre = 'Habilitacion_' . $habilitacion->colegiado->codigo_cpap . '.pdf';
 
-        return response()->file(\Storage::path($habilitacion->documento_path), [
+        return response()->file($pdfPath, [
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $nombre . '"',
         ]);

@@ -67,9 +67,7 @@ return [
     | Symbolic Links
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the symbolic links that will be created when the
-    | `storage:link` Artisan command is executed. The array keys should be
-    | the locations of the links and the values should be their targets.
+    | Symlinks disabled - all files are stored directly in public/
     |
     | NOTE: Symlinks are disabled in this configuration.
     | File storage uses public_path('storage') directly (see 'public' disk config).

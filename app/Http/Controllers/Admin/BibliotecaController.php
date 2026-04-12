@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RecursoBiblioteca;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class BibliotecaController extends Controller
 {
@@ -85,7 +84,7 @@ class BibliotecaController extends Controller
             'idioma'              => 'nullable|string|max:80',
             'enlace_externo'      => 'nullable|url|max:500',
             'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',     // 200 MB
-            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120', // 5 MB
+            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480', // 20 MB
             'copyright_titular'   => 'nullable|string|max:255',
             'copyright_anio'      => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'licencia_tipo'       => 'required|in:copyright,creative_commons_by,cc_by_sa,cc_by_nc,cc_by_nc_sa,cc_by_nd,cc_by_nc_nd,dominio_publico,licencia_cpap',
@@ -98,14 +97,22 @@ class BibliotecaController extends Controller
 
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
-            $data['archivo_pdf'] = $request->file('archivo_pdf')
-                ->store('biblioteca/pdf', 'public');
+            $file = $request->file('archivo_pdf');
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['archivo_pdf'] = 'public/pdf/' . $nombre;
         }
 
         // Imagen de portada
         if ($request->hasFile('imagen_portada')) {
-            $data['imagen_portada'] = $request->file('imagen_portada')
-                ->store('biblioteca/portadas', 'public');
+            $file = $request->file('imagen_portada');
+            $dir = public_path('images/biblioteca');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('portada_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['imagen_portada'] = 'public/images/biblioteca/' . $nombre;
         }
 
         // Booleans
@@ -154,8 +161,8 @@ class BibliotecaController extends Controller
             'paginas'             => 'nullable|integer|min:1',
             'idioma'              => 'nullable|string|max:80',
             'enlace_externo'      => 'nullable|url|max:500',
-            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',      // 200 MB,      // 200 MB
-            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'archivo_pdf'         => 'nullable|file|mimes:pdf|max:204800',      // 200 MB
+            'imagen_portada'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             'copyright_titular'   => 'nullable|string|max:255',
             'copyright_anio'      => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'licencia_tipo'       => 'required|in:copyright,creative_commons_by,cc_by_sa,cc_by_nc,cc_by_nc_sa,cc_by_nd,cc_by_nc_nd,dominio_publico,licencia_cpap',
@@ -168,21 +175,22 @@ class BibliotecaController extends Controller
 
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
-            // Eliminar anterior
-            if ($biblioteca->archivo_pdf) {
-                Storage::disk('public')->delete($biblioteca->archivo_pdf);
-            }
-            $data['archivo_pdf'] = $request->file('archivo_pdf')
-                ->store('biblioteca/pdf', 'public');
+            $file = $request->file('archivo_pdf');
+            $dir = public_path('pdf');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['archivo_pdf'] = 'public/pdf/' . $nombre;
         }
 
         // Imagen de portada
         if ($request->hasFile('imagen_portada')) {
-            if ($biblioteca->imagen_portada) {
-                Storage::disk('public')->delete($biblioteca->imagen_portada);
-            }
-            $data['imagen_portada'] = $request->file('imagen_portada')
-                ->store('biblioteca/portadas', 'public');
+            $file = $request->file('imagen_portada');
+            $dir = public_path('images/biblioteca');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('portada_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $data['imagen_portada'] = 'public/images/biblioteca/' . $nombre;
         }
 
         // Booleans
@@ -202,14 +210,6 @@ class BibliotecaController extends Controller
      * ----------------------------------------------------- */
     public function destroy(RecursoBiblioteca $biblioteca)
     {
-        // Eliminar archivos
-        if ($biblioteca->archivo_pdf) {
-            Storage::disk('public')->delete($biblioteca->archivo_pdf);
-        }
-        if ($biblioteca->imagen_portada) {
-            Storage::disk('public')->delete($biblioteca->imagen_portada);
-        }
-
         $biblioteca->delete();
 
         return redirect()->route('admin.biblioteca.index')

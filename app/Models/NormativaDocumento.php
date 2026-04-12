@@ -39,8 +39,8 @@ class NormativaDocumento extends Model
             return $this->archivo_pdf;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->archivo_pdf);
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($this->archivo_pdf);
     }
 
     public static function iconosDisponibles(): array

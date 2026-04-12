@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Log;
 
 class ContactMessageMail extends Mailable
 {
@@ -15,7 +16,13 @@ class ContactMessageMail extends Mailable
 
     public function build()
     {
+        Log::info('Enviando email del formulario de contacto');
+        Log::info('De: ' . $this->messageData->email);
+        Log::info('Para: contacto@cpapregioncentro.com');
+        Log::info('Asunto: ' . $this->messageData->asunto);
+        
         return $this->subject('Nuevo mensaje - CPAP Región Centro')
-            ->view('emails.contact-message');
+                    ->from(config('mail.from.address'), config('mail.from.name'))
+                    ->view('emails.contact-message');
     }
 }

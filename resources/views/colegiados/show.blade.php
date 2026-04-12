@@ -163,9 +163,9 @@
                     <div class="habilitacion-box">
 
                         {{-- QR Code --}}
-                        @if($habilitacion->qr_path && file_exists(public_path($habilitacion->qr_path)))
+                        @if($habilitacion->qr_path)
                         <div class="habilitacion-qr-col">
-                            <img src="{{ asset($habilitacion->qr_path) }}"
+                            <img src="{{ $habilitacion->qr_url }}"
                                  alt="QR de verificación"
                                  class="habilitacion-qr-img">
                             <p class="habilitacion-qr-label">Escanea para verificar</p>

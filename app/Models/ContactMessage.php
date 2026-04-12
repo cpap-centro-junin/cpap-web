@@ -30,7 +30,7 @@ class ContactMessage extends Model
             return $this->archivo_respuesta;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->archivo_respuesta);
+        // Ruta relativa en public/
+        return asset($this->archivo_respuesta);
     }
 }

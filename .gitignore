@@ -1,0 +1,3 @@
+#quiero ignorar el .env
+# Ignorar el archivo .env
+.env

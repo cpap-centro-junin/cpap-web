@@ -60,7 +60,7 @@
                 </h3>
                 @if($config->hero_imagen)
                 <div id="imagenActualContainer" style="position:relative;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-                    <img src="{{ $config->hero_imagen_url }}" alt="Hero Background" 
+                    <img src="{{ $config->heroImagenUrl }}" alt="Hero Background" 
                          style="width:100%;height:200px;object-fit:cover;display:block;">
                     <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:12px;color:white;">
                         <p style="margin:0;font-size:12px;font-weight:500;">

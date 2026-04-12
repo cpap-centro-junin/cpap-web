@@ -59,7 +59,7 @@
                             Imagen actual
                         </label>
                         <div style="margin-bottom:12px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);max-width:400px;">
-                            <img src="{{ $galeria->imagen_url }}" alt="{{ $galeria->titulo }}"
+                            <img src="{{ $galeria->imagen }}" alt="{{ $galeria->titulo }}"
                                  style="width:100%;display:block;">
                         </div>
                         <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">

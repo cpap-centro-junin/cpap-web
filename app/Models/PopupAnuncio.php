@@ -24,10 +24,9 @@ class PopupAnuncio extends Model
     public function getImagenAttribute($value): ?string
     {
         if (!$value) return null;
-        if (str_starts_with($value, 'data:')) return $value;
         if (str_starts_with($value, 'http')) return $value;
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($value);
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($value);
     }
 }

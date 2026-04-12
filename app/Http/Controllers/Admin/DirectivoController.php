@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Directivo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class DirectivoController extends Controller
 {
@@ -63,7 +62,8 @@ class DirectivoController extends Controller
 
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
-            $data['foto'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());
+            $data['foto'] = 'public/images/directivos/' . basename($filename);
         }
 
         Directivo::create($data);
@@ -93,10 +93,13 @@ class DirectivoController extends Controller
         if ($request->hasFile('foto')) {
             $rawFoto = $directivo->getOriginal('foto');
             if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-                Storage::disk('public')->delete($rawFoto);
+                $rutaFoto = $rawFoto;                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
+                }                @unlink(public_path($rutaFoto));
             }
             $file = $request->file('foto');
-            $data['foto'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());
+            $data['foto'] = 'public/images/directivos/' . basename($filename);
         }
 
         $directivo->update($data);
@@ -109,7 +112,11 @@ class DirectivoController extends Controller
     {
         $rawFoto = $directivo->getOriginal('foto');
         if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-            Storage::disk('public')->delete($rawFoto);
+            $rutaFoto = $rawFoto;
+            if (str_starts_with($rutaFoto, 'public/')) {
+                $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
+            }
+            @unlink(public_path($rutaFoto));
         }
         $directivo->delete();
 

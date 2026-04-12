@@ -240,8 +240,8 @@ class RecursoBiblioteca extends Model
             return $this->archivo_pdf;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->archivo_pdf);
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($this->archivo_pdf);
     }
 
     /** URL de la imagen de portada. */
@@ -256,7 +256,7 @@ class RecursoBiblioteca extends Model
             return $this->imagen_portada;
         }
 
-        // Ruta de storage (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->imagen_portada);
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($this->imagen_portada);
     }
 }

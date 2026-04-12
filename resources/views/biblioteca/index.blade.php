@@ -198,7 +198,7 @@
             <div class="resource-card featured" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 + 100 }}">
                 <div class="resource-thumbnail">
                     @if($dest->imagen_portada)
-                        <img src="{{ $dest->imagen_portada_url }}" alt="{{ $dest->titulo }}">
+                        <img src="{{ $dest->imagenPortadaUrl }}" alt="{{ $dest->titulo }}">
                     @else
                         <i class="fas {{ $dest->tipo_icon }}"></i>
                     @endif
@@ -267,7 +267,7 @@
             <div class="resource-card" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 100 + 100 }}">
                 <div class="resource-thumbnail">
                     @if($recurso->imagen_portada)
-                        <img src="{{ $recurso->imagen_portada_url }}" alt="{{ $recurso->titulo }}">
+                        <img src="{{ $recurso->imagenPortadaUrl }}" alt="{{ $recurso->titulo }}">
                     @else
                         <i class="fas {{ $recurso->tipo_icon }}"></i>
                     @endif

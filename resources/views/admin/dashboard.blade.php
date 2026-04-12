@@ -194,7 +194,7 @@
                     <div class="activity-card">
                         <div class="activity-icon">
                             @if($colegiado->foto)
-                                <img src="{{ $colegiado->foto_url }}" alt="{{ $colegiado->nombre_completo }}" class="activity-avatar">
+                                <img src="{{ $colegiado->fotoUrl }}" alt="{{ $colegiado->nombre_completo }}" class="activity-avatar">
                             @else
                                 <span class="activity-initials">{{ strtoupper(substr($colegiado->nombres, 0, 1) . substr($colegiado->apellidos, 0, 1)) }}</span>
                             @endif

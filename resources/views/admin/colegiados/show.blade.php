@@ -507,7 +507,7 @@
 
                             <div class="habilitacion-qr">
                                 <strong>Código QR:</strong>
-                                <img src="{{ asset($habilitacion->qr_path) }}" alt="QR Code">
+                                <img src="{{ $habilitacion->qr_url }}" alt="QR Code">
                             </div>
 
                             <div class="habilitacion-actions">

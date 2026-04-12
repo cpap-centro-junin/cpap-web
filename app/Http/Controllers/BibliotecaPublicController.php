@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RecursoBiblioteca;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
 
 class BibliotecaPublicController extends Controller
 {
@@ -121,6 +121,23 @@ class BibliotecaPublicController extends Controller
 
         $filename = \Illuminate\Support\Str::slug($recurso->titulo) . '.pdf';
 
-        return Storage::disk('public')->download($recurso->archivo_pdf, $filename);
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $recurso->archivo_pdf;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+        $pdfPath = public_path($ruta);
+        if (file_exists($pdfPath)) {
+            return response()->download($pdfPath, $filename, [
+                'Content-Type' => 'application/pdf'
+            ]);
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($recurso->archivo_pdf, 'http')) {
+            return redirect($recurso->archivo_pdf);
+        }
+
+        abort(404, 'El recurso no está disponible.');
     }
 }

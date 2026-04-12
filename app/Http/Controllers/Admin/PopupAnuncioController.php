@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PopupAnuncio;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PopupAnuncioController extends Controller
 {
@@ -48,13 +47,14 @@ class PopupAnuncioController extends Controller
     {
         $data = $request->validate([
             'titulo' => 'required|string|max:200',
-            'imagen' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:4096',
+            'imagen' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:20480',
         ]);
 
         $data['activo'] = $request->boolean('activo');
 
         $file = $request->file('imagen');
-        $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        $filename = $file->move(public_path('images/popup'), uniqid('popup_') . '.' . $file->getClientOriginalExtension());
+        $data['imagen'] = 'public/images/popup/' . basename($filename);
 
         PopupAnuncio::create($data);
 
@@ -71,18 +71,15 @@ class PopupAnuncioController extends Controller
     {
         $data = $request->validate([
             'titulo' => 'required|string|max:200',
-            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:4096',
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:20480',
         ]);
 
         $data['activo'] = $request->boolean('activo');
 
         if ($request->hasFile('imagen')) {
-            $rawImagen = $anuncio->getOriginal('imagen');
-            if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-                Storage::disk('public')->delete($rawImagen);
-            }
             $file = $request->file('imagen');
-            $data['imagen'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            $filename = $file->move(public_path('images/popup'), uniqid('popup_') . '.' . $file->getClientOriginalExtension());
+            $data['imagen'] = 'public/images/popup/' . basename($filename);
         }
 
         $anuncio->update($data);
@@ -93,10 +90,6 @@ class PopupAnuncioController extends Controller
 
     public function destroy(PopupAnuncio $anuncio)
     {
-        $rawImagen = $anuncio->getOriginal('imagen');
-        if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-            Storage::disk('public')->delete($rawImagen);
-        }
         $anuncio->delete();
 
         return back()->with('success', 'Anuncio eliminado.');

@@ -102,18 +102,25 @@ class BannerSlide extends Model
             return null;
         }
 
-        // Data URI (base64)
-        if (str_starts_with($this->imagen, 'data:')) {
-            return $this->imagen;
-        }
-
         // URL externa
         if (str_starts_with($this->imagen, 'http')) {
             return $this->imagen;
         }
 
-        // Ruta de storage local (convierte a URL pública)
-        return \Illuminate\Support\Facades\Storage::url($this->imagen);
+        // Ruta en public/
+        return asset($this->imagen);
+    }
+
+    /**
+     * Mutador para manejar imagen (base64, URL externa o storage)
+     */
+    public function getImagenAttribute($value): ?string
+    {
+        if (!$value) return null;
+        if (str_starts_with($value, 'http')) return $value;
+        
+        // Retornar la ruta tal como está en BD (con public/)
+        return asset($value);
     }
 
     /**
