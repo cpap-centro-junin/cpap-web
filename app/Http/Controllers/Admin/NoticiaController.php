@@ -129,6 +129,66 @@ class NoticiaController extends Controller
         return back()->with('success', 'Noticia eliminada.');
     }
 
+    public function bulkToggle(Request $request)
+    {
+        $data = $request->validate([
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:noticias,id',
+            'action' => 'required|in:activar,desactivar,destacar,no-destacar,eliminar',
+        ]);
+
+        try {
+            $ids = $data['ids'];
+            $action = $data['action'];
+            $count = count($ids);
+
+            switch ($action) {
+                case 'activar':
+                    Noticia::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} noticia(s) publicada(s) correctamente.";
+                    break;
+
+                case 'desactivar':
+                    Noticia::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} noticia(s) pasada(s) a borrador correctamente.";
+                    break;
+
+                case 'destacar':
+                    Noticia::whereIn('id', $ids)->update(['destacado' => true]);
+                    $message = "{$count} noticia(s) destacada(s) correctamente.";
+                    break;
+
+                case 'no-destacar':
+                    Noticia::whereIn('id', $ids)->update(['destacado' => false]);
+                    $message = "{$count} noticia(s) removida(s) de destacados correctamente.";
+                    break;
+
+                case 'eliminar':
+                    // Obtener noticias para eliminar sus imágenes
+                    $noticias = Noticia::whereIn('id', $ids)->get();
+                    foreach ($noticias as $noticia) {
+                        $rawImagen = $noticia->getOriginal('imagen');
+                        if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
+                            Storage::disk('public')->delete($rawImagen);
+                        }
+                    }
+                    Noticia::whereIn('id', $ids)->delete();
+                    $message = "{$count} noticia(s) eliminada(s) correctamente.";
+                    break;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function show(Noticia $noticia)
     {
         return view('noticias.show', compact('noticia'));

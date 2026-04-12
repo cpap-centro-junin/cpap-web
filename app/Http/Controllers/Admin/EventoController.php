@@ -127,4 +127,49 @@ class EventoController extends Controller
 
         return back()->with('success', 'Evento eliminado.');
     }
+
+    public function bulkToggle(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:eventos,id',
+            'action' => 'required|in:activar,desactivar,destacar,no-destacar,eliminar'
+        ]);
+
+        $ids = $request->ids;
+        $action = $request->action;
+        $count = count($ids);
+
+        switch($action) {
+            case 'activar':
+                Evento::whereIn('id', $ids)->update(['activo' => true]);
+                $message = "{$count} evento(s) publicado(s) correctamente.";
+                break;
+            case 'desactivar':
+                Evento::whereIn('id', $ids)->update(['activo' => false]);
+                $message = "{$count} evento(s) guardado(s) como borrador correctamente.";
+                break;
+            case 'destacar':
+                Evento::whereIn('id', $ids)->update(['destacado' => true]);
+                $message = "{$count} evento(s) destacado(s) correctamente.";
+                break;
+            case 'no-destacar':
+                Evento::whereIn('id', $ids)->update(['destacado' => false]);
+                $message = "{$count} evento(s) sin destaque correctamente.";
+                break;
+            case 'eliminar':
+                $eventos = Evento::whereIn('id', $ids)->get();
+                foreach ($eventos as $evento) {
+                    $rawImagen = $evento->getOriginal('imagen_portada');
+                    if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
+                        Storage::disk('public')->delete($rawImagen);
+                    }
+                    $evento->delete();
+                }
+                $message = "{$count} evento(s) eliminado(s) correctamente.";
+                break;
+        }
+
+        return response()->json(['success' => true, 'message' => $message]);
+    }
 }

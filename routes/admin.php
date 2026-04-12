@@ -95,6 +95,10 @@ Route::patch('/colegiados/{colegiado}/toggle-perfil-oculto', [ColegiadoControlle
 Route::get('/colegiados/{colegiado}/descargar-cv', [ColegiadoController::class, 'descargarCV'])
     ->name('admin.colegiados.descargar-cv');
 
+// Acciones en masa para colegiados
+Route::post('/colegiados/bulk-toggle', [ColegiadoController::class, 'bulkToggle'])
+    ->name('admin.colegiados.bulk-toggle');
+
 // ============================================
 // RUTAS DE HABILITACIONES
 // ============================================
@@ -154,6 +158,7 @@ Route::resource('normativa', \App\Http\Controllers\Admin\NormativaController::cl
     'update'  => 'admin.normativa.update',
     'destroy' => 'admin.normativa.destroy',
 ]);
+Route::post('/normativa/bulk-toggle', [\App\Http\Controllers\Admin\NormativaController::class, 'bulkToggle'])->name('admin.normativa.bulk-toggle');
 
 // ============================================
 // PERSONALIZACIÓN DE DISEÑO
@@ -181,6 +186,7 @@ Route::post('/mensajes/{message}/responder', [ContactMessageController::class, '
 Route::delete('/mensajes/{message}', 
     [ContactMessageController::class, 'destroy'])
     ->name('admin.mensajes.destroy');
+Route::post('/mensajes/bulk-toggle', [ContactMessageController::class, 'bulkToggle'])->name('admin.mensajes.bulk-toggle');
 
 // ============================================
 // BOLSA DE TRABAJO
@@ -194,6 +200,7 @@ Route::resource('bolsa', \App\Http\Controllers\Admin\BolsaTrabajoController::cla
     'update'  => 'admin.bolsa.update',
     'destroy' => 'admin.bolsa.destroy',
 ])->except(['show']);
+Route::post('/bolsa/bulk-toggle', [\App\Http\Controllers\Admin\BolsaTrabajoController::class, 'bulkToggle'])->name('admin.bolsa.bulk-toggle');
 
 // ============================================
 // SOLICITUDES DE OFERTAS LABORALES
@@ -259,3 +266,5 @@ Route::resource('biblioteca', \App\Http\Controllers\Admin\BibliotecaController::
     'update'  => 'admin.biblioteca.update',
     'destroy' => 'admin.biblioteca.destroy',
 ]);
+Route::post('/biblioteca/bulk-toggle', [\App\Http\Controllers\Admin\BibliotecaController::class, 'bulkToggle'])
+    ->name('admin.biblioteca.bulk-toggle');

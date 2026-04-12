@@ -269,5 +269,9 @@ Route::get('/colegiatura', [ColegiaturaController::class, 'index'])
 // ============================================
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('noticias', AdminNoticiaController::class);
+    Route::post('/noticias/bulk-toggle', [AdminNoticiaController::class, 'bulkToggle'])
+        ->name('noticias.bulk-toggle');
     Route::resource('eventos', AdminEventoController::class);
+    Route::post('/eventos/bulk-toggle', [AdminEventoController::class, 'bulkToggle'])
+        ->name('eventos.bulk-toggle');
 });

@@ -22,7 +22,7 @@ class BibliotecaController extends Controller
             }
         }
         
-        $perpage = session('pagination_perpage', 15);
+        $perpage = session('pagination_perpage', 10);
         
         $query = RecursoBiblioteca::query();
 
@@ -214,5 +214,60 @@ class BibliotecaController extends Controller
 
         return redirect()->route('admin.biblioteca.index')
                          ->with('success', 'Recurso eliminado correctamente.');
+    }
+
+    public function bulkToggle(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:biblioteca,id',
+            'action' => 'required|in:fisico,virtual,activar,desactivar,destacar,no-destacar,eliminar'
+        ]);
+
+        $ids = $request->ids;
+        $action = $request->action;
+        $count = count($ids);
+
+        switch($action) {
+            case 'fisico':
+                RecursoBiblioteca::whereIn('id', $ids)->update(['formato' => 'fisico']);
+                $message = "{$count} recurso(s) marcado(s) como físico correctamente.";
+                break;
+            case 'virtual':
+                RecursoBiblioteca::whereIn('id', $ids)->update(['formato' => 'digital']);
+                $message = "{$count} recurso(s) marcado(s) como virtual correctamente.";
+                break;
+            case 'activar':
+                RecursoBiblioteca::whereIn('id', $ids)->update(['activo' => true]);
+                $message = "{$count} recurso(s) publicado(s) correctamente.";
+                break;
+            case 'desactivar':
+                RecursoBiblioteca::whereIn('id', $ids)->update(['activo' => false]);
+                $message = "{$count} recurso(s) ocultado(s) correctamente.";
+                break;
+            case 'destacar':
+                RecursoBiblioteca::whereIn('id', $ids)->update(['destacado' => true]);
+                $message = "{$count} recurso(s) destacado(s) correctamente.";
+                break;
+            case 'no-destacar':
+                RecursoBiblioteca::whereIn('id', $ids)->update(['destacado' => false]);
+                $message = "{$count} recurso(s) sin destaque correctamente.";
+                break;
+            case 'eliminar':
+                $recursos = RecursoBiblioteca::whereIn('id', $ids)->get();
+                foreach ($recursos as $recurso) {
+                    if ($recurso->archivo_pdf) {
+                        Storage::disk('public')->delete($recurso->archivo_pdf);
+                    }
+                    if ($recurso->imagen_portada) {
+                        Storage::disk('public')->delete($recurso->imagen_portada);
+                    }
+                    $recurso->delete();
+                }
+                $message = "{$count} recurso(s) eliminado(s) correctamente.";
+                break;
+        }
+
+        return response()->json(['success' => true, 'message' => $message]);
     }
 }

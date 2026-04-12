@@ -392,4 +392,73 @@ class ColegiadoController extends Controller
 
         return redirect()->back()->with('success', $mensaje);
     }
+
+    /**
+     * Acciones en masa para colegiados: activar, desactivar, ocultar, mostrar, eliminar
+     */
+    public function bulkToggle(Request $request)
+    {
+        $data = $request->validate([
+            'ids'    => 'required|array|min:1',
+            'ids.*'  => 'integer|exists:colegiados,id',
+            'action' => 'required|in:activar,desactivar,ocultar,mostrar,eliminar',
+        ]);
+
+        try {
+            $ids = $data['ids'];
+            $action = $data['action'];
+            $count = count($ids);
+
+            switch ($action) {
+                case 'activar':
+                    Colegiado::whereIn('id', $ids)->update(['estado' => 'activo']);
+                    // Sincronizar habilitaciones
+                    Habilitacion::whereIn('colegiado_id', $ids)->update(['activo' => true]);
+                    $message = "{$count} colegiado(s) activado(s) correctamente.";
+                    break;
+
+                case 'desactivar':
+                    Colegiado::whereIn('id', $ids)->update(['estado' => 'inactivo']);
+                    // Sincronizar habilitaciones
+                    Habilitacion::whereIn('colegiado_id', $ids)->update(['activo' => false]);
+                    $message = "{$count} colegiado(s) desactivado(s) correctamente.";
+                    break;
+
+                case 'ocultar':
+                    Colegiado::whereIn('id', $ids)->update(['perfil_oculto' => true]);
+                    $message = "{$count} perfil(es) ocultado(s) del directorio público.";
+                    break;
+
+                case 'mostrar':
+                    Colegiado::whereIn('id', $ids)->update(['perfil_oculto' => false]);
+                    $message = "{$count} perfil(es) ahora visible(s) en el directorio público.";
+                    break;
+
+                case 'eliminar':
+                    // Obtener colegiados para eliminar sus archivos
+                    $colegiados = Colegiado::whereIn('id', $ids)->get();
+                    foreach ($colegiados as $colegiado) {
+                        if ($colegiado->foto && Storage::disk('public')->exists($colegiado->foto)) {
+                            Storage::disk('public')->delete($colegiado->foto);
+                        }
+                        if ($colegiado->cv_path && Storage::exists($colegiado->cv_path)) {
+                            Storage::delete($colegiado->cv_path);
+                        }
+                    }
+                    Colegiado::whereIn('id', $ids)->delete();
+                    $message = "{$count} colegiado(s) eliminado(s) correctamente.";
+                    break;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
