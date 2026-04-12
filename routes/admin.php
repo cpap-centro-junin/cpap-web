@@ -172,6 +172,9 @@ Route::get('/mensajes/{message}', [ContactMessageController::class, 'show'])
 Route::post('/mensajes/{message}/responder', [ContactMessageController::class, 'responder'])
     ->name('admin.mensajes.responder');
 
+Route::get('/mensajes/{message}/descargar-respuesta', [ContactMessageController::class, 'descargarRespuesta'])
+    ->name('admin.mensajes.descargar-respuesta');
+
 Route::delete('/mensajes/{message}', 
     [ContactMessageController::class, 'destroy'])
     ->name('admin.mensajes.destroy');

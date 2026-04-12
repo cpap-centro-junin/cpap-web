@@ -61,7 +61,12 @@ class ContactMessageController extends Controller
         $filePath = null;
 
         if ($request->hasFile('archivo')) {
-            $filePath = $request->file('archivo')->store('respuestas', 'public');
+            $file = $request->file('archivo');
+            $dir = public_path('respuestas');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $nombre = uniqid('respuesta_') . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $nombre);
+            $filePath = 'public/respuestas/' . $nombre;
         }
 
         $message->update([
@@ -79,6 +84,27 @@ class ContactMessageController extends Controller
         $message->delete();
 
         return back()->with('success', 'Mensaje eliminado correctamente.');
+    }
+
+    public function descargarRespuesta(ContactMessage $message)
+    {
+        if (!$message->archivo_respuesta) {
+            abort(404, 'El archivo no está disponible.');
+        }
+
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $message->archivo_respuesta;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+
+        $filePath = public_path($ruta);
+        if (!file_exists($filePath)) {
+            abort(404, 'El archivo no se encontró.');
+        }
+
+        $filename = basename($filePath);
+        return response()->download($filePath, $filename);
     }
 
 }
