@@ -22,9 +22,16 @@ class RespuestaMensajeMail extends Mailable
                      ->view('emails.respuesta-mensaje');
 
         if ($this->messageData->archivo_respuesta) {
-            $mail->attach(
-                storage_path('app/public/' . $this->messageData->archivo_respuesta)
-            );
+            // Stripear public/ prefix de la ruta en BD
+            $ruta = $this->messageData->archivo_respuesta;
+            if (str_starts_with($ruta, 'public/')) {
+                $ruta = substr($ruta, 7);
+            }
+            
+            $filePath = public_path($ruta);
+            if (file_exists($filePath)) {
+                $mail->attach($filePath);
+            }
         }
 
         return $mail;
