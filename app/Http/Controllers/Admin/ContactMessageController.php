@@ -144,4 +144,28 @@ class ContactMessageController extends Controller
         return response()->json(['success' => true, 'message' => $message]);
     }
 
+    /* -------------------------------------------------------
+     * DESCARGAR RESPUESTA (Admin)
+     * ----------------------------------------------------- */
+    public function descargarRespuesta(ContactMessage $message)
+    {
+        if (!$message->archivo_respuesta) {
+            abort(404, 'El archivo no está disponible.');
+        }
+
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $message->archivo_respuesta;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+
+        $filePath = public_path($ruta);
+        if (!file_exists($filePath)) {
+            abort(404, 'El archivo no se encontró.');
+        }
+
+        $filename = basename($filePath);
+        return response()->download($filePath, $filename);
+    }
+
 }

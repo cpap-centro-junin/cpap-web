@@ -270,4 +270,41 @@ class BibliotecaController extends Controller
 
         return response()->json(['success' => true, 'message' => $message]);
     }
+
+    /* -------------------------------------------------------
+     * DESCARGAR PDF (Admin)
+     * ----------------------------------------------------- */
+    public function descargarPdf(RecursoBiblioteca $biblioteca)
+    {
+        if (!$biblioteca->archivo_pdf) {
+            abort(404, 'El PDF no está disponible.');
+        }
+
+        $nombre = $biblioteca->titulo . '.pdf';
+
+        // Stripear public/ prefix de la ruta en BD antes de usar public_path()
+        $ruta = $biblioteca->archivo_pdf;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7);
+        }
+        
+        $pdfPath = public_path($ruta);
+        
+        if (file_exists($pdfPath)) {
+            return response()->file(
+                $pdfPath,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $nombre . '"',
+                ]
+            );
+        }
+
+        // Fallback: si es URL externa
+        if (str_starts_with($biblioteca->archivo_pdf, 'http')) {
+            return redirect($biblioteca->archivo_pdf);
+        }
+
+        abort(404, 'El archivo no se encontró.');
+    }
 }
