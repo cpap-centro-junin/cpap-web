@@ -240,7 +240,12 @@ class RecursoBiblioteca extends Model
             return $this->archivo_pdf;
         }
 
-        // Ruta en public/
+        // Si empieza con "public/", remover ese prefijo para asset()
+        if (str_starts_with($this->archivo_pdf, 'public/')) {
+            $ruta = substr($this->archivo_pdf, 7); // Remover "public/"
+            return asset($ruta);
+        }
+        
         return asset($this->archivo_pdf);
     }
 
@@ -256,7 +261,12 @@ class RecursoBiblioteca extends Model
             return $this->imagen_portada;
         }
 
-        // Ruta en public/
+        // Si empieza con "public/", remover ese prefijo para asset()
+        if (str_starts_with($this->imagen_portada, 'public/')) {
+            $ruta = substr($this->imagen_portada, 7); // Remover "public/"
+            return asset($ruta);
+        }
+        
         return asset($this->imagen_portada);
     }
 }

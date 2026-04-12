@@ -79,7 +79,7 @@ class PopupAnuncioController extends Controller
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
             $filename = $file->move(public_path('images/popup'), uniqid('popup_') . '.' . $file->getClientOriginalExtension());
-            $data['imagen'] = 'public/public/images/popup/' . basename($filename);
+            $data['imagen'] = 'public/images/popup/' . basename($filename);
         }
 
         $anuncio->update($data);

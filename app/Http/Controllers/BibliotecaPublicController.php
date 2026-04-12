@@ -127,7 +127,6 @@ class BibliotecaPublicController extends Controller
             $ruta = substr($ruta, 7); // Remover "public/"
         }
 
-        // Si es ruta en public/ (archivos guardados)
         $pdfPath = public_path($ruta);
         if (file_exists($pdfPath)) {
             return response()->download($pdfPath, $filename, [

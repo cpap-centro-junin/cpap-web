@@ -73,7 +73,7 @@ class QRCodeService
         // Guardar imagen
         file_put_contents($pathCompleto, $result->getString());
 
-        // Retornar path relativo con prefijo public/ (para BD)
+        // Retornar path relativo (para BD - con public/ porque es para Colegiados)
         return 'public/images/qr/' . $nombreArchivo;
     }
 

@@ -63,7 +63,7 @@ class DirectivoController extends Controller
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
             $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());
-            $data['foto'] = 'images/directivos/' . basename($filename);
+            $data['foto'] = 'public/images/directivos/' . basename($filename);
         }
 
         Directivo::create($data);
@@ -99,7 +99,7 @@ class DirectivoController extends Controller
             }
             $file = $request->file('foto');
             $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());
-            $data['foto'] = 'images/directivos/' . basename($filename);
+            $data['foto'] = 'public/images/directivos/' . basename($filename);
         }
 
         $directivo->update($data);

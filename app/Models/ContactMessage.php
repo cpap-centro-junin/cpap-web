@@ -30,13 +30,7 @@ class ContactMessage extends Model
             return $this->archivo_respuesta;
         }
 
-        // Si empieza con "public/", convertir a URL
-        if (str_starts_with($this->archivo_respuesta, 'public/')) {
-            $ruta = substr($this->archivo_respuesta, 7); // Remover "public/"
-            return asset($ruta);
-        }
-
-        // Ruta en public/
+        // Ruta relativa en public/
         return asset($this->archivo_respuesta);
     }
 }

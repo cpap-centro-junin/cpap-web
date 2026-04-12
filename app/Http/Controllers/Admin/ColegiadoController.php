@@ -418,8 +418,13 @@ class ColegiadoController extends Controller
 
         $filename = 'CV_' . $colegiado->codigo_cpap . '.pdf';
 
-        // Si es ruta en public/ (archivos nuevos)
-        $cvPath = public_path($colegiado->cv_path);
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $colegiado->cv_path;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+
+        $cvPath = public_path($ruta);
         if (file_exists($cvPath)) {
             return response()->file($cvPath, [
                 'Content-Type'        => 'application/pdf',

@@ -135,11 +135,8 @@ class NormativaController extends Controller
 
         $nombre = $documento->archivo_nombre ?? $documento->titulo . '.pdf';
 
-        // Si empieza con "public/", remover ese prefijo para public_path()
+        // Si es ruta en public/ (archivos guardados sin public/ prefix)
         $ruta = $documento->archivo_pdf;
-        if (str_starts_with($ruta, 'public/')) {
-            $ruta = substr($ruta, 7); // Remover "public/"
-        }
 
         // Si es ruta en public/ (archivos guardados)
         $pdfPath = public_path($ruta);
