@@ -127,6 +127,41 @@ class NormativaController extends Controller
             ->with('success', 'Documento normativo eliminado correctamente.');
     }
 
+    public function bulkToggle(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:normativa_documentos,id',
+            'action' => 'required|in:activar,desactivar,eliminar'
+        ]);
+
+        $ids = $request->ids;
+        $action = $request->action;
+        $count = count($ids);
+
+        switch($action) {
+            case 'activar':
+                NormativaDocumento::whereIn('id', $ids)->update(['activo' => true]);
+                $message = "{$count} documento(s) activado(s) correctamente.";
+                break;
+            case 'desactivar':
+                NormativaDocumento::whereIn('id', $ids)->update(['activo' => false]);
+                $message = "{$count} documento(s) desactivado(s) correctamente.";
+                break;
+            case 'eliminar':
+                $documentos = NormativaDocumento::whereIn('id', $ids)->get();
+                foreach ($documentos as $doc) {
+                    if ($doc->archivo_pdf) {
+                        Storage::disk('public')->delete($doc->archivo_pdf);
+                    }
+                    $doc->delete();
+                }
+                $message = "{$count} documento(s) eliminado(s) correctamente.";
+                break;
+        }
+
+        return response()->json(['success' => true, 'message' => $message]);
+    }
     /**
      * Descargar PDF (ruta pública).
      */

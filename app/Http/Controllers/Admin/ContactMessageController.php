@@ -81,4 +81,26 @@ class ContactMessageController extends Controller
         return back()->with('success', 'Mensaje eliminado correctamente.');
     }
 
+    public function bulkToggle(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:contact_messages,id',
+            'action' => 'required|in:eliminar'
+        ]);
+
+        $ids = $request->ids;
+        $action = $request->action;
+        $count = count($ids);
+
+        switch($action) {
+            case 'eliminar':
+                ContactMessage::whereIn('id', $ids)->delete();
+                $message = "{$count} mensaje(s) eliminado(s) correctamente.";
+                break;
+        }
+
+        return response()->json(['success' => true, 'message' => $message]);
+    }
+
 }

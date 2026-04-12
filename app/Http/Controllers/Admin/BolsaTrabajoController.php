@@ -18,7 +18,7 @@ class BolsaTrabajoController extends Controller
             }
         }
         
-        $perpage = session('pagination_perpage', 15);
+        $perpage = session('pagination_perpage', 10);
         
         $query = BolsaTrabajo::query();
         
@@ -116,5 +116,35 @@ class BolsaTrabajoController extends Controller
 
         return redirect()->route('admin.bolsa.index')
                          ->with('success', 'Oferta eliminada correctamente.');
+    }
+
+    public function bulkToggle(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:bolsa_trabajo,id',
+            'action' => 'required|in:activar,desactivar,eliminar'
+        ]);
+
+        $ids = $request->ids;
+        $action = $request->action;
+        $count = count($ids);
+
+        switch($action) {
+            case 'activar':
+                BolsaTrabajo::whereIn('id', $ids)->update(['activo' => true]);
+                $message = "{$count} oferta(s) activada(s) correctamente.";
+                break;
+            case 'desactivar':
+                BolsaTrabajo::whereIn('id', $ids)->update(['activo' => false]);
+                $message = "{$count} oferta(s) desactivada(s) correctamente.";
+                break;
+            case 'eliminar':
+                BolsaTrabajo::whereIn('id', $ids)->delete();
+                $message = "{$count} oferta(s) eliminada(s) correctamente.";
+                break;
+        }
+
+        return response()->json(['success' => true, 'message' => $message]);
     }
 }
