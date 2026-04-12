@@ -58,6 +58,12 @@ class ContactMessageController extends Controller
             'archivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
         ]);
 
+        // Verificar que el mensaje tiene email válido
+        if (!$message->email || !filter_var($message->email, FILTER_VALIDATE_EMAIL)) {
+            \Log::error('ContactMessage sin email válido. ID: ' . $message->id . ', Email: ' . ($message->email ?? 'null'));
+            return back()->withErrors('Error: El mensaje no tiene un correo electrónico válido guardado.');
+        }
+
         $filePath = null;
 
         if ($request->hasFile('archivo')) {
@@ -87,20 +93,27 @@ class ContactMessageController extends Controller
         ]);
 
         try {
-            \Mail::to($message->email)
+            $destinoEmail = $message->email;
+            \Log::info('=== ENVIANDO EMAIL DE RESPUESTA ===');
+            \Log::info('Destinatario: ' . $destinoEmail);
+            \Log::info('Nombre del contacto: ' . $message->nombre);
+            \Log::info('Archivo adjunto: ' . ($filePath ?? 'ninguno'));
+            
+            \Mail::to($destinoEmail)
                 ->send(new RespuestaMensajeMail(
                     nombre: $message->nombre,
                     respuesta: $message->respuesta,
                     archivo_respuesta: $message->archivo_respuesta
                 ));
             
-            \Log::info('Email enviado a: ' . $message->email . ' con archivo: ' . ($filePath ?? 'sin archivo'));
+            \Log::info('✓ Email enviado correctamente a: ' . $destinoEmail);
         } catch (\Exception $e) {
-            \Log::error('Error al enviar email: ' . $e->getMessage());
+            \Log::error('✗ Error al enviar email: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return back()->with('warning', 'Respuesta guardada pero error al enviar email: ' . $e->getMessage());
         }
 
-        return back()->with('success', 'Respuesta enviada correctamente.');
+        return back()->with('success', 'Respuesta enviada correctamente a ' . $message->email. '.');
     }
     public function destroy(ContactMessage $message)
     {
