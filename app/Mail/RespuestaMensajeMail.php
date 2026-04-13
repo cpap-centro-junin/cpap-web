@@ -23,9 +23,26 @@ class RespuestaMensajeMail extends Mailable
 
     public function build()
     {
+        $fromAddress = config('mail.from.address');
+        $fromName = config('mail.from.name');
+        
         $mail = $this->subject('Respuesta - CPAP Región Centro')
-                     ->from(config('mail.from.address'), config('mail.from.name'))
-                     ->view('emails.respuesta-mensaje');
+                     ->from($fromAddress, $fromName)
+                     ->replyTo($fromAddress, $fromName)
+                     ->mailer('smtp')
+                     ->view('emails.respuesta-mensaje')
+                     ->with([
+                         'nombre' => $this->nombre,
+                         'respuesta' => $this->respuesta,
+                     ]);
+
+        // Agregar headers MIME explícitos para compatibilidad con Outlook
+        $mail->withSymfonyMessage(function (\Symfony\Component\Mime\Email $message) {
+            $message->getHeaders()
+                ->addTextHeader('X-Priority', '3')
+                ->addTextHeader('X-Mailer', 'CPAP Sistema Institucional')
+                ->addTextHeader('X-MSMail-Priority', 'Normal');
+        });
 
         if ($this->archivo_respuesta) {
             // Stripear public/ prefix de la ruta en BD

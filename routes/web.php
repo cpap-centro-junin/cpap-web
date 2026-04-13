@@ -24,7 +24,7 @@ Route::get('/', function () {
     $config   = \App\Models\ConfiguracionInicio::obtener();
     $noticias = \App\Models\Noticia::where('activo', true)->latest()->take(3)->get();
     $eventos  = \App\Models\Evento::where('activo', true)
-                    ->where('fecha_inicio', '>=', now()->toDateString())
+                    ->proximo()
                     ->orderBy('fecha_inicio')
                     ->take(3)
                     ->get();

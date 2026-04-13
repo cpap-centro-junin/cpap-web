@@ -37,6 +37,16 @@ class Evento extends Model
         return $fin->greaterThanOrEqualTo(now()->startOfDay());
     }
 
+    /**
+     * Scope: Filtrar solo eventos que NO han terminado
+     * (fecha_fin o fecha_inicio >= hoy)
+     */
+    public function scopeProximo($query)
+    {
+        $today = now()->toDateString();
+        return $query->whereRaw('COALESCE(fecha_fin, fecha_inicio) >= ?', [$today]);
+    }
+
     public function getImagenPortadaAttribute($value): ?string
     {
         if (!$value) return null;
