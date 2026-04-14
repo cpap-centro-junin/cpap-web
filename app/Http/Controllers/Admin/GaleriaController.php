@@ -292,7 +292,7 @@ class GaleriaController extends Controller
         try {
             $request->validate([
                 'ids' => 'required|array',
-                'ids.*' => 'integer|exists:galeria_imagens,id',
+                'ids.*' => 'integer|exists:galeria_imagenes,id',
                 'action' => 'required|in:destacar,quitar_destacado,ocultar,mostrar,eliminar',
             ]);
 
