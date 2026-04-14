@@ -15,17 +15,11 @@
                         Promoviendo la excelencia profesional desde 1985.
                     </p>
                     <div class="footer-social">
-                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                        <a href="https://web.facebook.com/AntropologosCentro" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
+                        <a href="https://wa.me/51943667317" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
@@ -99,9 +93,9 @@
                     &copy; {{ date('Y') }} <strong>CPAP Región Centro</strong>. Todos los derechos reservados.
                 </p>
                 <div class="footer-bottom-links">
-                    <a href="{{ route('contacto.index') }}">Política de Privacidad</a>
-                    <a href="{{ route('contacto.index') }}">Términos de Uso</a>
-                    <a href="{{ url('/') }}">Mapa del Sitio</a>
+                    <a href="{{ route('legal.privacidad') }}">Política de Privacidad</a>
+                    <a href="{{ route('legal.terminos') }}">Términos de Uso</a>
+                    <a href="{{ route('legal.mapa-sitio') }}">Mapa del Sitio</a>
                 </div>
             </div>
         </div>

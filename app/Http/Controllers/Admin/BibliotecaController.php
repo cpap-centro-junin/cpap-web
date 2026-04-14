@@ -99,11 +99,11 @@ class BibliotecaController extends Controller
         // Archivo PDF
         if ($request->hasFile('archivo_pdf')) {
             $file = $request->file('archivo_pdf');
-            $dir = public_path('pdf');
+            $dir = public_path('pdf/biblioteca');
             if (!file_exists($dir)) mkdir($dir, 0755, true);
             $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
-            $data['archivo_pdf'] = 'public/pdf/' . $nombre;
+            $data['archivo_pdf'] = 'public/pdf/biblioteca/' . $nombre;
         }
 
         // Imagen de portada
@@ -188,11 +188,11 @@ class BibliotecaController extends Controller
                 }
             }
             $file = $request->file('archivo_pdf');
-            $dir = public_path('pdf');
+            $dir = public_path('pdf/biblioteca');
             if (!file_exists($dir)) mkdir($dir, 0755, true);
             $nombre = uniqid('biblioteca_') . '.' . $file->getClientOriginalExtension();
             $file->move($dir, $nombre);
-            $data['archivo_pdf'] = 'public/pdf/' . $nombre;
+            $data['archivo_pdf'] = 'public/pdf/biblioteca/' . $nombre;
         }
         // Eliminar PDF si se solicita (solo si no hay archivo nuevo)
         elseif ($request->boolean('pdf_clear')) {
@@ -307,28 +307,51 @@ class BibliotecaController extends Controller
                     break;
                 case 'eliminar':
                     $recursos = RecursoBiblioteca::whereIn('id', $ids)->get();
+                    $eliminados = 0;
+                    
                     foreach ($recursos as $recurso) {
-                        if ($recurso->archivo_pdf) {
-                            try {
-                                if (Storage::disk('public')->exists($recurso->archivo_pdf)) {
-                                    Storage::disk('public')->delete($recurso->archivo_pdf);
+                        try {
+                            // Eliminar PDF
+                            if ($recurso->archivo_pdf) {
+                                $ruta = $recurso->archivo_pdf;
+                                if (str_starts_with($ruta, 'public/')) {
+                                    $ruta = substr($ruta, 7);
                                 }
-                            } catch (\Exception $fe) {
-                                // Ignorar errores de eliminación de PDF
-                            }
-                        }
-                        if ($recurso->imagen_portada) {
-                            try {
-                                if (Storage::disk('public')->exists($recurso->imagen_portada)) {
-                                    Storage::disk('public')->delete($recurso->imagen_portada);
+                                $pdfPath = public_path($ruta);
+                                if (file_exists($pdfPath)) {
+                                    @unlink($pdfPath);
                                 }
-                            } catch (\Exception $fe) {
-                                // Ignorar errores de eliminación de imagen
                             }
+                            
+                            // Eliminar Imagen
+                            if ($recurso->imagen_portada) {
+                                $ruta = $recurso->imagen_portada;
+                                if (str_starts_with($ruta, 'public/')) {
+                                    $ruta = substr($ruta, 7);
+                                }
+                                $imagenPath = public_path($ruta);
+                                if (file_exists($imagenPath)) {
+                                    @unlink($imagenPath);
+                                }
+                            }
+                            
+                            // Eliminamos el registro
+                            $recurso->delete();
+                            $eliminados++;
+                        } catch (\Exception $e) {
+                            \Log::error("Error eliminando recurso {$recurso->id}: " . $e->getMessage());
                         }
-                        $recurso->delete();
                     }
-                    $message = "{$count} recurso(s) eliminado(s) correctamente.";
+                    
+                    if ($eliminados > 0) {
+                        if ($eliminados === 1) {
+                            $message = "Se eliminó 1 recurso correctamente con sus archivos adjuntos (PDF e imagen).";
+                        } else {
+                            $message = "Se eliminaron {$eliminados} recursos correctamente con sus archivos adjuntos.";
+                        }
+                    } else {
+                        $message = "No se pudieron eliminar los recursos.";
+                    }
                     break;
             }
 
