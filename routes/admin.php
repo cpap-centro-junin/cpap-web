@@ -50,7 +50,7 @@ Route::post('/directivos/bulk-toggle', [\App\Http\Controllers\Admin\DirectivoCon
 
 // Invitaciones
 Route::get('/invitaciones', [App\Http\Controllers\Admin\InvitacionController::class, 'index'])
-    ->name('admin.invitaciones');
+    ->name('admin.invitaciones.index');
 
 Route::post('/invitaciones/enviar', [App\Http\Controllers\Admin\InvitacionController::class, 'enviar'])
     ->name('admin.invitaciones.enviar');

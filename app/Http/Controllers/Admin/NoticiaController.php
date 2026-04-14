@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Noticia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class NoticiaController extends Controller
 {
@@ -197,7 +198,13 @@ class NoticiaController extends Controller
                     foreach ($noticias as $noticia) {
                         $rawImagen = $noticia->getOriginal('imagen');
                         if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-                            Storage::disk('public')->delete($rawImagen);
+                            try {
+                                if (Storage::disk('public')->exists($rawImagen)) {
+                                    Storage::disk('public')->delete($rawImagen);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de imagen
+                            }
                         }
                     }
                     Noticia::whereIn('id', $ids)->delete();

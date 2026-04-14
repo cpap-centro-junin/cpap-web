@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GaleriaImagen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GaleriaController extends Controller
 {
@@ -288,48 +289,54 @@ class GaleriaController extends Controller
      */
     public function bulkToggle(Request $request)
     {
-        $ids = $request->input('ids', []);
-        $action = $request->input('action');
-
-        if (empty($ids) || !$action) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Parámetros inválidos.'
-            ], 400);
-        }
-
         try {
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:galeria_imagens,id',
+                'action' => 'required|in:destacar,quitar_destacado,ocultar,mostrar,eliminar',
+            ]);
+
+            $ids = $request->input('ids', []);
+            $action = $request->input('action');
+            $count = count($ids);
+
             $imagenes = GaleriaImagen::whereIn('id', $ids)->get();
 
             switch ($action) {
                 case 'destacar':
                     GaleriaImagen::whereIn('id', $ids)->update(['destacado' => true]);
-                    $message = count($ids) . ' imagen(es) marcada(s) como destacada(s).';
+                    $message = $count . ' imagen(es) marcada(s) como destacada(s).';
                     break;
 
-                case 'no-destacar':
+                case 'quitar_destacado':
                     GaleriaImagen::whereIn('id', $ids)->update(['destacado' => false]);
-                    $message = count($ids) . ' imagen(es) desmarcada(s) como destacada(s).';
+                    $message = $count . ' imagen(es) desmarcada(s) como destacada(s).';
                     break;
 
-                case 'activar':
+                case 'mostrar':
                     GaleriaImagen::whereIn('id', $ids)->update(['activo' => true]);
-                    $message = count($ids) . ' imagen(es) activada(s).';
+                    $message = $count . ' imagen(es) mostrada(s).';
                     break;
 
-                case 'desactivar':
+                case 'ocultar':
                     GaleriaImagen::whereIn('id', $ids)->update(['activo' => false]);
-                    $message = count($ids) . ' imagen(es) desactivada(s).';
+                    $message = $count . ' imagen(es) ocultada(s).';
                     break;
 
                 case 'eliminar':
                     foreach ($imagenes as $imagen) {
-                        if ($imagen->imagen && Storage::disk('public')->exists($imagen->imagen)) {
-                            Storage::disk('public')->delete($imagen->imagen);
+                        if ($imagen->imagen) {
+                            try {
+                                if (Storage::disk('public')->exists($imagen->imagen)) {
+                                    Storage::disk('public')->delete($imagen->imagen);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de archivos
+                            }
                         }
                         $imagen->delete();
                     }
-                    $message = count($ids) . ' imagen(es) eliminada(s).';
+                    $message = $count . ' imagen(es) eliminada(s).';
                     break;
 
                 default:

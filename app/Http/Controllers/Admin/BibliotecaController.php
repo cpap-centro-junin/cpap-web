@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RecursoBiblioteca;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BibliotecaController extends Controller
 {
@@ -268,57 +269,73 @@ class BibliotecaController extends Controller
 
     public function bulkToggle(Request $request)
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:biblioteca,id',
-            'action' => 'required|in:fisico,virtual,activar,desactivar,destacar,no-destacar,eliminar'
-        ]);
+        try {
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:biblioteca,id',
+                'action' => 'required|in:fisico,virtual,activar,desactivar,destacar,no-destacar,eliminar'
+            ]);
 
-        $ids = $request->ids;
-        $action = $request->action;
-        $count = count($ids);
+            $ids = $request->ids;
+            $action = $request->action;
+            $count = count($ids);
 
-        switch($action) {
-            case 'fisico':
-                RecursoBiblioteca::whereIn('id', $ids)->update(['formato' => 'fisico']);
-                $message = "{$count} recurso(s) marcado(s) como físico correctamente.";
-                break;
-            case 'virtual':
-                RecursoBiblioteca::whereIn('id', $ids)->update(['formato' => 'digital']);
-                $message = "{$count} recurso(s) marcado(s) como virtual correctamente.";
-                break;
-            case 'activar':
-                RecursoBiblioteca::whereIn('id', $ids)->update(['activo' => true]);
-                $message = "{$count} recurso(s) publicado(s) correctamente.";
-                break;
-            case 'desactivar':
-                RecursoBiblioteca::whereIn('id', $ids)->update(['activo' => false]);
-                $message = "{$count} recurso(s) ocultado(s) correctamente.";
-                break;
-            case 'destacar':
-                RecursoBiblioteca::whereIn('id', $ids)->update(['destacado' => true]);
-                $message = "{$count} recurso(s) destacado(s) correctamente.";
-                break;
-            case 'no-destacar':
-                RecursoBiblioteca::whereIn('id', $ids)->update(['destacado' => false]);
-                $message = "{$count} recurso(s) sin destaque correctamente.";
-                break;
-            case 'eliminar':
-                $recursos = RecursoBiblioteca::whereIn('id', $ids)->get();
-                foreach ($recursos as $recurso) {
-                    if ($recurso->archivo_pdf) {
-                        Storage::disk('public')->delete($recurso->archivo_pdf);
+            switch($action) {
+                case 'fisico':
+                    RecursoBiblioteca::whereIn('id', $ids)->update(['formato' => 'fisico']);
+                    $message = "{$count} recurso(s) marcado(s) como físico correctamente.";
+                    break;
+                case 'virtual':
+                    RecursoBiblioteca::whereIn('id', $ids)->update(['formato' => 'digital']);
+                    $message = "{$count} recurso(s) marcado(s) como virtual correctamente.";
+                    break;
+                case 'activar':
+                    RecursoBiblioteca::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} recurso(s) publicado(s) correctamente.";
+                    break;
+                case 'desactivar':
+                    RecursoBiblioteca::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} recurso(s) ocultado(s) correctamente.";
+                    break;
+                case 'destacar':
+                    RecursoBiblioteca::whereIn('id', $ids)->update(['destacado' => true]);
+                    $message = "{$count} recurso(s) destacado(s) correctamente.";
+                    break;
+                case 'no-destacar':
+                    RecursoBiblioteca::whereIn('id', $ids)->update(['destacado' => false]);
+                    $message = "{$count} recurso(s) sin destaque correctamente.";
+                    break;
+                case 'eliminar':
+                    $recursos = RecursoBiblioteca::whereIn('id', $ids)->get();
+                    foreach ($recursos as $recurso) {
+                        if ($recurso->archivo_pdf) {
+                            try {
+                                if (Storage::disk('public')->exists($recurso->archivo_pdf)) {
+                                    Storage::disk('public')->delete($recurso->archivo_pdf);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de PDF
+                            }
+                        }
+                        if ($recurso->imagen_portada) {
+                            try {
+                                if (Storage::disk('public')->exists($recurso->imagen_portada)) {
+                                    Storage::disk('public')->delete($recurso->imagen_portada);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de imagen
+                            }
+                        }
+                        $recurso->delete();
                     }
-                    if ($recurso->imagen_portada) {
-                        Storage::disk('public')->delete($recurso->imagen_portada);
-                    }
-                    $recurso->delete();
-                }
-                $message = "{$count} recurso(s) eliminado(s) correctamente.";
-                break;
+                    $message = "{$count} recurso(s) eliminado(s) correctamente.";
+                    break;
+            }
+
+            return response()->json(['success' => true, 'message' => $message]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
-
-        return response()->json(['success' => true, 'message' => $message]);
     }
 
     /* -------------------------------------------------------

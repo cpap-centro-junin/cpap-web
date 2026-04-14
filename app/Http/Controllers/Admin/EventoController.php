@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EventoController extends Controller
 {
@@ -158,46 +159,54 @@ class EventoController extends Controller
 
     public function bulkToggle(Request $request)
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:eventos,id',
-            'action' => 'required|in:activar,desactivar,destacar,no-destacar,eliminar'
-        ]);
+        try {
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:eventos,id',
+                'action' => 'required|in:activar,desactivar,destacar,no-destacar,eliminar'
+            ]);
 
-        $ids = $request->ids;
-        $action = $request->action;
-        $count = count($ids);
+            $ids = $request->ids;
+            $action = $request->action;
+            $count = count($ids);
 
-        switch($action) {
-            case 'activar':
-                Evento::whereIn('id', $ids)->update(['activo' => true]);
-                $message = "{$count} evento(s) publicado(s) correctamente.";
-                break;
-            case 'desactivar':
-                Evento::whereIn('id', $ids)->update(['activo' => false]);
-                $message = "{$count} evento(s) guardado(s) como borrador correctamente.";
-                break;
-            case 'destacar':
-                Evento::whereIn('id', $ids)->update(['destacado' => true]);
-                $message = "{$count} evento(s) destacado(s) correctamente.";
-                break;
-            case 'no-destacar':
-                Evento::whereIn('id', $ids)->update(['destacado' => false]);
-                $message = "{$count} evento(s) sin destaque correctamente.";
-                break;
-            case 'eliminar':
-                $eventos = Evento::whereIn('id', $ids)->get();
-                foreach ($eventos as $evento) {
-                    $rawImagen = $evento->getOriginal('imagen_portada');
-                    if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-                        Storage::disk('public')->delete($rawImagen);
+            switch($action) {
+                case 'activar':
+                    Evento::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} evento(s) publicado(s) correctamente.";
+                    break;
+                case 'desactivar':
+                    Evento::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} evento(s) guardado(s) como borrador correctamente.";
+                    break;
+                case 'destacar':
+                    Evento::whereIn('id', $ids)->update(['destacado' => true]);
+                    $message = "{$count} evento(s) destacado(s) correctamente.";
+                    break;
+                case 'no-destacar':
+                    Evento::whereIn('id', $ids)->update(['destacado' => false]);
+                    $message = "{$count} evento(s) sin destaque correctamente.";
+                    break;
+                case 'eliminar':
+                    $eventos = Evento::whereIn('id', $ids)->get();
+                    foreach ($eventos as $evento) {
+                        $rawImagen = $evento->getOriginal('imagen_portada');
+                        if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
+                            try {
+                                Storage::disk('public')->delete($rawImagen);
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de archivos
+                            }
+                        }
+                        $evento->delete();
                     }
-                    $evento->delete();
-                }
-                $message = "{$count} evento(s) eliminado(s) correctamente.";
-                break;
-        }
+                    $message = "{$count} evento(s) eliminado(s) correctamente.";
+                    break;
+            }
 
-        return response()->json(['success' => true, 'message' => $message]);
+            return response()->json(['success' => true, 'message' => $message]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
 }

@@ -10,6 +10,7 @@ use App\Services\PDFService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ColegiadoController extends Controller
 {
@@ -545,11 +546,23 @@ class ColegiadoController extends Controller
                     // Obtener colegiados para eliminar sus archivos
                     $colegiados = Colegiado::whereIn('id', $ids)->get();
                     foreach ($colegiados as $colegiado) {
-                        if ($colegiado->foto && Storage::disk('public')->exists($colegiado->foto)) {
-                            Storage::disk('public')->delete($colegiado->foto);
+                        if ($colegiado->foto) {
+                            try {
+                                if (Storage::disk('public')->exists($colegiado->foto)) {
+                                    Storage::disk('public')->delete($colegiado->foto);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de foto
+                            }
                         }
-                        if ($colegiado->cv_path && Storage::exists($colegiado->cv_path)) {
-                            Storage::delete($colegiado->cv_path);
+                        if ($colegiado->cv_path) {
+                            try {
+                                if (Storage::exists($colegiado->cv_path)) {
+                                    Storage::delete($colegiado->cv_path);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de CV
+                            }
                         }
                     }
                     Colegiado::whereIn('id', $ids)->delete();

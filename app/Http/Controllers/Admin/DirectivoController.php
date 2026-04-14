@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Directivo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DirectivoController extends Controller
 {
@@ -174,7 +175,11 @@ class DirectivoController extends Controller
                     foreach ($directivos as $directivo) {
                         $rawFoto = $directivo->getOriginal('foto');
                         if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-                            Storage::disk('public')->delete($rawFoto);
+                            try {
+                                Storage::disk('public')->delete($rawFoto);
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de archivos
+                            }
                         }
                     }
                     Directivo::whereIn('id', $ids)->delete();

@@ -8,6 +8,7 @@ use App\Models\ConfiguracionInicio;
 use App\Models\Noticia;
 use App\Models\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class InicioController extends Controller
 {
@@ -218,8 +219,14 @@ class InicioController extends Controller
                     // Obtener slides para eliminar sus imágenes
                     $slides = BannerSlide::whereIn('id', $ids)->get();
                     foreach ($slides as $slide) {
-                        if ($slide->imagen && !str_starts_with($slide->imagen, 'http') && \Storage::disk('public')->exists($slide->imagen)) {
-                            \Storage::disk('public')->delete($slide->imagen);
+                        if ($slide->imagen && !str_starts_with($slide->imagen, 'http')) {
+                            try {
+                                if (\Storage::disk('public')->exists($slide->imagen)) {
+                                    \Storage::disk('public')->delete($slide->imagen);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de archivos
+                            }
                         }
                     }
                     BannerSlide::whereIn('id', $ids)->delete();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\NormativaDocumento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class NormativaController extends Controller
 {
@@ -148,38 +149,46 @@ class NormativaController extends Controller
 
     public function bulkToggle(Request $request)
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:normativa_documentos,id',
-            'action' => 'required|in:activar,desactivar,eliminar'
-        ]);
+        try {
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:normativa_documentos,id',
+                'action' => 'required|in:activar,desactivar,eliminar'
+            ]);
 
-        $ids = $request->ids;
-        $action = $request->action;
-        $count = count($ids);
+            $ids = $request->ids;
+            $action = $request->action;
+            $count = count($ids);
 
-        switch($action) {
-            case 'activar':
-                NormativaDocumento::whereIn('id', $ids)->update(['activo' => true]);
-                $message = "{$count} documento(s) activado(s) correctamente.";
-                break;
-            case 'desactivar':
-                NormativaDocumento::whereIn('id', $ids)->update(['activo' => false]);
-                $message = "{$count} documento(s) desactivado(s) correctamente.";
-                break;
-            case 'eliminar':
-                $documentos = NormativaDocumento::whereIn('id', $ids)->get();
-                foreach ($documentos as $doc) {
-                    if ($doc->archivo_pdf) {
-                        Storage::disk('public')->delete($doc->archivo_pdf);
+            switch($action) {
+                case 'activar':
+                    NormativaDocumento::whereIn('id', $ids)->update(['activo' => true]);
+                    $message = "{$count} documento(s) activado(s) correctamente.";
+                    break;
+                case 'desactivar':
+                    NormativaDocumento::whereIn('id', $ids)->update(['activo' => false]);
+                    $message = "{$count} documento(s) desactivado(s) correctamente.";
+                    break;
+                case 'eliminar':
+                    $documentos = NormativaDocumento::whereIn('id', $ids)->get();
+                    foreach ($documentos as $doc) {
+                        if ($doc->archivo_pdf) {
+                            try {
+                                Storage::disk('public')->delete($doc->archivo_pdf);
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de archivos
+                            }
+                        }
+                        $doc->delete();
                     }
-                    $doc->delete();
-                }
-                $message = "{$count} documento(s) eliminado(s) correctamente.";
-                break;
-        }
+                    $message = "{$count} documento(s) eliminado(s) correctamente.";
+                    break;
+            }
 
-        return response()->json(['success' => true, 'message' => $message]);
+            return response()->json(['success' => true, 'message' => $message]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
     /**
      * Descargar PDF (ruta pública).

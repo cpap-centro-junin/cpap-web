@@ -104,7 +104,7 @@
             </div>
         </a>
 
-        <a href="{{ route('admin.invitaciones') }}" class="card">
+        <a href="{{ route('admin.invitaciones.index') }}" class="card">
             <div class="card-icon" style="background: linear-gradient(135deg, #e65100 0%, #d84315 100%);">
                 <i class="fas fa-envelope-open-text"></i>
             </div>

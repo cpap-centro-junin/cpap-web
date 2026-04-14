@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PopupAnuncio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PopupAnuncioController extends Controller
 {
@@ -125,7 +126,13 @@ class PopupAnuncioController extends Controller
                     foreach ($anuncios as $anuncio) {
                         $rawImagen = $anuncio->getOriginal('imagen');
                         if ($rawImagen && !str_starts_with($rawImagen, 'data:')) {
-                            Storage::disk('public')->delete($rawImagen);
+                            try {
+                                if (Storage::disk('public')->exists($rawImagen)) {
+                                    Storage::disk('public')->delete($rawImagen);
+                                }
+                            } catch (\Exception $fe) {
+                                // Ignorar errores de eliminación de imagen
+                            }
                         }
                     }
                     PopupAnuncio::whereIn('id', $ids)->delete();
