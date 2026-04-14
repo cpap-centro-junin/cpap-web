@@ -88,9 +88,9 @@
                     </h3>
 
                     
-                    <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
+                    <div id="archivosActuales" style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
                         <?php if($recurso->archivo_pdf): ?>
-                        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(139,21,56,0.08);border:1px solid rgba(139,21,56,0.15);border-radius:8px;font-size:12px;">
+                        <div id="pdfActualContainer" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(139,21,56,0.08);border:1px solid rgba(139,21,56,0.15);border-radius:8px;font-size:12px;">
                             <i class="fas fa-file-pdf" style="color:var(--primary);font-size:16px;"></i>
                             <div style="flex:1;">
                                 <div style="color:var(--dark);font-weight:500;">PDF cargado</div>
@@ -100,12 +100,20 @@
                                style="padding:6px 12px;background:var(--primary);color:white;border-radius:6px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;font-size:11px;white-space:nowrap;flex-shrink:0;transition:all .2s;">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
+                            <button type="button" onclick="clearPdf()"
+                               style="padding:6px 12px;background:var(--danger-light);color:var(--danger);border:none;border-radius:6px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;white-space:nowrap;flex-shrink:0;transition:all .2s;">
+                                <i class="fas fa-times"></i> Eliminar
+                            </button>
                         </div>
                         <?php endif; ?>
                         <?php if($recurso->imagen_portada): ?>
-                        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(201,169,97,0.1);border-radius:8px;font-size:12px;">
+                        <div id="imagenActualContainer" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(201,169,97,0.1);border-radius:8px;font-size:12px;">
                             <img src="<?php echo e($recurso->imagen_portada_url); ?>" alt="" style="width:30px;height:40px;object-fit:cover;border-radius:4px;">
                             <span style="color:var(--dark);font-weight:500;">Portada actual</span>
+                            <button type="button" onclick="clearImagen()"
+                               style="margin-left:6px;padding:4px 8px;background:var(--danger-light);color:var(--danger);border:none;border-radius:4px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:2px;font-size:10px;">
+                                <i class="fas fa-times"></i> Eliminar
+                            </button>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -122,6 +130,8 @@
                                    class="admin-input" style="padding:8px;">
                         </div>
                     </div>
+                    <input type="hidden" id="pdfClear" name="pdf_clear" value="0">
+                    <input type="hidden" id="imagenClear" name="imagen_clear" value="0">
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
                         <div>
                             <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Enlace externo</label>
@@ -278,6 +288,20 @@
     </form>
 
 </div>
+
+<?php $__env->startPush('scripts'); ?>
+<script>
+function clearPdf() {
+    document.getElementById('pdfClear').value = '1';
+    document.getElementById('pdfActualContainer').style.display = 'none';
+}
+
+function clearImagen() {
+    document.getElementById('imagenClear').value = '1';
+    document.getElementById('imagenActualContainer').style.display = 'none';
+}
+</script>
+<?php $__env->stopPush(); ?>
 
 <?php $__env->startPush('styles'); ?>
 <style>

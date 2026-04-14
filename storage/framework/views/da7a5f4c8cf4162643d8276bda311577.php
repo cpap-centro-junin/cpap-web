@@ -99,9 +99,9 @@
                     &copy; <?php echo e(date('Y')); ?> <strong>CPAP Región Centro</strong>. Todos los derechos reservados.
                 </p>
                 <div class="footer-bottom-links">
-                    <a href="<?php echo e(route('contacto.index')); ?>">Política de Privacidad</a>
-                    <a href="<?php echo e(route('contacto.index')); ?>">Términos de Uso</a>
-                    <a href="<?php echo e(url('/')); ?>">Mapa del Sitio</a>
+                    <a href="<?php echo e(route('legal.privacidad')); ?>">Política de Privacidad</a>
+                    <a href="<?php echo e(route('legal.terminos')); ?>">Términos de Uso</a>
+                    <a href="<?php echo e(route('legal.mapa-sitio')); ?>">Mapa del Sitio</a>
                 </div>
             </div>
         </div>

@@ -140,7 +140,7 @@
                 <i class="fas fa-palette"></i>
                 <span class="menu-text">Diseño del Sitio</span>
             </a>
-            <a href="<?php echo e(route('admin.invitaciones')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.invitaciones') ? 'active' : ''); ?>">
+            <a href="<?php echo e(route('admin.invitaciones.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.invitaciones*') ? 'active' : ''); ?>">
                 <i class="fas fa-user-plus"></i>
                 <span class="menu-text">Invitaciones</span>
             </a>

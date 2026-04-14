@@ -99,9 +99,9 @@
                     &copy; {{ date('Y') }} <strong>CPAP Región Centro</strong>. Todos los derechos reservados.
                 </p>
                 <div class="footer-bottom-links">
-                    <a href="{{ route('contacto.index') }}">Política de Privacidad</a>
-                    <a href="{{ route('contacto.index') }}">Términos de Uso</a>
-                    <a href="{{ url('/') }}">Mapa del Sitio</a>
+                    <a href="{{ route('legal.privacidad') }}">Política de Privacidad</a>
+                    <a href="{{ route('legal.terminos') }}">Términos de Uso</a>
+                    <a href="{{ route('legal.mapa-sitio') }}">Mapa del Sitio</a>
                 </div>
             </div>
         </div>

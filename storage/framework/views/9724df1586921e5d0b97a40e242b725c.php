@@ -440,11 +440,19 @@ function bulkAction(action) {
             confirmButtonText = '<i class="fas fa-star-regular"></i> Sí, remover destaque';
             break;
         case 'eliminar':
-            title = 'Eliminar recursos';
-            message = `Se eliminarán permanentemente <strong>${count} recurso(s)</strong> junto con sus archivos. Esta acción no se puede deshacer.`;
+            title = '⚠️ Eliminar recursos';
+            message = `<div style="text-align: left; line-height: 1.8;">
+                <p><strong>Se eliminarán permanentemente ${count} recurso(s):</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>✓ Registros de la base de datos</li>
+                    <li>✓ PDFs almacenados en <code>/pdf/biblioteca/</code></li>
+                    <li>✓ Imágenes almacenadas en <code>/images/biblioteca/</code></li>
+                </ul>
+                <p style="color: #d32f2f; font-weight: 600; margin-top: 15px;">⚠️ Esta acción NO se puede deshacer</p>
+            </div>`;
             icon = 'warning';
             confirmButtonColor = '#d32f2f';
-            confirmButtonText = '<i class="fas fa-trash"></i> Sí, eliminar';
+            confirmButtonText = '<i class="fas fa-trash"></i> Sí, eliminar todo';
             break;
     }
     
@@ -468,6 +476,28 @@ function bulkAction(action) {
 function executeBulkAction(action) {
     const ids = Array.from(selectedRecursos);
     
+    // Mensajes específicos para el loading
+    let loadingTitle = '⏳ Procesando...';
+    let loadingMessage = 'Se está procesando tu solicitud';
+    
+    if (action === 'eliminar') {
+        loadingTitle = '🗑️ Eliminando recursos...';
+        loadingMessage = 'Se están eliminando los recursos y sus archivos adjuntos. Por favor espera...';
+    }
+    
+    // Mostrar dialogo de carga
+    Swal.fire({
+        title: loadingTitle,
+        html: loadingMessage,
+        icon: 'info',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: (modal) => {
+            Swal.showLoading();
+        }
+    });
+    
+    // Ejecutar la acción
     fetch('<?php echo e(route("admin.biblioteca.bulk-toggle")); ?>', {
         method: 'POST',
         headers: {
@@ -482,11 +512,25 @@ function executeBulkAction(action) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Mensaje de éxito personalizado
+            let successTitle = '¡Éxito!';
+            let successIcon = 'success';
+            let successColor = '#4CAF50';
+            
+            if (action === 'eliminar') {
+                successTitle = '✅ Recursos eliminados';
+                successIcon = 'success';
+            }
+            
             Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: data.message,
-                confirmButtonColor: '#4CAF50'
+                icon: successIcon,
+                title: successTitle,
+                html: `<div style="text-align: center; line-height: 1.6;">
+                    <p style="font-weight: 600; color: #333; margin-bottom: 10px;">${data.message}</p>
+                    ${action === 'eliminar' ? '<p style="font-size: 0.9rem; color: #666;">Los PDFs e imágenes también fueron eliminados.</p>' : ''}
+                </div>`,
+                confirmButtonColor: successColor,
+                confirmButtonText: 'OK'
             }).then(() => {
                 location.reload();
             });
@@ -494,7 +538,10 @@ function executeBulkAction(action) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: data.message || 'Algo salió mal. Intenta nuevamente.'
+                html: `<div style="text-align: center;">
+                    <p>${data.message || 'Algo salió mal. Intenta nuevamente.'}</p>
+                </div>`,
+                confirmButtonColor: '#d32f2f'
             });
         }
     })
@@ -502,8 +549,11 @@ function executeBulkAction(action) {
         console.error('Error:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema procesando tu solicitud.'
+            title: 'Error de Conexión',
+            html: `<div style="text-align: center;">
+                <p>Hubo un problema procesando tu solicitud. Por favor intenta nuevamente.</p>
+            </div>`,
+            confirmButtonColor: '#d32f2f'
         });
     });
 }

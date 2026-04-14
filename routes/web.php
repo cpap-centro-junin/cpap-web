@@ -262,7 +262,17 @@ Route::middleware('auth')->group(function () {
 Route::get('/colegiatura', [ColegiaturaController::class, 'index'])
     ->name('colegiatura.index');
 
+// ============================================
+// PÁGINAS LEGALES
+// ============================================
+Route::get('/privacidad', [\App\Http\Controllers\LegalPagesController::class, 'privacidad'])
+    ->name('legal.privacidad');
 
+Route::get('/terminos', [\App\Http\Controllers\LegalPagesController::class, 'terminos'])
+    ->name('legal.terminos');
+
+Route::get('/mapa-sitio', [\App\Http\Controllers\LegalPagesController::class, 'mapa'])
+    ->name('legal.mapa-sitio');
 
 // ============================================
 // ADMIN: NOTICIAS Y EVENTOS (CRUD)

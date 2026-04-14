@@ -6,11 +6,14 @@
 <div class="msg-list-card">
 
     <div class="msg-list-header">
-        <div class="msg-list-header-left">
-            <div class="msg-list-icon"><i class="fas fa-inbox"></i></div>
-            <div>
-                <h3>Bandeja de entrada</h3>
-                <p><?php echo e($messages->total()); ?> mensaje<?php echo e($messages->total() != 1 ? 's' : ''); ?> recibido<?php echo e($messages->total() != 1 ? 's' : ''); ?></p>
+        <div class="msg-list-header-left" style="display:flex;align-items:center;gap:16px;">
+            <input type="checkbox" id="selectAll">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="msg-list-icon"><i class="fas fa-inbox"></i></div>
+                <div>
+                    <h3>Bandeja de entrada</h3>
+                    <p><?php echo e($messages->total()); ?> mensaje<?php echo e($messages->total() != 1 ? 's' : ''); ?> recibido<?php echo e($messages->total() != 1 ? 's' : ''); ?></p>
+                </div>
             </div>
         </div>
         <?php $newCount = $messages->getCollection()->where('leido', false)->count(); ?>
@@ -60,8 +63,12 @@
 <?php endif; ?>
 
     <div class="msg-list-body">
-        <?php $__empty_1 = true; $__currentLoopData = $messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-        <div class="msg-row <?php echo e(!$msg->leido ? 'msg-row--new' : ''); ?>">
+        <?php $__empty_1 = true; $__currentLoopData = $messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $msg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+        <div class="msg-row <?php echo e(!$msg->leido ? 'msg-row--new' : ''); ?>" data-msg-id="<?php echo e($msg->id); ?>">
+
+            <div style="display:flex;align-items:center;padding-right:12px;">
+                <input type="checkbox" class="msg-checkbox" value="<?php echo e($msg->id); ?>" style="width:18px;height:18px;cursor:pointer;">
+            </div>
 
             <div class="msg-avatar">
                 <?php echo e(strtoupper(substr($msg->nombre, 0, 2))); ?>
@@ -116,6 +123,32 @@
         <?php endif; ?>
     </div>
 
+    
+    <div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <i class="fas fa-check-circle" style="color:var(--primary);font-size:18px;"></i>
+                <span id="selectionCountText" style="font-weight:600;color:var(--dark);font-size:14px;">
+                    0 elementos seleccionados
+                </span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="bulkAction('eliminar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(211,47,47,0.1);color:#d32f2f;border:1px solid rgba(211,47,47,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                        onmouseover="this.style.background='rgba(211,47,47,0.15)';this.style.borderColor='rgba(211,47,47,0.5)'"
+                        onmouseout="this.style.background='rgba(211,47,47,0.1)';this.style.borderColor='rgba(211,47,47,0.3)'">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+                <button onclick="clearSelection()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--light-gray);color:var(--medium-gray);border:1px solid rgba(0,0,0,0.1);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                        onmouseover="this.style.background='#e0e0e0'"
+                        onmouseout="this.style.background='var(--light-gray)'">
+                    <i class="fas fa-times"></i>
+                    Deseleccionar
+                </button>
+            </div>
+        </div>
+    </div>
+
 <?php echo e($messages->links('pagination.admin')); ?>
 
 
@@ -124,7 +157,121 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('scripts'); ?>
+<style>
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+let selectedMessages = new Set();
+const bulkActionsPanel = document.getElementById('bulkActionsPanel');
+const msgCheckboxes = document.querySelectorAll('.msg-checkbox');
+const selectAllCheckbox = document.getElementById('selectAll');
+
+msgCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            selectedMessages.add(this.value);
+        } else {
+            selectedMessages.delete(this.value);
+        }
+        updateBulkUI();
+    });
+});
+
+selectAllCheckbox?.addEventListener('change', function() {
+    msgCheckboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+        if (this.checked) {
+            selectedMessages.add(checkbox.value);
+        } else {
+            selectedMessages.delete(checkbox.value);
+        }
+    });
+    updateBulkUI();
+});
+
+function updateBulkUI() {
+    const count = selectedMessages.size;
+    const countText = document.getElementById('selectionCountText');
+    
+    if (count > 0) {
+        bulkActionsPanel.style.display = 'block';
+        countText.textContent = count === 1 ? '1 elemento seleccionado' : `${count} elementos seleccionados`;
+    } else {
+        bulkActionsPanel.style.display = 'none';
+    }
+}
+
+function bulkAction(action) {
+    const count = selectedMessages.size;
+    if (count === 0) return;
+    
+    Swal.fire({
+        title: 'Eliminar mensajes',
+        text: `Se eliminarán permanentemente ${count} mensaje(s). Esta acción no se puede deshacer.`,
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            executeBulkAction(action);
+        }
+    });
+}
+
+function executeBulkAction(action) {
+    const ids = Array.from(selectedMessages);
+    const route = '<?php echo e(route("admin.mensajes.bulk-toggle")); ?>';
+    
+    fetch(route, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '<?php echo e(csrf_token()); ?>'
+        },
+        body: JSON.stringify({ ids, action })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: '¡Completado!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonColor: '#4CAF50',
+                confirmButtonText: 'Continuar'
+            }).then(() => {
+                location.reload();
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
+    });
+}
+
+function clearSelection() {
+    selectedMessages.clear();
+    msgCheckboxes.forEach(checkbox => checkbox.checked = false);
+    selectAllCheckbox.checked = false;
+    updateBulkUI();
+}
+
+// Confirmación de eliminación individual
 document.querySelectorAll('.delete-form').forEach(form => {
     form.addEventListener('submit', function(e){
         e.preventDefault();
@@ -133,10 +280,11 @@ document.querySelectorAll('.delete-form').forEach(form => {
             text: "Esta acción no se puede deshacer.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#7b1e3a',
-            cancelButtonColor: '#999',
+            confirmButtonColor: '#d32f2f',
+            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
         }).then((result) => {
             if(result.isConfirmed) form.submit();
         });
