@@ -138,18 +138,27 @@
                     </div>
                     <div class="form-group">
                         <label for="foto">Foto de Perfil</label>
-                        @if($colegiado->foto)
-                            <div class="current-file-preview">
-                                <img src="{{ $colegiado->foto_url }}" alt="Foto actual">
-                                <span class="text-muted">Foto actual</span>
-                            </div>
-                        @endif
+                        <div id="fotoCurrentContainer">
+                            @if($colegiado->foto)
+                                <div class="current-file-preview" style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                                    <img src="{{ $colegiado->foto_url }}" alt="Foto actual" style="width:100px;height:100px;object-fit:cover;border-radius:6px;">
+                                    <div style="flex:1;">
+                                        <p style="margin:0;font-weight:600;color:var(--dark);font-size:13px;">Foto actual</p>
+                                        <button type="button" id="fotoClearBtn" onclick="clearFoto()"
+                                                style="margin-top:6px;padding:6px 12px;background:var(--danger-light);color:var(--danger);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                                            <i class="fas fa-times"></i> Eliminar foto
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
                         <input type="file" class="form-control @error('foto') is-invalid @enderror"
                                id="foto" name="foto" accept="image/*">
                         <small class="form-text">JPG, JPEG o PNG. Máximo 2MB. Dejar vacío para mantener la actual.</small>
                         @error('foto')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <input type="hidden" id="fotoClear" name="foto_clear" value="0">
                     </div>
                 </div>
             </div>
@@ -271,18 +280,30 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Curriculum Vitae (PDF)</label>
-                        @if($colegiado->cv_path)
-                            <div class="current-file-preview">
-                                <i class="fas fa-file-pdf"></i>
-                                <span class="text-muted">CV actual cargado</span>
-                            </div>
-                        @endif
+                        <div id="cvCurrentContainer">
+                            @if($colegiado->cv_path)
+                                <div class="current-file-preview" style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                                    <div style="flex-shrink:0;">
+                                        <i class="fas fa-file-pdf" style="font-size:32px;color:var(--danger);"></i>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <p style="margin:0;font-weight:600;color:var(--dark);font-size:13px;">CV cargado</p>
+                                        <p style="margin:4px 0 0;font-size:12px;color:var(--medium-gray);">Archivo PDF</p>
+                                        <button type="button" id="cvClearBtn" onclick="clearCV()"
+                                                style="margin-top:6px;padding:6px 12px;background:var(--danger-light);color:var(--danger);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                                            <i class="fas fa-times"></i> Eliminar CV
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
                         <input type="file" class="form-control @error('cv') is-invalid @enderror"
                                id="cv" name="cv" accept=".pdf">
                         <small class="form-text">Archivo PDF. Máximo 5MB. Dejar vacío para mantener el actual.</small>
                         @error('cv')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <input type="hidden" id="cvClear" name="cv_clear" value="0">
                     </div>
                     <div class="form-group">
                         {{-- Espacio reservado para mantener el grid --}}
@@ -596,5 +617,19 @@
     </div>
 
 </div>
+
+<script>
+function clearFoto() {
+    document.getElementById('fotoClear').value = '1';
+    document.getElementById('fotoCurrentContainer').style.display = 'none';
+    document.getElementById('foto').value = '';
+}
+
+function clearCV() {
+    document.getElementById('cvClear').value = '1';
+    document.getElementById('cvCurrentContainer').style.display = 'none';
+    document.getElementById('cv').value = '';
+}
+</script>
 
 @endsection

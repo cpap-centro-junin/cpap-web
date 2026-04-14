@@ -58,15 +58,20 @@
                         <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">
                             Imagen actual
                         </label>
-                        <div style="margin-bottom:12px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);max-width:400px;">
+                        <div id="imagenActualContainer" style="margin-bottom:12px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);max-width:400px;">
                             <img src="{{ $galeria->imagen }}" alt="{{ $galeria->titulo }}"
                                  style="width:100%;display:block;">
+                            <button type="button" onclick="clearImagen()"
+                                    style="width:100%;padding:8px;background:var(--danger-light);color:var(--danger);border:none;border-radius:0;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                <i class="fas fa-times"></i> Eliminar imagen
+                            </button>
                         </div>
                         <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">
                             Reemplazar imagen <span style="color:var(--medium-gray);font-weight:400;">(dejar vacío para mantener la actual)</span>
                         </label>
                         <input type="file" name="imagen" accept="image/jpeg,image/png,image/webp"
                                class="admin-input" style="padding:10px;" id="inputImagen">
+                        <input type="hidden" id="imagenClear" name="imagen_clear" value="0">
                         <p style="color:var(--medium-gray);font-size:11px;margin:6px 0 0;">JPG, PNG o WebP. Máximo 5 MB.</p>
                         <div id="previewContainer" style="margin-top:12px;display:none;">
                             <p style="font-size:12px;color:var(--success);font-weight:600;margin-bottom:6px;">
@@ -151,6 +156,12 @@ document.getElementById('inputImagen').addEventListener('change', function(e) {
         container.style.display = 'none';
     }
 });
+
+function clearImagen() {
+    document.getElementById('imagenClear').value = '1';
+    document.getElementById('imagenActualContainer').style.display = 'none';
+    document.getElementById('inputImagen').value = '';
+}
 </script>
 @endpush
 

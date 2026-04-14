@@ -70,23 +70,30 @@
                         Archivo PDF <span style="color:var(--medium-gray);font-weight:400;">(máx. 10MB)</span>
                     </label>
 
-                    @if($normativa->archivo_pdf)
-                    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-sm);margin-bottom:10px;">
-                        <i class="fas fa-file-pdf" style="font-size:20px;color:#dc2626;"></i>
-                        <div style="flex:1;min-width:0;">
-                            <div style="font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                                {{ $normativa->archivo_nombre }}
+                    <div id="pdfActualContainer">
+                        @if($normativa->archivo_pdf)
+                        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--radius-sm);margin-bottom:10px;">
+                            <i class="fas fa-file-pdf" style="font-size:20px;color:#dc2626;"></i>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    {{ $normativa->archivo_nombre }}
+                                </div>
+                                <div style="font-size:11px;color:#16a34a;">Archivo actual</div>
                             </div>
-                            <div style="font-size:11px;color:#16a34a;">Archivo actual</div>
+                            <a href="{{ $normativa->pdfUrl }}" target="_blank"
+                               style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            <button type="button" onclick="clearPdf()"
+                               style="padding:6px 12px;background:var(--danger-light);color:var(--danger);border:none;border-radius:6px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap;flex-shrink:0;">
+                                <i class="fas fa-times"></i> Eliminar
+                            </button>
                         </div>
-                        <a href="{{ $normativa->pdfUrl }}" target="_blank"
-                           style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;">
-                            <i class="fas fa-eye"></i> Ver
-                        </a>
+                        @endif
                     </div>
-                    @endif
 
                     <input type="file" name="archivo_pdf" accept=".pdf" class="admin-input">
+                    <input type="hidden" id="pdfClear" name="pdf_clear" value="0">
                     <p style="font-size:11px;color:var(--medium-gray);margin:4px 0 0;">
                         @if($normativa->archivo_pdf)
                             Sube un nuevo PDF para reemplazar el actual, o déjalo vacío para mantenerlo.
@@ -150,6 +157,15 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+function clearPdf() {
+    document.getElementById('pdfClear').value = '1';
+    document.getElementById('pdfActualContainer').innerHTML = '';
+}
+</script>
+@endpush
 
 @push('styles')
 <style>

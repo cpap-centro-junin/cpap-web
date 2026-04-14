@@ -90,12 +90,33 @@ class DirectivoController extends Controller
         $data['activo'] = $request->boolean('activo');
         $data['orden']  = $data['orden'] ?? $directivo->orden;
 
-        if ($request->hasFile('foto')) {
+        // Eliminar foto si se solicita
+        if ($request->boolean('foto_clear')) {
             $rawFoto = $directivo->getOriginal('foto');
             if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-                $rutaFoto = $rawFoto;                if (str_starts_with($rutaFoto, 'public/')) {
+                $rutaFoto = $rawFoto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7);
+                }
+                $fotoPath = public_path($rutaFoto);
+                if (file_exists($fotoPath)) {
+                    @unlink($fotoPath);
+                }
+            }
+            $data['foto'] = null;
+        }
+        // Procesar nueva foto si se sube
+        elseif ($request->hasFile('foto')) {
+            $rawFoto = $directivo->getOriginal('foto');
+            if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
+                $rutaFoto = $rawFoto;                
+                if (str_starts_with($rutaFoto, 'public/')) {
                     $rutaFoto = substr($rutaFoto, 7); // Remover "public/"
-                }                @unlink(public_path($rutaFoto));
+                }                
+                $fotoPath = public_path($rutaFoto);
+                if (file_exists($fotoPath)) {
+                    @unlink($fotoPath);
+                }
             }
             $file = $request->file('foto');
             $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());

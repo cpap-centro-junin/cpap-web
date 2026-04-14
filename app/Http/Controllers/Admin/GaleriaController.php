@@ -203,7 +203,33 @@ class GaleriaController extends Controller
             'activo'      => 'nullable|boolean',
         ]);
 
-        if ($request->hasFile('imagen')) {
+        // Eliminar imagen si se solicita
+        if ($request->boolean('imagen_clear')) {
+            if ($galeria->imagen) {
+                $ruta = $galeria->imagen;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $imagenPath = public_path($ruta);
+                if (file_exists($imagenPath)) {
+                    @unlink($imagenPath);
+                }
+            }
+            $data['imagen'] = null;
+        }
+        // Procesar nueva imagen si se sube
+        elseif ($request->hasFile('imagen')) {
+            // Eliminar anterior si existe
+            if ($galeria->imagen) {
+                $ruta = $galeria->imagen;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $imagenPath = public_path($ruta);
+                if (file_exists($imagenPath)) {
+                    @unlink($imagenPath);
+                }
+            }
             $file = $request->file('imagen');
             $filename = $file->move(public_path('images/galeria'), uniqid('galeria_') . '.' . $file->getClientOriginalExtension());
             $data['imagen'] = 'public/images/galeria/' . basename($filename);

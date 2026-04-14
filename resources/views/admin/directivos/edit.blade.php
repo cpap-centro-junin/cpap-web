@@ -159,19 +159,25 @@
                         <i class="fas fa-image" style="color:var(--primary);"></i> Fotografía
                     </h3>
 
-                    @if($directivo->foto)
-                    <div style="margin-bottom:10px;">
+                    <div id="currentFotoContainer" style="margin-bottom:10px;display:{{ $directivo->foto ? 'block' : 'none' }};">
+                        @if($directivo->foto)
                         <p style="font-size:12px;color:var(--medium-gray);margin:0 0 6px;">Foto actual:</p>
-                        <img src="{{ $directivo->foto }}" alt="{{ $directivo->nombre }}"
-                             id="currentImg"
-                             style="width:100%;height:140px;object-fit:cover;border-radius:6px;display:block;">
+                        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;">
+                            <img src="{{ $directivo->foto }}" alt="{{ $directivo->nombre }}"
+                                 id="currentImg"
+                                 style="width:100px;height:100px;object-fit:cover;border-radius:6px;flex-shrink:0;">
+                            <button type="button" id="deleteCurrentFotoBtn" onclick="deleteCurrentFoto()"
+                                    style="align-self:center;padding:6px 12px;background:var(--danger-light);color:var(--danger);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                                <i class="fas fa-times"></i> Eliminar foto
+                            </button>
+                        </div>
+                        @else
+                        <div style="margin-bottom:10px;padding:16px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:6px;text-align:center;">
+                            <i class="fas fa-user-tie" style="font-size:40px;color:rgba(255,255,255,0.5);"></i>
+                            <p style="font-size:11px;color:rgba(255,255,255,0.7);margin:4px 0 0;">Sin foto asignada</p>
+                        </div>
+                        @endif
                     </div>
-                    @else
-                    <div style="margin-bottom:10px;padding:16px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:6px;text-align:center;">
-                        <i class="fas fa-user-tie" style="font-size:40px;color:rgba(255,255,255,0.5);"></i>
-                        <p style="font-size:11px;color:rgba(255,255,255,0.7);margin:4px 0 0;">Sin foto asignada</p>
-                    </div>
-                    @endif
 
                     <div id="dropZone" onclick="document.getElementById('fotoInput').click()"
                          style="border:2px dashed var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;transition:all 0.2s;">
@@ -182,6 +188,7 @@
                         <img id="preview" src="" alt="" style="display:none;width:100%;height:120px;object-fit:cover;border-radius:6px;">
                     </div>
                     <input type="file" id="fotoInput" name="foto" accept="image/*" style="display:none;" onchange="handleImg(this)">
+                    <input type="hidden" id="fotoClear" name="foto_clear" value="0">
                     <button type="button" id="removeBtn" onclick="removeImg()"
                             style="display:none;width:100%;margin-top:8px;padding:6px;background:var(--danger-light);color:var(--danger);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;">
                         <i class="fas fa-times"></i> Quitar nueva foto
@@ -301,6 +308,12 @@ dz.addEventListener('drop', e => {
         inp.files = dt.files; handleImg(inp);
     }
 });
+
+function deleteCurrentFoto() {
+    document.getElementById('fotoClear').value = '1';
+    document.getElementById('currentFotoContainer').style.display = 'none';
+    document.getElementById('fotoInput').value = '';
+}
 </script>
 @endpush
 

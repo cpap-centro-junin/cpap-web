@@ -95,7 +95,34 @@ class NormativaController extends Controller
         $data['activo'] = $request->boolean('activo');
         $data['orden']  = $data['orden'] ?? $normativa->orden;
 
-        if ($request->hasFile('archivo_pdf')) {
+        // Eliminar PDF si se solicita
+        if ($request->boolean('pdf_clear')) {
+            if ($normativa->archivo_pdf) {
+                $ruta = $normativa->archivo_pdf;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $pdfPath = public_path($ruta);
+                if (file_exists($pdfPath)) {
+                    @unlink($pdfPath);
+                }
+            }
+            $data['archivo_pdf'] = null;
+            $data['archivo_nombre'] = null;
+        }
+        // Procesar PDF si se sube uno nuevo
+        elseif ($request->hasFile('archivo_pdf')) {
+            // Eliminar anterior si existe
+            if ($normativa->archivo_pdf) {
+                $ruta = $normativa->archivo_pdf;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $pdfPath = public_path($ruta);
+                if (file_exists($pdfPath)) {
+                    @unlink($pdfPath);
+                }
+            }
             $file = $request->file('archivo_pdf');
             $dir = public_path('pdf');
             if (!file_exists($dir)) mkdir($dir, 0755, true);
@@ -103,11 +130,6 @@ class NormativaController extends Controller
             $file->move($dir, $nombre);
             $data['archivo_nombre'] = $file->getClientOriginalName();
             $data['archivo_pdf'] = 'public/pdf/' . $nombre;
-        }
-
-        if ($request->boolean('eliminar_pdf') && !$request->hasFile('archivo_pdf')) {
-            $data['archivo_pdf'] = null;
-            $data['archivo_nombre'] = null;
         }
 
         $normativa->update($data);

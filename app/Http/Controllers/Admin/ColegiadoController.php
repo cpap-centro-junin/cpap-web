@@ -300,8 +300,22 @@ class ColegiadoController extends Controller
         $validated = $request->validate($this->validationRules($colegiado->id));
         $validated = array_merge($validated, $this->resolveVisibilityFields($request));
 
-        // Procesar foto
-        if ($request->hasFile('foto')) {
+        // Eliminar foto si se solicita
+        if ($request->boolean('foto_clear')) {
+            if ($colegiado->foto && !str_starts_with($colegiado->foto, 'data:')) {
+                $rutaFoto = $colegiado->foto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7);
+                }
+                $fotoPath = public_path($rutaFoto);
+                if (file_exists($fotoPath)) {
+                    @unlink($fotoPath);
+                }
+            }
+            $validated['foto'] = null;
+        }
+        // Procesar foto si se sube una nueva
+        elseif ($request->hasFile('foto')) {
             $foto = $request->file('foto');
             $ext = strtolower($foto->getClientOriginalExtension());
             
@@ -359,8 +373,22 @@ class ColegiadoController extends Controller
             $validated['foto'] = 'public/images/colegiados/' . $nombreFoto;
         }
 
-        // Procesar CV
-        if ($request->hasFile('cv')) {
+        // Eliminar CV si se solicita
+        if ($request->boolean('cv_clear')) {
+            if ($colegiado->cv_path && !str_starts_with($colegiado->cv_path, 'data:')) {
+                $rutaCV = $colegiado->cv_path;
+                if (str_starts_with($rutaCV, 'public/')) {
+                    $rutaCV = substr($rutaCV, 7);
+                }
+                $cvPath = public_path($rutaCV);
+                if (file_exists($cvPath)) {
+                    @unlink($cvPath);
+                }
+            }
+            $validated['cv_path'] = null;
+        }
+        // Procesar CV si se sube uno nuevo
+        elseif ($request->hasFile('cv')) {
             $cv = $request->file('cv');
             
             // Eliminar CV anterior si existe

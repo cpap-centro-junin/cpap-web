@@ -173,8 +173,33 @@ class BibliotecaController extends Controller
             'destacado'           => 'boolean',
         ]);
 
-        // Archivo PDF
-        if ($request->hasFile('archivo_pdf')) {
+        // Eliminar PDF si se solicita
+        if ($request->boolean('pdf_clear')) {
+            if ($biblioteca->archivo_pdf) {
+                $ruta = $biblioteca->archivo_pdf;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $pdfPath = public_path($ruta);
+                if (file_exists($pdfPath)) {
+                    @unlink($pdfPath);
+                }
+            }
+            $data['archivo_pdf'] = null;
+        }
+        // Archivo PDF (si se sube uno nuevo)
+        elseif ($request->hasFile('archivo_pdf')) {
+            // Eliminar anterior si existe
+            if ($biblioteca->archivo_pdf) {
+                $ruta = $biblioteca->archivo_pdf;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $pdfPath = public_path($ruta);
+                if (file_exists($pdfPath)) {
+                    @unlink($pdfPath);
+                }
+            }
             $file = $request->file('archivo_pdf');
             $dir = public_path('pdf');
             if (!file_exists($dir)) mkdir($dir, 0755, true);
@@ -183,8 +208,33 @@ class BibliotecaController extends Controller
             $data['archivo_pdf'] = 'public/pdf/' . $nombre;
         }
 
-        // Imagen de portada
-        if ($request->hasFile('imagen_portada')) {
+        // Eliminar imagen si se solicita
+        if ($request->boolean('imagen_clear')) {
+            if ($biblioteca->imagen_portada) {
+                $ruta = $biblioteca->imagen_portada;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $imagenPath = public_path($ruta);
+                if (file_exists($imagenPath)) {
+                    @unlink($imagenPath);
+                }
+            }
+            $data['imagen_portada'] = null;
+        }
+        // Imagen de portada (si se sube una nueva)
+        elseif ($request->hasFile('imagen_portada')) {
+            // Eliminar anterior si existe
+            if ($biblioteca->imagen_portada) {
+                $ruta = $biblioteca->imagen_portada;
+                if (str_starts_with($ruta, 'public/')) {
+                    $ruta = substr($ruta, 7);
+                }
+                $imagenPath = public_path($ruta);
+                if (file_exists($imagenPath)) {
+                    @unlink($imagenPath);
+                }
+            }
             $file = $request->file('imagen_portada');
             $dir = public_path('images/biblioteca');
             if (!file_exists($dir)) mkdir($dir, 0755, true);
