@@ -123,7 +123,7 @@ class BolsaTrabajoController extends Controller
         try {
             $request->validate([
                 'ids' => 'required|array',
-                'ids.*' => 'integer|exists:bolsa_trabajos,id',
+                'ids.*' => 'integer|exists:bolsa_trabajo,id',
                 'action' => 'required|in:activar,desactivar,eliminar'
             ]);
 
