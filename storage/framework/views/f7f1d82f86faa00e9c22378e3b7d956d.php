@@ -56,7 +56,7 @@
                 'availableLanguage' => 'Spanish'
             ],
             'sameAs' => [
-                'https://www.facebook.com/cpapregioncentro'
+                'https://web.facebook.com/AntropologosCentro'
             ],
             'areaServed' => [
                 '@type' => 'AdministrativeArea',

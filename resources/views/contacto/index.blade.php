@@ -189,19 +189,13 @@
 
                 {{-- REDES SOCIALES --}}
                 <div class="ctc-social-card">
-                    <h3><i class="fas fa-share-alt"></i> Síguenos</h3>
+                    <h3><i class="fas fa-share-alt"></i> Contáctanos</h3>
                     <div class="ctc-social-links">
-                        <a href="#" class="ctc-social-link ctc-social--fb" title="Facebook">
+                        <a href="https://web.facebook.com/AntropologosCentro" target="_blank" rel="noopener noreferrer" class="ctc-social-link ctc-social--fb" title="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="ctc-social-link ctc-social--ig" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="ctc-social-link ctc-social--yt" title="YouTube">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="#" class="ctc-social-link ctc-social--tiktok" title="TikTok">
-                            <i class="fab fa-tiktok"></i>
+                        <a href="https://wa.me/51943667317" target="_blank" rel="noopener noreferrer" class="ctc-social-link ctc-social--wa" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
