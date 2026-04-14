@@ -76,7 +76,7 @@ class BibliotecaController extends Controller
             'autor'               => 'required|string|max:255',
             'tipo'                => 'required|in:libro,articulo,tesis,documento,revista,multimedia',
             'formato'             => 'required|in:fisico,digital',
-            'area_tematica'       => 'required|in:cultural,social,arqueologia,linguistica,biologica',
+            'area_tematica'       => 'required|string|max:255',
             'descripcion'         => 'required|string',
             'editorial'           => 'nullable|string|max:255',
             'anio_publicacion'    => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
