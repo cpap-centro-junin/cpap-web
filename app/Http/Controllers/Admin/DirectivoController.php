@@ -91,23 +91,8 @@ class DirectivoController extends Controller
         $data['activo'] = $request->boolean('activo');
         $data['orden']  = $data['orden'] ?? $directivo->orden;
 
-        // Eliminar foto si se solicita
-        if ($request->boolean('foto_clear')) {
-            $rawFoto = $directivo->getOriginal('foto');
-            if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
-                $rutaFoto = $rawFoto;
-                if (str_starts_with($rutaFoto, 'public/')) {
-                    $rutaFoto = substr($rutaFoto, 7);
-                }
-                $fotoPath = public_path($rutaFoto);
-                if (file_exists($fotoPath)) {
-                    @unlink($fotoPath);
-                }
-            }
-            $data['foto'] = null;
-        }
         // Procesar nueva foto si se sube
-        elseif ($request->hasFile('foto')) {
+        if ($request->hasFile('foto')) {
             $rawFoto = $directivo->getOriginal('foto');
             if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
                 $rutaFoto = $rawFoto;                
@@ -122,6 +107,21 @@ class DirectivoController extends Controller
             $file = $request->file('foto');
             $filename = $file->move(public_path('images/directivos'), uniqid('directivo_') . '.' . $file->getClientOriginalExtension());
             $data['foto'] = 'public/images/directivos/' . basename($filename);
+        }
+        // Eliminar foto si se solicita (solo si no hay foto nueva)
+        elseif ($request->boolean('foto_clear')) {
+            $rawFoto = $directivo->getOriginal('foto');
+            if ($rawFoto && !str_starts_with($rawFoto, 'data:')) {
+                $rutaFoto = $rawFoto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7);
+                }
+                $fotoPath = public_path($rutaFoto);
+                if (file_exists($fotoPath)) {
+                    @unlink($fotoPath);
+                }
+            }
+            $data['foto'] = null;
         }
 
         $directivo->update($data);

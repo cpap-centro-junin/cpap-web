@@ -301,22 +301,8 @@ class ColegiadoController extends Controller
         $validated = $request->validate($this->validationRules($colegiado->id));
         $validated = array_merge($validated, $this->resolveVisibilityFields($request));
 
-        // Eliminar foto si se solicita
-        if ($request->boolean('foto_clear')) {
-            if ($colegiado->foto && !str_starts_with($colegiado->foto, 'data:')) {
-                $rutaFoto = $colegiado->foto;
-                if (str_starts_with($rutaFoto, 'public/')) {
-                    $rutaFoto = substr($rutaFoto, 7);
-                }
-                $fotoPath = public_path($rutaFoto);
-                if (file_exists($fotoPath)) {
-                    @unlink($fotoPath);
-                }
-            }
-            $validated['foto'] = null;
-        }
         // Procesar foto si se sube una nueva
-        elseif ($request->hasFile('foto')) {
+        if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
             $ext = strtolower($foto->getClientOriginalExtension());
             
@@ -373,23 +359,23 @@ class ColegiadoController extends Controller
             file_put_contents($fotoDir . '/' . $nombreFoto, $contenidoFoto);
             $validated['foto'] = 'public/images/colegiados/' . $nombreFoto;
         }
-
-        // Eliminar CV si se solicita
-        if ($request->boolean('cv_clear')) {
-            if ($colegiado->cv_path && !str_starts_with($colegiado->cv_path, 'data:')) {
-                $rutaCV = $colegiado->cv_path;
-                if (str_starts_with($rutaCV, 'public/')) {
-                    $rutaCV = substr($rutaCV, 7);
+        // Eliminar foto si se solicita (solo si no hay foto nueva)
+        elseif ($request->boolean('foto_clear')) {
+            if ($colegiado->foto && !str_starts_with($colegiado->foto, 'data:')) {
+                $rutaFoto = $colegiado->foto;
+                if (str_starts_with($rutaFoto, 'public/')) {
+                    $rutaFoto = substr($rutaFoto, 7);
                 }
-                $cvPath = public_path($rutaCV);
-                if (file_exists($cvPath)) {
-                    @unlink($cvPath);
+                $fotoPath = public_path($rutaFoto);
+                if (file_exists($fotoPath)) {
+                    @unlink($fotoPath);
                 }
             }
-            $validated['cv_path'] = null;
+            $validated['foto'] = null;
         }
+
         // Procesar CV si se sube uno nuevo
-        elseif ($request->hasFile('cv')) {
+        if ($request->hasFile('cv')) {
             $cv = $request->file('cv');
             
             // Eliminar CV anterior si existe
@@ -414,6 +400,20 @@ class ColegiadoController extends Controller
             $nombreCV = uniqid('cv_') . '.pdf';
             $cv->move($cvDir, $nombreCV);
             $validated['cv_path'] = 'pdf/colegiados/' . $nombreCV;
+        }
+        // Eliminar CV si se solicita (solo si no hay CV nuevo)
+        elseif ($request->boolean('cv_clear')) {
+            if ($colegiado->cv_path && !str_starts_with($colegiado->cv_path, 'data:')) {
+                $rutaCV = $colegiado->cv_path;
+                if (str_starts_with($rutaCV, 'public/')) {
+                    $rutaCV = substr($rutaCV, 7);
+                }
+                $cvPath = public_path($rutaCV);
+                if (file_exists($cvPath)) {
+                    @unlink($cvPath);
+                }
+            }
+            $validated['cv_path'] = null;
         }
 
         $colegiado->update($validated);
