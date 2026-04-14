@@ -103,7 +103,12 @@ class PDFService
         $qrY = $size['height'] - $qrSize - $espacioTexto - $margenInferior;
 
         // Insertar imagen QR
-        $qrFullPath = public_path($qrImagePath);
+        // Si empieza con "public/", remover ese prefijo para public_path()
+        $ruta = $qrImagePath;
+        if (str_starts_with($ruta, 'public/')) {
+            $ruta = substr($ruta, 7); // Remover "public/"
+        }
+        $qrFullPath = public_path($ruta);
         if (file_exists($qrFullPath)) {
             $pdf->Image($qrFullPath, $qrX, $qrY, $qrSize, $qrSize, 'PNG');
         }
