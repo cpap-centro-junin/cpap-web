@@ -78,7 +78,7 @@
                     <i class="fas fa-clock"></i>
                     {{ $sol->created_at->format('d/m/Y') }}
                 </div>
-                <div class="msg-actions">
+                <div class="msg-actions sol-actions">
                     <a href="{{ route('admin.solicitudes.show', $sol) }}" class="msg-btn msg-btn--view">
                         <i class="fas fa-eye"></i> Ver
                     </a>
@@ -146,12 +146,18 @@
         transform: translateY(0);
     }
 }
+
+.sol-actions.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 let selectedSolicitudes = new Set();
 const bulkActionsPanel = document.getElementById('bulkActionsPanel');
 const solCheckboxes = document.querySelectorAll('.sol-checkbox');
+const solActions = document.querySelectorAll('.sol-actions');
 const selectAllCheckbox = document.getElementById('selectAll');
 
 solCheckboxes.forEach(checkbox => {
@@ -184,8 +190,14 @@ function updateBulkUI() {
     if (count > 0) {
         bulkActionsPanel.style.display = 'block';
         countText.textContent = count === 1 ? '1 elemento seleccionado' : `${count} elementos seleccionados`;
+        
+        // Deshabilitar botones individuales
+        solActions.forEach(actions => actions.classList.add('disabled'));
     } else {
         bulkActionsPanel.style.display = 'none';
+        
+        // Habilitar botones individuales
+        solActions.forEach(actions => actions.classList.remove('disabled'));
     }
 }
 
@@ -233,6 +245,13 @@ function executeBulkAction(action) {
                 confirmButtonText: 'Continuar'
             }).then(() => {
                 location.reload();
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message || 'Ocurrió un error al procesar la solicitud.',
+                icon: 'error',
+                confirmButtonColor: '#d32f2f'
             });
         }
     })

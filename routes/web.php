@@ -121,10 +121,16 @@ Route::post('/bolsa-trabajo/solicitar', function (\Illuminate\Http\Request $requ
         'activo'             => false,
     ]);
 
-    \Illuminate\Support\Facades\Mail::to('juancarloschmm@gmail.com')
-        ->send(new \App\Mail\SolicitudOfertaLaboralMail($oferta));
+    // Intentar enviar email a admin, pero no fallar si hay error SMTP
+    try {
+        \Illuminate\Support\Facades\Mail::to('juancarloschmm@gmail.com')
+            ->send(new \App\Mail\SolicitudOfertaLaboralMail($oferta));
+    } catch (\Exception $e) {
+        // Log del error de email pero no interrumpir el flujo
+        \Illuminate\Support\Facades\Log::error('Error enviando notificación de bolsa de trabajo: ' . $e->getMessage());
+    }
 
-    return response()->json(['success' => true, 'message' => 'Solicitud enviada correctamente.']);
+    return response()->json(['success' => true, 'message' => 'Solicitud enviada correctamente. Nuestro equipo la revisará pronto.']);
 })->name('bolsa-trabajo.solicitar');
 
 Route::get('/biblioteca', [\App\Http\Controllers\BibliotecaPublicController::class, 'index'])->name('biblioteca');

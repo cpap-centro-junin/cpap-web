@@ -374,7 +374,6 @@ function bulkAction(action) {
             icon = 'info';
             confirmButtonColor = '#4CAF50';
             confirmButtonText = '<i class="fas fa-eye"></i> Sí, mostrar';
-            apiAction = 'activar';
             break;
         case 'ocultar':
             title = 'Ocultar imágenes';
@@ -382,7 +381,6 @@ function bulkAction(action) {
             icon = 'warning';
             confirmButtonColor = '#FF9800';
             confirmButtonText = '<i class="fas fa-eye-slash"></i> Sí, ocultar';
-            apiAction = 'desactivar';
             break;
         case 'eliminar':
             title = 'Eliminar imágenes';

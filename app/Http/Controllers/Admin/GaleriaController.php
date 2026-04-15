@@ -293,12 +293,13 @@ class GaleriaController extends Controller
             $request->validate([
                 'ids' => 'required|array',
                 'ids.*' => 'integer|exists:galeria_imagenes,id',
-                'action' => 'required|in:destacar,quitar_destacado,ocultar,mostrar,eliminar',
+                'action' => 'required|in:destacar,no-destacar,mostrar,ocultar,eliminar',
             ]);
 
             $ids = $request->input('ids', []);
             $action = $request->input('action');
             $count = count($ids);
+            $message = '';
 
             $imagenes = GaleriaImagen::whereIn('id', $ids)->get();
 
@@ -308,7 +309,7 @@ class GaleriaController extends Controller
                     $message = $count . ' imagen(es) marcada(s) como destacada(s).';
                     break;
 
-                case 'quitar_destacado':
+                case 'no-destacar':
                     GaleriaImagen::whereIn('id', $ids)->update(['destacado' => false]);
                     $message = $count . ' imagen(es) desmarcada(s) como destacada(s).';
                     break;

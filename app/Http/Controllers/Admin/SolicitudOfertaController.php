@@ -92,7 +92,7 @@ class SolicitudOfertaController extends Controller
         try {
             $validated = $request->validate([
                 'ids'    => 'required|array',
-                'ids.*'  => 'integer|exists:bolsa_trabajos,id',
+                'ids.*'  => 'integer|exists:bolsa_trabajo,id',
                 'action' => 'required|in:eliminar',
             ]);
 
