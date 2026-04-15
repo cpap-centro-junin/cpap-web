@@ -44,7 +44,7 @@
                 'internacional' => 'Internacional',
                 'otro' => 'Otro',
             ]
-        ],"
+        ],
         [
             'field' => 'estado',
             'label' => 'Estado',

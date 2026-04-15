@@ -60,7 +60,7 @@
                 'activo' => 'Activo',
                 'inactivo' => 'Inactivo',
             ]
-        ],"
+        ],
     ]"
 />
 
