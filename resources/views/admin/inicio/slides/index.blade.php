@@ -42,8 +42,9 @@
             'options' => [
                 'noticia' => 'Noticia',
                 'evento' => 'Evento',
+                'personalizado' => 'Personalizado',
             ]
-        ],
+        ],"
         [
             'field' => 'estado',
             'label' => 'Estado',

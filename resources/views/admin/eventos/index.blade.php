@@ -36,11 +36,21 @@
             'field' => 'categoria',
             'label' => 'Categoría',
             'options' => [
-                'conferencia' => 'Conferencia',
-                'taller' => 'Taller',
-                'seminario' => 'Seminario',
-                'reunion' => 'Reunión',
+                'academico' => 'Académico',
+                'institucional' => 'Institucional',
+                'cultural' => 'Cultural',
+                'gremial' => 'Gremial',
+                'formacion' => 'Formación',
+                'internacional' => 'Internacional',
                 'otro' => 'Otro',
+            ]
+        ],
+        [
+            'field' => 'destacado',
+            'label' => 'Destacado',
+            'options' => [
+                'si' => 'Destacados',
+                'no' => 'No destacados',
             ]
         ],
         [
@@ -50,7 +60,7 @@
                 'activo' => 'Activo',
                 'inactivo' => 'Inactivo',
             ]
-        ],
+        ],"
     ]"
 />
 

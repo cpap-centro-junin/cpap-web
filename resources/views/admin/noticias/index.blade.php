@@ -36,14 +36,15 @@
             'field' => 'categoria',
             'label' => 'Categoría',
             'options' => [
-                'tecnologia' => 'Tecnología',
+                'institucional' => 'Institucional',
+                'academico' => 'Académico',
                 'investigacion' => 'Investigación',
-                'cultura' => 'Cultura',
-                'educacion' => 'Educación',
-                'eventos' => 'Eventos',
+                'gremial' => 'Gremial',
+                'convocatoria' => 'Convocatoria',
+                'internacional' => 'Internacional',
                 'otro' => 'Otro',
             ]
-        ],
+        ],"
         [
             'field' => 'estado',
             'label' => 'Estado',

@@ -37,6 +37,11 @@ class EventoController extends Controller
             $query->where('categoria', $request->categoria);
         }
         
+        // Filtro por destacado
+        if ($request->filled('destacado')) {
+            $query->where('destacado', $request->destacado === 'si');
+        }
+        
         // Filtro por estado
         if ($request->filled('estado')) {
             $query->where('activo', $request->estado === 'activo');

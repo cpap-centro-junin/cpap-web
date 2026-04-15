@@ -63,7 +63,7 @@ class BibliotecaPublicController extends Controller
 
         // Destacados (para la sección hero)
         $destacados = RecursoBiblioteca::activos()->destacados()
-            ->orderBy('created_at', 'desc')->take(3)->get();
+            ->orderBy('created_at', 'desc')->take(6)->get();
 
         // Conteos por categoría
         $conteos = [

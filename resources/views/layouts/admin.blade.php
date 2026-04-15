@@ -194,9 +194,9 @@
                 </div>
                 <span class="user-name">{{ auth()->user()->name }}</span>
 
-                <form action="/logout" method="POST" style="display: inline;">
+                <form action="/logout" method="POST" style="display: inline;" id="logoutForm">
                     @csrf
-                    <button class="logout-btn" type="submit">
+                    <button class="logout-btn" type="button" id="btnLogout">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Salir</span>
                     </button>
@@ -208,6 +208,27 @@
         <section class="page-content">
             @yield('content')
         </section>
+
+        <script>
+        document.getElementById('btnLogout').addEventListener('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Cerrar sesión?',
+                text: 'Se cerrará tu sesión en el panel administrativo.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#8B1538',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-sign-out-alt"></i> Sí, cerrar sesión',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+        });
+        </script>
 
     </main>
 
