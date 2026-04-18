@@ -78,4 +78,63 @@ class InvitacionController extends Controller
     return back()->with('success', 'Invitación enviada correctamente.');
 }
 
+    public function bulkToggle(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'ids'    => 'required|array',
+                'ids.*'  => 'integer|exists:invitaciones,id',
+                'action' => 'required|in:eliminar',
+            ]);
+
+            $ids = $validated['ids'];
+            $solicitadas = count($ids);
+
+            // Solo se eliminan invitaciones pendientes para mantener trazabilidad de las usadas.
+            $eliminadas = Invitaciones::whereIn('id', $ids)
+                ->where('usado', false)
+                ->delete();
+
+            $protegidas = max(0, $solicitadas - $eliminadas);
+
+            if ($eliminadas === 0) {
+                $message = 'No se eliminó ninguna invitación. Las seleccionadas están protegidas por haber sido usadas.';
+            } else {
+                $message = $eliminadas . ($eliminadas === 1
+                    ? ' invitación pendiente eliminada.'
+                    : ' invitaciones pendientes eliminadas.');
+
+                if ($protegidas > 0) {
+                    $message .= ' ' . $protegidas . ($protegidas === 1
+                        ? ' invitación usada se mantuvo protegida.'
+                        : ' invitaciones usadas se mantuvieron protegidas.');
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function destroy(Invitaciones $invitacion)
+    {
+        if ($invitacion->usado) {
+            return redirect()->route('admin.invitaciones.index')
+                ->withErrors(['general' => 'No se puede eliminar una invitación que ya fue utilizada.']);
+        }
+
+        $email = $invitacion->email;
+        $invitacion->delete();
+
+        return redirect()->route('admin.invitaciones.index')
+            ->with('success', "Invitación eliminada correctamente para: {$email}");
+    }
+
 }

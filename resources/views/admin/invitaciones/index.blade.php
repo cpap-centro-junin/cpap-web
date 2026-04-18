@@ -108,16 +108,31 @@
                 <table class="table" id="inviteTable">
                     <thead>
                         <tr>
+                            <th style="width:40px;">
+                                <input type="checkbox" id="selectAll" title="Seleccionar todo">
+                            </th>
                             <th>Email</th>
                             <th>Token</th>
                             <th style="width: 120px;">Estado</th>
                             <th style="width: 120px;">Fecha</th>
-                            <th class="text-center" style="width: 100px;">Acción</th>
+                            <th class="text-center" style="width: 160px;">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($invitaciones as $inv)
                             <tr>
+                                <td class="text-center">
+                                    @if(!$inv->usado)
+                                        <input type="checkbox"
+                                               class="invite-checkbox"
+                                               value="{{ $inv->id }}"
+                                               title="Seleccionar invitación">
+                                    @else
+                                        <span class="text-muted" style="font-size:12px;" title="Invitación usada: protegida">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="inv-email-cell">
                                         <div class="inv-avatar">{{ strtoupper(substr($inv->email, 0, 1)) }}</div>
@@ -152,19 +167,63 @@
                                 </td>
                                 <td class="text-center">
                                     @if(!$inv->usado)
-                                        <button class="btn-icon btn-info"
-                                                onclick="copyInviteLink('{{ url('/register?token=' . $inv->token) }}')"
-                                                title="Copiar enlace de registro">
-                                            <i class="fas fa-link"></i>
-                                        </button>
+                                        <div class="inv-actions inv-row-actions">
+                                            <button class="btn-icon btn-info"
+                                                    onclick="copyInviteLink('{{ url('/register?token=' . $inv->token) }}')"
+                                                    title="Copiar enlace de registro">
+                                                <i class="fas fa-link"></i>
+                                            </button>
+
+                                            <form action="{{ route('admin.invitaciones.destroy', $inv) }}"
+                                                  method="POST"
+                                                  style="display:inline;"
+                                                  id="form-delete-invitacion-{{ $inv->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button"
+                                                        class="btn-icon btn-danger"
+                                                        onclick="confirmDeleteInvitation('{{ addslashes($inv->email) }}', 'form-delete-invitacion-{{ $inv->id }}')"
+                                                        title="Eliminar invitación pendiente">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     @else
-                                        <span class="text-muted" style="font-size: 12px;">—</span>
+                                        <span class="text-muted" style="font-size: 12px;" title="Las invitaciones usadas se mantienen para trazabilidad">
+                                            <i class="fas fa-shield-alt"></i> Protegida
+                                        </span>
                                     @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+
+            {{-- Panel de Acciones en Masa --}}
+            <div id="bulkActionsPanel" style="display:none;margin-top:20px;padding:16px 18px;background:linear-gradient(135deg,rgba(139,21,56,0.08),rgba(139,21,56,0.04));border:1px solid rgba(139,21,56,0.2);border-radius:var(--radius-sm);animation:slideDown 0.3s ease-out;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+                    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                        <i class="fas fa-check-circle" style="color:var(--primary);font-size:18px;"></i>
+                        <span id="selectionCountText" style="font-weight:600;color:var(--dark);font-size:14px;">
+                            0 elementos seleccionados
+                        </span>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button onclick="bulkAction('eliminar')" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(211,47,47,0.1);color:#d32f2f;border:1px solid rgba(211,47,47,0.3);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                                onmouseover="this.style.background='rgba(211,47,47,0.15)';this.style.borderColor='rgba(211,47,47,0.5)'"
+                                onmouseout="this.style.background='rgba(211,47,47,0.1)';this.style.borderColor='rgba(211,47,47,0.3)'">
+                            <i class="fas fa-trash"></i>
+                            Eliminar
+                        </button>
+                        <button onclick="clearSelection()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--light-gray);color:var(--medium-gray);border:1px solid rgba(0,0,0,0.1);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;"
+                                onmouseover="this.style.background='#e0e0e0'"
+                                onmouseout="this.style.background='var(--light-gray)'">
+                            <i class="fas fa-times"></i>
+                            Deseleccionar
+                        </button>
+                    </div>
+                </div>
             </div>
         @else
             <div class="empty-state">
@@ -203,6 +262,116 @@ function toggleInviteForm() {
     }
 }
 
+let selectedInvitaciones = new Set();
+const bulkActionsPanel = document.getElementById('bulkActionsPanel');
+const inviteCheckboxes = document.querySelectorAll('.invite-checkbox');
+const inviteRowActions = document.querySelectorAll('.inv-row-actions');
+const selectAllCheckbox = document.getElementById('selectAll');
+
+inviteCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            selectedInvitaciones.add(this.value);
+        } else {
+            selectedInvitaciones.delete(this.value);
+        }
+        updateBulkUI();
+    });
+});
+
+selectAllCheckbox?.addEventListener('change', function() {
+    inviteCheckboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+        if (this.checked) {
+            selectedInvitaciones.add(checkbox.value);
+        } else {
+            selectedInvitaciones.delete(checkbox.value);
+        }
+    });
+    updateBulkUI();
+});
+
+function updateBulkUI() {
+    const count = selectedInvitaciones.size;
+    const countText = document.getElementById('selectionCountText');
+
+    if (count > 0) {
+        bulkActionsPanel.style.display = 'block';
+        countText.textContent = count === 1 ? '1 elemento seleccionado' : `${count} elementos seleccionados`;
+
+        inviteRowActions.forEach(actions => actions.classList.add('disabled'));
+    } else {
+        bulkActionsPanel.style.display = 'none';
+        inviteRowActions.forEach(actions => actions.classList.remove('disabled'));
+    }
+}
+
+function bulkAction(action) {
+    const count = selectedInvitaciones.size;
+    if (count === 0) return;
+
+    Swal.fire({
+        title: 'Eliminar invitaciones',
+        text: `Se eliminarán permanentemente ${count} invitación(es) pendiente(s). Esta acción no se puede deshacer.`,
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            executeBulkAction(action);
+        }
+    });
+}
+
+function executeBulkAction(action) {
+    const ids = Array.from(selectedInvitaciones);
+    const route = '{{ route("admin.invitaciones.bulk-toggle") }}';
+
+    fetch(route, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ ids, action })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                title: '¡Completado!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonColor: '#4CAF50',
+                confirmButtonText: 'Continuar'
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: data.message || 'Ocurrió un error al procesar la acción.',
+                icon: 'error',
+                confirmButtonColor: '#d32f2f'
+            });
+        }
+    })
+    .catch(() => {
+        Swal.fire('Error', 'Ocurrió un error al procesar la acción.', 'error');
+    });
+}
+
+function clearSelection() {
+    selectedInvitaciones.clear();
+    inviteCheckboxes.forEach(checkbox => checkbox.checked = false);
+    if (selectAllCheckbox) selectAllCheckbox.checked = false;
+    updateBulkUI();
+}
+
 /* Copiar token */
 function copyToken(token) {
     navigator.clipboard.writeText(token).then(() => {
@@ -220,6 +389,25 @@ function copyInviteLink(url) {
             toast: true, position: 'top-end', icon: 'success',
             title: 'Enlace copiado', showConfirmButton: false, timer: 1800
         });
+    });
+}
+
+/* Confirmar eliminación de invitación pendiente */
+function confirmDeleteInvitation(email, formId) {
+    Swal.fire({
+        title: '¿Eliminar invitación?',
+        html: `Se revocará la invitación de <b>${email}</b>.<br>El token quedará inválido inmediatamente.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d32f2f',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash-alt"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
     });
 }
 

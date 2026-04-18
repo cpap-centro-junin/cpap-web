@@ -55,6 +55,12 @@ Route::get('/invitaciones', [App\Http\Controllers\Admin\InvitacionController::cl
 Route::post('/invitaciones/enviar', [App\Http\Controllers\Admin\InvitacionController::class, 'enviar'])
     ->name('admin.invitaciones.enviar');
 
+Route::post('/invitaciones/bulk-toggle', [App\Http\Controllers\Admin\InvitacionController::class, 'bulkToggle'])
+    ->name('admin.invitaciones.bulk-toggle');
+
+Route::delete('/invitaciones/{invitacion}', [App\Http\Controllers\Admin\InvitacionController::class, 'destroy'])
+    ->name('admin.invitaciones.destroy');
+
 // ============================================
 // NOTA: Las siguientes rutas fueron removidas por no tener funcionalidad:
 // - /usuarios (sin implementar)

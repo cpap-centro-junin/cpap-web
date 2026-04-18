@@ -169,6 +169,30 @@
     white-space: nowrap;
 }
 
+/* Acciones en celda (copiar enlace + eliminar) */
+.inv-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.inv-actions.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
