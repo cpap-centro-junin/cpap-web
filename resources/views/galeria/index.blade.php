@@ -156,7 +156,7 @@
     $lightboxJson = json_encode(
         $imagenes->getCollection()->map(function($img) {
             return array(
-                'url'   => $img->imagen_url,
+                'url'   => $img->imagen,
                 'title' => $img->titulo,
                 'desc'  => $img->descripcion ?? '',
             );
