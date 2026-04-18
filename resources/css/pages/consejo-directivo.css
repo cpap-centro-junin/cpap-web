@@ -24,7 +24,8 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 }
 
-.consejo-fotos-container .container {
+.consejo-fotos-container .container,
+.consejo-fotos-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 32px;
@@ -41,6 +42,8 @@
     box-shadow: 0 10px 50px rgba(139, 21, 56, 0.12);
     border: 1px solid var(--border);
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .consejo-foto-imagen {
@@ -65,6 +68,10 @@
     text-align: center;
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .consejo-foto-caption h3 {
@@ -106,18 +113,24 @@
     }
 
     .consejo-fotos-container {
-        grid-template-columns: 1fr;
-        gap: 24px;
         padding: 40px 0;
     }
 
+    .consejo-fotos-container .container,
+    .consejo-fotos-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
     .consejo-foto-card {
-        margin: 0 16px;
+        margin: 0;
         border-radius: var(--radius-xl);
     }
 
     .consejo-foto-caption {
         padding: 20px 24px;
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        min-height: auto;
     }
 
     .consejo-foto-caption h3 {

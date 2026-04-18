@@ -67,7 +67,7 @@
 
 <!-- Fotos del Consejo Directivo (lado a lado) -->
 <section class="consejo-fotos-container">
-    <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;">
+    <div class="container consejo-fotos-grid">
         {{-- Foto Grupal --}}
         <div class="consejo-foto-card" data-aos="zoom-in">
             <div class="consejo-foto-imagen">
