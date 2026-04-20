@@ -171,10 +171,17 @@ Route::post('/normativa/bulk-toggle', [\App\Http\Controllers\Admin\NormativaCont
 // ============================================
 
 use App\Http\Controllers\Admin\DisenoController;
+use App\Http\Controllers\Admin\ColegiaturaDocumentoController;
 
 Route::get('/diseno', [DisenoController::class, 'edit'])->name('admin.diseno.edit');
 Route::put('/diseno', [DisenoController::class, 'update'])->name('admin.diseno.update');
 Route::post('/diseno/restaurar', [DisenoController::class, 'restaurar'])->name('admin.diseno.restaurar');
+
+// Documentos fijos de colegiatura (solo reemplazo)
+Route::get('/colegiatura/documentos', [ColegiaturaDocumentoController::class, 'edit'])
+    ->name('admin.colegiatura-documentos.edit');
+Route::put('/colegiatura/documentos', [ColegiaturaDocumentoController::class, 'update'])
+    ->name('admin.colegiatura-documentos.update');
 
     use App\Http\Controllers\Admin\ContactMessageController;
 

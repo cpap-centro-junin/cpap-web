@@ -113,6 +113,10 @@
                 <i class="fas fa-gavel"></i>
                 <span class="menu-text">Normativa</span>
             </a>
+            <a href="{{ route('admin.colegiatura-documentos.edit') }}" class="menu-item {{ request()->routeIs('admin.colegiatura-documentos.*') ? 'active' : '' }}">
+                <i class="fas fa-file-pdf"></i>
+                <span class="menu-text">Docs Colegiatura</span>
+            </a>
 
             {{-- COMUNICACIÓN --}}
             <div class="menu-separator">
