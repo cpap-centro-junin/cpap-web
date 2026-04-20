@@ -5,6 +5,70 @@
 
 @push('styles')
 <style>
+.hero-editor-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.hero-editor-btn {
+    padding: 8px 14px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.hero-editor-btn:hover {
+    background: #e8e8e8;
+    border-color: #ccc;
+}
+
+.hero-editor-btn.gradient {
+    background: linear-gradient(135deg, #e3a953, #d4941c);
+    color: white;
+    border: none;
+}
+
+.hero-editor-btn.gradient:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(212, 148, 28, 0.25);
+}
+
+.hero-rich-editor {
+    min-height: 120px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--dark);
+    outline: none;
+    white-space: pre-wrap;
+}
+
+.hero-rich-editor:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139, 21, 56, 0.12);
+}
+
+.hero-rich-editor.gradient-preview .gradient-text {
+    background: linear-gradient(135deg, #e3a953, #d4941c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: #d4941c;
+    font-weight: 700;
+}
+
 @media (max-width: 768px) {
     .admin-form-card > div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
@@ -25,7 +89,7 @@
     }
     
     /* Botones de formato en columna */
-    div[style*="display:flex;gap:8px"] button {
+    .hero-editor-toolbar .hero-editor-btn {
         flex: 1 1 100%;
         min-width: 100%;
     }
@@ -180,33 +244,34 @@
                 Título Principal <span style="color:var(--danger);">*</span>
             </label>
             
-            {{-- Botones de Formato --}}
-            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-                <button type="button" onclick="insertarSaltoLinea('hero_titulo')" 
-                        style="padding:8px 16px;background:#f5f5f5;border:1px solid #ddd;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;transition:all 0.2s;font-weight:500;"
-                        onmouseover="this.style.background='#e8e8e8';this.style.borderColor='#ccc'"
-                        onmouseout="this.style.background='#f5f5f5';this.style.borderColor='#ddd'">
+            {{-- Editor visual --}}
+            <div class="hero-editor-toolbar">
+                <button type="button" class="hero-editor-btn" onclick="heroInsertLineBreak()">
                     <i class="fas fa-level-down-alt" style="color:var(--primary);"></i>
                     <span>Salto de Línea</span>
                 </button>
-                <button type="button" onclick="insertarTextoColorido('hero_titulo')" 
-                        style="padding:8px 16px;background:linear-gradient(135deg,#e3a953,#d4941c);border:none;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;transition:all 0.3s;font-weight:500;color:white;box-shadow:0 2px 4px rgba(212,148,28,0.2);"
-                        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 8px rgba(212,148,28,0.3)'"
-                        onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 4px rgba(212,148,28,0.2)'">
+                <button type="button" class="hero-editor-btn" onclick="heroToggleBold()">
+                    <i class="fas fa-bold" style="color:var(--primary);"></i>
+                    <span>Negrita</span>
+                </button>
+                <button type="button" class="hero-editor-btn" onclick="heroToggleItalic()">
+                    <i class="fas fa-italic" style="color:var(--primary);"></i>
+                    <span>Cursiva</span>
+                </button>
+                <button type="button" class="hero-editor-btn gradient" onclick="heroApplyGradient()">
                     <span>Aplicar Degradado Dorado</span>
                 </button>
             </div>
-            
-            <textarea id="hero_titulo" name="hero_titulo" rows="3" class="form-control" required
-                      placeholder="Colegio Profesional de Antropólogos del Perú" 
-                      style="font-size:15px;line-height:1.6;">{{ old('hero_titulo', $config->hero_titulo) }}</textarea>
+
+            <div id="hero_titulo_editor" class="hero-rich-editor gradient-preview" contenteditable="true"></div>
+            <textarea id="hero_titulo" name="hero_titulo" rows="3" style="display:none;">{{ old('hero_titulo', $config->hero_titulo) }}</textarea>
             <small style="color:var(--medium-gray);font-size:12px;display:block;margin-top:8px;padding:12px;background:#f0f7ff;border-left:3px solid var(--primary);border-radius:6px;line-height:1.6;">
                 <strong style="color:var(--dark);display:block;margin-bottom:6px;">💡 Cómo darle formato:</strong>
                 <div style="margin-bottom:8px;padding:8px;background:white;border-radius:4px;">
-                    <strong style="color:var(--primary);">Para dos líneas:</strong> Coloca el cursor donde quieras el salto y presiona el botón "Salto de Línea"
+                    <strong style="color:var(--primary);">Para dos líneas:</strong> Presiona Enter o usa el botón "Salto de Línea"
                 </div>
                 <div style="padding:8px;background:white;border-radius:4px;">
-                    <strong style="color:#d4941c;">Para texto dorado:</strong> Selecciona el texto que quieres resaltar y presiona "Aplicar Degradado Dorado"
+                    <strong style="color:#d4941c;">Para resaltar:</strong> Selecciona texto y usa Negrita, Cursiva o Degradado Dorado
                 </div>
             </small>
             @error('hero_titulo')
@@ -381,120 +446,134 @@
 
 @push('scripts')
 <script>
-/**
- * Inserta un salto de línea (<br>) en la posición del cursor
- */
-function insertarSaltoLinea(fieldId) {
-    const textarea = document.getElementById(fieldId);
-    if (!textarea) return;
-    
-    const cursorPos = textarea.selectionStart;
-    const textBefore = textarea.value.substring(0, cursorPos);
-    const textAfter = textarea.value.substring(cursorPos);
-    
-    textarea.value = textBefore + '<br>' + textAfter;
-    textarea.selectionStart = textarea.selectionEnd = cursorPos + 4;
-    textarea.focus();
-    
-    // Notificación visual
-    Swal.fire({
-        icon: 'success',
-        title: '¡Listo!',
-        text: 'Se ha insertado el salto de línea',
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    });
+const heroTitleEditor = document.getElementById('hero_titulo_editor');
+const heroTitleInput = document.getElementById('hero_titulo');
+
+function normalizeHeroHtml(html) {
+    if (!html) return '';
+
+    let normalized = html
+        .replace(/<div><br><\/div>/gi, '<br>')
+        .replace(/<div>/gi, '')
+        .replace(/<\/div>/gi, '<br>')
+        .replace(/<p>/gi, '')
+        .replace(/<\/p>/gi, '<br>')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>')
+        .trim();
+
+    normalized = normalized.replace(/^(<br\s*\/?>\s*)+|(<br\s*\/?>\s*)+$/gi, '');
+    return normalized;
 }
 
-/**
- * Envuelve el texto seleccionado con <span class="gradient-text">
- */
-function insertarTextoColorido(fieldId) {
-    const textarea = document.getElementById(fieldId);
-    if (!textarea) return;
-    
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-    
-    if (!selectedText) {
+function syncHeroTitleInput() {
+    if (!heroTitleEditor || !heroTitleInput) return;
+    heroTitleInput.value = normalizeHeroHtml(heroTitleEditor.innerHTML);
+}
+
+function initHeroTitleEditor() {
+    if (!heroTitleEditor || !heroTitleInput) return;
+
+    const initial = heroTitleInput.value && heroTitleInput.value.trim() !== ''
+        ? heroTitleInput.value
+        : 'Colegio Profesional de Antropólogos del Perú';
+
+    heroTitleEditor.innerHTML = initial;
+
+    heroTitleEditor.addEventListener('input', syncHeroTitleInput);
+    heroTitleEditor.addEventListener('blur', syncHeroTitleInput);
+    heroTitleEditor.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            heroInsertLineBreak();
+        }
+    });
+
+    const form = heroTitleEditor.closest('form');
+    if (form) {
+        form.addEventListener('submit', syncHeroTitleInput);
+    }
+
+    syncHeroTitleInput();
+}
+
+function getSelectionRangeInsideHeroEditor() {
+    if (!heroTitleEditor) return null;
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return null;
+
+    const range = selection.getRangeAt(0);
+    if (!heroTitleEditor.contains(range.commonAncestorContainer)) return null;
+
+    return range;
+}
+
+function heroInsertLineBreak() {
+    if (!heroTitleEditor) return;
+
+    heroTitleEditor.focus();
+    const range = getSelectionRangeInsideHeroEditor();
+
+    if (!range) {
+        heroTitleEditor.innerHTML += '<br>';
+        syncHeroTitleInput();
+        return;
+    }
+
+    range.deleteContents();
+    const br = document.createElement('br');
+    range.insertNode(br);
+    range.setStartAfter(br);
+    range.collapse(true);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    syncHeroTitleInput();
+}
+
+function heroToggleBold() {
+    heroTitleEditor?.focus();
+    document.execCommand('bold', false, null);
+    syncHeroTitleInput();
+}
+
+function heroToggleItalic() {
+    heroTitleEditor?.focus();
+    document.execCommand('italic', false, null);
+    syncHeroTitleInput();
+}
+
+function heroApplyGradient() {
+    if (!heroTitleEditor) return;
+
+    heroTitleEditor.focus();
+    const range = getSelectionRangeInsideHeroEditor();
+
+    if (!range || range.collapsed) {
         Swal.fire({
-            icon: 'warning',
-            title: 'Selecciona texto primero',
-            text: 'Por favor, marca el texto que deseas resaltar con degradado dorado antes de presionar el botón.',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: 'var(--primary)'
+            icon: 'info',
+            title: 'Selecciona texto',
+            text: 'Selecciona una parte del título para aplicar el degradado dorado.',
+            confirmButtonColor: '#8B1538'
         });
         return;
     }
-    
-    const wrapped = '<span class="gradient-text">' + selectedText + '</span>';
-    textarea.value = textarea.value.substring(0, start) + wrapped + textarea.value.substring(end);
-    
-    // Mantener la selección en el texto envuelto
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + wrapped.length;
-    textarea.focus();
-    
-    // Notificación visual
-    Swal.fire({
-        icon: 'success',
-        title: '¡Texto resaltado!',
-        text: 'Se ha aplicado el degradado dorado',
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-    });
-}
-</script>
-@endpush
 
-@push('scripts')
-<script>
-/**
- * Inserta un salto de línea (<br>) en la posición del cursor
- */
-function insertarSaltoLinea(fieldId) {
-    const textarea = document.getElementById(fieldId);
-    if (!textarea) return;
-    
-    const cursorPos = textarea.selectionStart;
-    const textBefore = textarea.value.substring(0, cursorPos);
-    const textAfter = textarea.value.substring(cursorPos);
-    
-    textarea.value = textBefore + '<br>' + textAfter;
-    textarea.selectionStart = textarea.selectionEnd = cursorPos + 4;
-    textarea.focus();
+    const selectedContent = range.extractContents();
+    const span = document.createElement('span');
+    span.className = 'gradient-text';
+    span.appendChild(selectedContent);
+    range.insertNode(span);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+
+    syncHeroTitleInput();
 }
 
-/**
- * Envuelve el texto seleccionado con <span class="gradient-text">
- */
-function insertarTextoColorido(fieldId) {
-    const textarea = document.getElementById(fieldId);
-    if (!textarea) return;
-    
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-    
-    if (!selectedText) {
-        alert('Por favor, selecciona primero el texto que deseas aplicar el degradado.');
-        return;
-    }
-    
-    const wrapped = '<span class="gradient-text">' + selectedText + '</span>';
-    textarea.value = textarea.value.substring(0, start) + wrapped + textarea.value.substring(end);
-    
-    // Mantener la selección en el texto envuelto
-    textarea.selectionStart = start;
-    textarea.selectionEnd = start + wrapped.length;
-    textarea.focus();
-}
+document.addEventListener('DOMContentLoaded', initHeroTitleEditor);
 </script>
 @endpush

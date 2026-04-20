@@ -56,8 +56,16 @@
                     </div>
                     <div>
                         <label style="display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;">Descripción completa <span style="color:var(--danger);">*</span></label>
-                        <textarea name="descripcion" rows="12" class="admin-input" required>{{ old('descripcion', $evento->descripcion) }}</textarea>
-                        <p style="color:var(--medium-gray);font-size:11px;margin:6px 0 0;">Puedes usar HTML básico: &lt;b&gt;, &lt;i&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;h2&gt;</p>
+                        <div class="rich-editor-wrapper {{ $errors->has('descripcion') ? 'is-invalid' : '' }}">
+                            <div id="descripcionEditor"></div>
+                        </div>
+                        <textarea name="descripcion" id="descripcionInput" style="display:none;">{{ old('descripcion', $evento->descripcion) }}</textarea>
+                        <p style="color:var(--medium-gray);font-size:11px;margin:6px 0 0;">Usa la barra para aplicar negrita, cursiva, títulos, listas, enlaces y saltos de línea como en Word.</p>
+                        @error('descripcion')
+                        <div style="background:var(--danger-light);color:var(--danger);border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                 </div>
 
@@ -172,7 +180,41 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 <script>
+function initRichTextEditor(editorId, inputId, placeholder) {
+    const editorElement = document.getElementById(editorId);
+    const inputElement = document.getElementById(inputId);
+    if (!editorElement || !inputElement || typeof Quill === 'undefined') return;
+
+    const quill = new Quill(editorElement, {
+        theme: 'snow',
+        placeholder,
+        modules: {
+            toolbar: [
+                [{ 'header': [2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['blockquote', 'link'],
+                ['clean']
+            ]
+        }
+    });
+
+    const initialValue = inputElement.value.trim();
+    quill.root.innerHTML = initialValue !== '' ? initialValue : '<p><br></p>';
+
+    const form = editorElement.closest('form');
+    if (form) {
+        form.addEventListener('submit', () => {
+            const plainText = quill.getText().trim();
+            inputElement.value = plainText.length > 0 ? quill.root.innerHTML : '';
+        });
+    }
+}
+
+initRichTextEditor('descripcionEditor', 'descripcionInput', 'Descripción detallada del evento...');
+
 function handleImg(input) {
     if (!input.files[0]) return;
     const reader = new FileReader();
@@ -211,13 +253,47 @@ dz.addEventListener('drop', e => {
 @endpush
 
 @push('styles')
+<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
 <style>
+.rich-editor-wrapper {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #fff;
+}
+.rich-editor-wrapper.is-invalid {
+    border-color: #dc3545;
+}
+.rich-editor-wrapper .ql-toolbar.ql-snow {
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--light-gray);
+}
+.rich-editor-wrapper .ql-container.ql-snow {
+    border: 0;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    min-height: 220px;
+}
+.rich-editor-wrapper .ql-editor {
+    min-height: 220px;
+    line-height: 1.6;
+    color: var(--dark);
+}
+.rich-editor-wrapper .ql-editor.ql-blank::before {
+    font-style: normal;
+    color: var(--medium-gray);
+}
 @media (max-width: 768px) {
     div[style*="grid-template-columns:1fr 300px"] {
         grid-template-columns: 1fr !important;
     }
     div[style*="grid-template-columns:1fr 1fr"] {
         grid-template-columns: 1fr !important;
+    }
+    .rich-editor-wrapper .ql-container.ql-snow,
+    .rich-editor-wrapper .ql-editor {
+        min-height: 180px;
     }
     .admin-input,
     input.admin-input,
