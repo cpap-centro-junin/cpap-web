@@ -47,7 +47,7 @@ class InicioController extends Controller
             $buscar = $request->q;
             $query->where(function ($q) use ($buscar) {
                 $q->where('titulo', 'like', "%{$buscar}%")
-                  ->orWhere('subtitulo', 'like', "%{$buscar}%");
+                  ->orWhere('descripcion', 'like', "%{$buscar}%");
             });
         }
 

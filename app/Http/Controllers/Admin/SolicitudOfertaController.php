@@ -30,7 +30,7 @@ class SolicitudOfertaController extends Controller
             $buscar = $request->q;
             $query->where(function ($q) use ($buscar) {
                 $q->where('nombre_contacto', 'like', "%{$buscar}%")
-                  ->orWhere('email', 'like', "%{$buscar}%");
+                  ->orWhere('email_contacto', 'like', "%{$buscar}%");
             });
         }
 
