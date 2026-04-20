@@ -191,7 +191,7 @@
 
         {{-- Botón descargar PDF --}}
         <div class="col-download-section" data-aos="fade-up" data-aos-delay="250">
-            <a href="{{ asset('assets/documents/proceso-colegiacion.pdf') }}" target="_blank" class="col-download-btn">
+            <a href="{{ route('colegiatura.documento', 'proceso-colegiacion') }}" target="_blank" class="col-download-btn">
                 <i class="fas fa-file-pdf"></i>
                 <span>Descargar Guía de Colegiación (PDF)</span>
             </a>
@@ -284,7 +284,7 @@
 
         {{-- Botón descargar PDF --}}
         <div class="col-download-section" data-aos="fade-up" data-aos-delay="250">
-            <a href="{{ asset('assets/documents/proceso-habilitacion.pdf') }}" target="_blank" class="col-download-btn col-download-btn--gold">
+            <a href="{{ route('colegiatura.documento', 'proceso-habilitacion') }}" target="_blank" class="col-download-btn col-download-btn--gold">
                 <i class="fas fa-file-pdf"></i>
                 <span>Descargar Guía de Habilitación (PDF)</span>
             </a>
@@ -364,7 +364,7 @@
 
         {{-- Botón descargar PDF --}}
         <div class="col-download-section" data-aos="fade-up" data-aos-delay="250">
-            <a href="{{ asset('assets/documents/reglamento-habilitaciones.pdf') }}" target="_blank" class="col-download-btn">
+            <a href="{{ route('colegiatura.documento', 'reglamento-habilitaciones') }}" target="_blank" class="col-download-btn">
                 <i class="fas fa-file-pdf"></i>
                 <span>Descargar Reglamento de Habilitaciones (PDF)</span>
             </a>

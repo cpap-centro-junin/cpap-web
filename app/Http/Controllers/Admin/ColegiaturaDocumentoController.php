@@ -13,16 +13,19 @@ class ColegiaturaDocumentoController extends Controller
             'title' => 'Guia de Colegiacion',
             'description' => 'Documento usado en la seccion de Proceso de Colegiacion y en el boton "Descargar Guia Completa" del home.',
             'filename' => 'proceso-colegiacion.pdf',
+            'slug' => 'proceso-colegiacion',
         ],
         'proceso_habilitacion' => [
             'title' => 'Guia de Habilitacion',
             'description' => 'Documento usado en la seccion de Proceso de Habilitacion.',
             'filename' => 'proceso-habilitacion.pdf',
+            'slug' => 'proceso-habilitacion',
         ],
         'reglamento_habilitaciones' => [
             'title' => 'Reglamento de Habilitaciones',
             'description' => 'Documento usado en la seccion de Reglamento Interno.',
             'filename' => 'reglamento-habilitaciones.pdf',
+            'slug' => 'reglamento-habilitaciones',
         ],
     ];
 
@@ -34,15 +37,15 @@ class ColegiaturaDocumentoController extends Controller
         $documents = [];
 
         foreach (self::DOCUMENTS as $key => $doc) {
-            $absolutePath = public_path('assets/documents/' . $doc['filename']);
-            $exists = file_exists($absolutePath);
+            $absolutePath = $this->resolveDocumentAbsolutePath($doc['filename']);
+            $exists = $absolutePath !== null;
 
             $documents[$key] = [
                 'key' => $key,
                 'title' => $doc['title'],
                 'description' => $doc['description'],
                 'filename' => $doc['filename'],
-                'url' => asset('assets/documents/' . $doc['filename']),
+                'url' => route('colegiatura.documento', $doc['slug']),
                 'exists' => $exists,
                 'size_kb' => $exists ? round(filesize($absolutePath) / 1024, 2) : null,
                 'updated_at' => $exists ? date('d/m/Y H:i', filemtime($absolutePath)) : null,
@@ -63,9 +66,9 @@ class ColegiaturaDocumentoController extends Controller
             'reglamento_habilitaciones' => 'nullable|file|mimes:pdf|max:20480',
         ]);
 
-        $targetDir = public_path('assets/documents');
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0755, true);
+        $legacyTargetDir = public_path('assets/documents');
+        if (!is_dir($legacyTargetDir)) {
+            mkdir($legacyTargetDir, 0755, true);
         }
 
         $updated = [];
@@ -76,7 +79,18 @@ class ColegiaturaDocumentoController extends Controller
             }
 
             $file = $validated[$field];
-            $file->move($targetDir, $doc['filename']);
+
+            // Ruta principal (sin symlink): public/storage/colegiatura-documentos/{archivo}
+            $file->storeAs('colegiatura-documentos', $doc['filename'], 'public');
+
+            // Compatibilidad con enlaces legacy existentes
+            $storageAbsolutePath = public_path('storage/colegiatura-documentos/' . $doc['filename']);
+            $legacyAbsolutePath = $legacyTargetDir . DIRECTORY_SEPARATOR . $doc['filename'];
+
+            if (is_file($storageAbsolutePath)) {
+                @copy($storageAbsolutePath, $legacyAbsolutePath);
+            }
+
             $updated[] = $doc['title'];
         }
 
@@ -89,5 +103,32 @@ class ColegiaturaDocumentoController extends Controller
         return redirect()
             ->back()
             ->with('success', 'Documentos actualizados correctamente: ' . implode(', ', $updated) . '.');
+    }
+
+    /**
+     * Resuelve la ruta absoluta del PDF buscando en ubicaciones actuales y legacy.
+     */
+    private function resolveDocumentAbsolutePath(string $filename): ?string
+    {
+        foreach ($this->getCandidatePaths($filename) as $path) {
+            if (is_file($path)) {
+                return $path;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Ubicaciones candidatas para compatibilidad con distintos despliegues.
+     */
+    private function getCandidatePaths(string $filename): array
+    {
+        return [
+            public_path('storage/colegiatura-documentos/' . $filename),
+            public_path('assets/documents/' . $filename),
+            public_path('pdf/' . $filename),
+            public_path('public/assets/documents/' . $filename),
+        ];
     }
 }

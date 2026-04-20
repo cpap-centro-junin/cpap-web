@@ -572,7 +572,7 @@
             </div>
 
             <div class="home-cta-buttons">
-                <a href="{{ asset('assets/documents/proceso-colegiacion.pdf') }}" target="_blank" class="btn-pdf">
+                <a href="{{ route('colegiatura.documento', 'proceso-colegiacion') }}" target="_blank" class="btn-pdf">
                     <i class="fas fa-file-pdf"></i>
                     Descargar Guía Completa
                 </a>

@@ -268,6 +268,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/colegiatura', [ColegiaturaController::class, 'index'])
     ->name('colegiatura.index');
 
+Route::get('/colegiatura/documentos/{documento}', [ColegiaturaController::class, 'descargarDocumento'])
+    ->whereIn('documento', ['proceso-colegiacion', 'proceso-habilitacion', 'reglamento-habilitaciones'])
+    ->name('colegiatura.documento');
+
 // ============================================
 // PÁGINAS LEGALES
 // ============================================
